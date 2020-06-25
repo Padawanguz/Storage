@@ -1,0 +1,33 @@
+set from = "gus.sosa@pm.me"
+set sendmail = "/usr/bin/msmtp -a protonmail"
+
+# Set folders
+set spoolfile = "+protonmail/gus.sosa@pm.me/Inbox"
+set mbox = "+protonmail/gus.sosa@pm.me/Archive"
+set postponed = "+protonmail/gus.sosa@pm.me/Drafts"
+set record = "+protonmail/gus.sosa@pm.me/Sent"
+set trash = "+protonmail/gus.sosa@pm.me/Trash"
+
+# Alternate email addresses.
+alternates ^gus.sosa@protonmail.com$ ^padawanguz@pm.me$
+
+# custom signaure
+# set signature = ~/.mutt/signatures/signature
+
+color status cyan default
+
+macro index o "<shell-escape>mbsync protonmail<enter>" "run mbsync to sync mail for this account"
+
+macro index,pager s \
+  "<enter-command>set my_old_resolve=\$resolve noresolve<enter>\
+  <tag-prefix><clear-flag>n<enter-command>set resolve=\$my_old_resolve<enter>\
+  <save-message>+mailbox/junk<enter>" \
+  "mark as read and move to junk folder"
+
+macro index,pager a \
+  "<save-message>+mailbox/archive<enter>"  \
+  "move message to the archive"
+
+macro index,pager i \
+  "<save-message>+mailbox/INBOX<enter>"  \
+  "move message to the inbox"

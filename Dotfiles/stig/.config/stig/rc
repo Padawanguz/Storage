@@ -1,0 +1,12 @@
+# Default columns in torrent lists
+set columns.torrents name ratio rate-up rate-down
+
+# Custom there file
+set tui.theme ~/.config/stig/my.theme
+
+# Open a few tabs on startup
+tab ls downloading
+tab ls uploading
+tab ls peers
+tab ls stopped
+tab ls all
