@@ -28,6 +28,7 @@ end
 
 # Set Vim as $EDITOR
 set -Ux EDITOR vim
+set -Ux TERMINAL st
 
 function ranger-cd
     set tmpfile "/tmp/pwd-from-ranger"
