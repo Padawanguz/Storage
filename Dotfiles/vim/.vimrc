@@ -13,13 +13,15 @@
   Plug 'tomtom/tcomment_vim'
   Plug 'preservim/nerdtree'
   Plug 'vim-airline/vim-airline'
-  Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'vim-airline/vim-airline-themes'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-rails'
   Plug 'vim-ruby/vim-ruby'
   Plug 'honza/vim-snippets'
   Plug 'sirver/UltiSnips'
   Plug 'ervandew/supertab'
+  Plug 'junegunn/fzf'
+  Plug 'junegunn/fzf.vim'
 
   call plug#end()
 
@@ -46,11 +48,19 @@
 	" set noswapfile
 	set history=1000
 	set ruler
+  set viminfo=!,h,f1,'100
 	set showcmd
 	set laststatus=2
 	set autowrite
-	set autoread
+  set hidden         " hide buffers instead of closing
+  set lazyredraw     " speed up on large files
+  set mouse=         " disable mouse
+  set scrolloff=999       " always keep cursor at the middle of screen
+  set virtualedit=onemore " allow the cursor to move just past the end of the line
+  set undolevels=5000     " set maximum undo levelsset autoread
   filetype plugin indent on
+  set foldmethod=manual       " use manual folding
+  set diffopt=filler,vertical " default behavior for diff
 
 " Trigger autoread when changing buffers or coming back to vim in terminal.
 	au FocusGained,BufEnter * :silent! !
@@ -71,9 +81,12 @@
 	set shiftwidth=2
 	set shiftround
 	set expandtab
+  set softtabstop=2 " remove <Tab> symbols as it was spaces
+  set shiftround    " round indent to multiple of 'shiftwidth' (for << and >>)
 
 " Enable autocompletion:
   set wildmode=longest,list,full
+  set wildignore+=*.a,*.o,*.pyc,*~,*.swp,*.tmp
 
 " Numbers
   set number relativenumber
@@ -287,3 +300,18 @@ augroup END
   let g:UltiSnipsExpandTrigger = "<tab>"
   let g:UltiSnipsJumpForwardTrigger = "<tab>"
   let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" FZF configuration and bindings
+  let g:fzf_action = {
+        \ 'ctrl-s': 'split',
+        \ 'ctrl-v': 'vsplit'
+        \ }
+  let g:fzf_preview_window = 'right:60%'
+  nnoremap <c-p> :Files<cr>
+  nnoremap <c-o> :Buffers<cr>
+  augroup fzf
+    autocmd!
+    autocmd! FileType fzf
+    autocmd  FileType fzf set laststatus=0 noshowmode noruler
+      \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+  augroup END
