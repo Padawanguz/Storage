@@ -7,6 +7,10 @@ set PATH $HOME/.rbenv/shims $PATH
 # Change GOPATH
 set -x GOPATH $HOME/.go
 
+# Set Enviroment Variables
+set -Ux EDITOR vim
+set -Ux TERMINAL st
+
 # Start X at login
 if status is-login
     if test -z "$DISPLAY" -a $XDG_VTNR = 1
@@ -25,10 +29,6 @@ end
 function su
    command su --shell=/usr/bin/fish $argv
 end
-
-# Set Vim as $EDITOR
-set -Ux EDITOR vim
-set -Ux TERMINAL st
 
 function ranger-cd
     set tmpfile "/tmp/pwd-from-ranger"
