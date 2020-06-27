@@ -13,7 +13,7 @@
   Plug 'tomtom/tcomment_vim'
   Plug 'preservim/nerdtree'
   Plug 'vim-airline/vim-airline'
-  Plug 'kien/ctrlp.vim'
+  Plug 'ctrlpvim/ctrlp.vim'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-rails'
   Plug 'vim-ruby/vim-ruby'
