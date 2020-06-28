@@ -96,7 +96,7 @@ keychains.keys.next    yellow       on $keychains_bg
 keychains.action       white        on $keychains_bg
 keychains.description  white        on $keychains_bg
 
-$completion_bg = dark gray
+$completion_bg = black
 completion               light gray   on $completion_bg
 completion.category      light gray,bold,underline on $completion_bg
 completion.item          light gray   on $completion_bg
