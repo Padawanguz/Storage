@@ -10,8 +10,9 @@
 " Pluggins installed
   call plug#begin()
 
+  Plug 'tpope/vim-surround'
   Plug 'tomtom/tcomment_vim'
-  Plug 'preservim/nerdtree'
+  Plug 'jeetsukumaran/vim-filebeagle'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'tpope/vim-fugitive'
@@ -22,6 +23,8 @@
   Plug 'ervandew/supertab'
   Plug 'junegunn/fzf'
   Plug 'junegunn/fzf.vim'
+  Plug 'tpope/vim-obsession'
+  Plug 'mhinz/vim-startify'
 
   call plug#end()
 
@@ -52,6 +55,7 @@
 	set showcmd
 	set laststatus=2
 	set autowrite
+  set autoread
   set hidden         " hide buffers instead of closing
   set lazyredraw     " speed up on large files
   set mouse=         " disable mouse
@@ -288,9 +292,6 @@ augroup END
 " Airline Theme
 	let g:airline_theme='solarized_flood'
 
-" NERDTree Toggle Key
-	map <leader>q :NERDTreeToggle<CR>
-
 " make YCM compatible with UltiSnips (using supertab)
   let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
   let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
@@ -315,3 +316,85 @@ augroup END
     autocmd  FileType fzf set laststatus=0 noshowmode noruler
       \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
   augroup END
+
+" Sessions management
+  let g:sessions_dir = '~/.vim/session'
+  exec 'nnoremap <Leader>ss :Obsession ' . g:sessions_dir . '/*.vim<C-D><BS><BS><BS><BS><BS>'
+  exec 'nnoremap <Leader>sr :so ' . g:sessions_dir. '/*.vim<C-D><BS><BS><BS><BS><BS>'
+
+" move among buffers with CTRL
+  nnoremap <C-l> :bnext<CR>
+  nnoremap <C-h> :bprevious<CR>
+
+" Rails.vim bindings
+  map <Leader>oc :Rcontroller<Space>
+  map <Leader>ov :Rview<Space>
+  map <Leader>om :Rmodel<Space>
+  map <Leader>oh :Rhelper<Space>
+  map <Leader>oj :Rjavascript<Space>
+  map <Leader>os :Rstylesheet<Space>
+  map <Leader>oi :Rintegration<Space>
+
+" surround for adding surround 'physics'
+  " # to surround with ruby string interpolation
+  let g:surround_35 = "#{\r}"
+  " - to surround with no-output erb tag
+  let g:surround_45 = "<% \r %>"
+  " = to surround with output erb tag
+  let g:surround_61 = "<%= \r %>"
+
+" Startify configuration
+" 'Most Recent Files' number
+    let g:startify_files_number           = 30
+
+  " Update session automatically as you exit vim
+    let g:startify_session_persistence    = 1
+
+  " Simplify the startify list to just recent files and sessions
+    let g:startify_lists = [
+      \ { 'type': 'dir',       'header': ['   - RECENT FILES -'] },
+      \ { 'type': 'sessions',  'header': ['   - SAVED SESSIONS -'] },
+      \ ]
+
+  " Fancy custom header
+    let g:startify_custom_header = [
+                  \ '     ________ ;;     ________',
+                  \ '    /********\;;;;  /********\',
+                  \ '    \********/;;;;;;\********/',
+                  \ '     |******|;;;;;;;;/*****/',
+                  \ '     |******|;;;;;;/*****/''',
+                  \ '    ;|******|;;;;/*****/'';',
+                  \ '  ;;;|******|;;/*****/'';;;;;',
+                  \ ';;;;;|******|/*****/'';;;;;;;;;',
+                  \ '  ;;;|***********/'';;;;;;;;;',
+                  \ '    ;|*********/'';;;;;;;;;',
+                  \ '     |*******/'';;;;;;;;;',
+                  \ '     |*****/'';;;;;;;;;',
+                  \ '     |***/'';;;;;;;;;',
+                  \ '     |*/''   ;;;;;;',
+                  \ '              ;;',
+                  \]
+
+    let g:startify_skiplist = [
+          \ 'COMMIT_EDITMSG',
+          \ '^/tmp',
+          \ escape(fnamemodify(resolve($VIMRUNTIME), ':p'), '\') .'doc',
+          \ 'bundle/.*/doc',
+          \ ]
+
+  let g:startify_padding_left = 5
+  let g:startify_relative_path = 0
+  let g:startify_fortune_use_unicode = 1
+  let g:startify_change_to_vcs_root = 1
+  let g:startify_session_autoload = 1
+  let g:startify_update_oldfiles = 1
+  let g:startify_use_env = 1
+
+  hi! link StartifyHeader Normal
+  hi! link StartifyFile Directory
+  hi! link StartifyPath LineNr
+  hi! link StartifySlash StartifyPath
+  hi! link StartifyBracket StartifyPath
+  hi! link StartifyNumber Title
+
+  autocmd User Startified setlocal cursorline
