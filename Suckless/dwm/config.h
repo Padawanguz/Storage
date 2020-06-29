@@ -3,18 +3,13 @@
 #include <X11/XF86keysym.h>
 
 /* appearance */
-static const unsigned int borderpx  = 2;        /* border pixel of windows */
-static const unsigned int gappx     = 0;        /* gaps between windows */
+static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
-static const unsigned int systrayspacing = 8;   /* systray spacing */
-static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
-static int showsystray              = 0;        /* 0 means no systray */
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Ubuntu Mono Nerd Font:size=11" };
-static const char dmenufont[]       = "ubuntumono:size=12";
+static const char *fonts[]          = { "Ubuntu Mono Nerd Font:size=12" };
+static const char dmenufont[]       = "Ubuntu Mono Nerd Font:size=12";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -27,35 +22,33 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { " ", " ", " ", " ", " ", "﯂ ", " ", " ", " " };
-static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-  /* class      instance    title          tags mask     isfloating  isterminal  noswallow  monitor */
-  { "Gimp",     NULL,       NULL,          0,            1,          0,           0,        -1 },
-  { "Firefox",  NULL,       NULL,          1 << 8,       0,          0,           0,        -1 },
-  { "st",       NULL,       NULL,          0,            0,          1,           0,        -1 },
-  { "mpv",      NULL,       NULL,          0,            1,          0,           0,        -1 },
-  { NULL,       NULL,      "Event Tester", 0,            1,          0,           1,        -1 }, /* xev */
+	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
+	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
+	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
+	{ "st",      NULL,     NULL,           0,         0,          1,          -1,        -1 },
+	{ NULL,      NULL,     "Event Tester", 0,         1,          0,           1,        -1 }, /* xev */
 };
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 
 #include "fibonacci.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ " ",      tile },    /* first entry is default */
-	{ " ",      NULL },    /* no layout function means floating behavior */
+	{ " ",      tile },    /* first entry is default */
+	{ " ",      NULL },    /* no layout function means floating behavior */
 	{ "ﱢ ",      monocle },
- 	{ " ",      spiral },
- 	{ " ",      dwindle },
+ 	{ " ",      spiral },
+ 	{ "﯂ ",      dwindle },
 };
 
 /* key definitions */
@@ -101,7 +94,6 @@ static const char* slock[]           = { "slock", NULL };
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
-  { MODKEY,              XK_bracketright,      spawn,          { .v = searchcmd } },
   { MODKEY | ShiftMask,             XK_f,      spawn,          { .v = browsecmd } },
   { MODKEY | ShiftMask,             XK_l,      spawn,          { .v = plexcmd } },
   { MODKEY | ShiftMask,             XK_t,      spawn,          { .v = transmissioncmd } },
@@ -113,9 +105,6 @@ static Key keys[] = {
   { MODKEY | ShiftMask,             XK_space,  spawn,          { .v = trackpadon } },
   { MODKEY | ControlMask,           XK_space,  spawn,          { .v = trackpadoff } },
   { MODKEY | ShiftMask,             XK_c,      killclient,     { 0 } },
-	{ MODKEY | ShiftMask,             XK_Down,   setgaps,        {.i = -1 } },
- 	{ MODKEY | ShiftMask,             XK_Up,     setgaps,        {.i = +1 } },
-	{ MODKEY | ShiftMask,             XK_equal,  setgaps,        {.i =  0 } },
   { MODKEY | ControlMask,           XK_m,      spawn,          { .v = udiskiecmd } },
   { MODKEY | ControlMask,           XK_c,      spawn,          { .v = networkmngrcmd } },
   { MODKEY | ControlMask,           XK_b,      spawn,          { .v = bitwardencmd } },
@@ -126,8 +115,8 @@ static Key keys[] = {
   { MODKEY,                         XK_p,      spawn,          { .v = dmenucmd } },
   { MODKEY,                         XK_o,      spawn,          { .v = clipboardcmd } },
   { MODKEY,               XK_bracketleft,      spawn,          { .v = dmenufmcmd } },
+  { MODKEY,              XK_bracketright,      spawn,          { .v = searchcmd } },
   { MODKEY,                         XK_b,      togglebar,      { 0 } },
-  { MODKEY | ShiftMask,             XK_b,      togglesystray,  { 0 } },
   { MODKEY,                         XK_j,      focusstack,     { .i = +1 } },
   { MODKEY,                         XK_k,      focusstack,     { .i = -1 } },
   { MODKEY,                         XK_i,      incnmaster,     { .i = +1 } },
@@ -146,7 +135,6 @@ static Key keys[] = {
   { MODKEY | ShiftMask,             XK_0,      tag,            { .ui = ~0 } },
   { MODKEY,                         XK_comma,  focusmon,       { .i = -1 } },
   { MODKEY,                         XK_period, focusmon,       { .i = +1 } },
-	{ MODKEY,                         XK_n,      togglealttag,   {0} },
   { MODKEY | ShiftMask,             XK_comma,  tagmon,         { .i = -1 } },
   { MODKEY | ShiftMask,             XK_period, tagmon,         { .i = +1 } },
   { 0,                              XK_Print,  spawn,          { .v = scrotcmd } },
