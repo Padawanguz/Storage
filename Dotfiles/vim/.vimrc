@@ -1,5 +1,9 @@
 " Type :so % to refresh .vimrc after making changes
 
+" Use Vim settings, rather then Vi settings. This setting must be as early as
+" possible, as it has side effects.
+	set nocompatible
+
 " Vim-Plug Autoinstall Code
   if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -28,12 +32,14 @@
 
   call plug#end()
 
+" Easier split navigation
+  nnoremap <C-J> <C-W><C-J>
+  nnoremap <C-K> <C-W><C-K>
+  nnoremap <C-L> <C-W><C-L>
+  nnoremap <C-H> <C-W><C-H>
+
 " Set fish shell
 	set shell=/usr/bin/fish
-
-" Use Vim settings, rather then Vi settings. This setting must be as early as
-" possible, as it has side effects.
-	set nocompatible
 
 " Leader - ( Comma )
 	let mapleader = ","
@@ -62,7 +68,6 @@
   set scrolloff=999       " always keep cursor at the middle of screen
   set virtualedit=onemore " allow the cursor to move just past the end of the line
   set undolevels=5000     " set maximum undo levelsset autoread
-  filetype plugin indent on
   set foldmethod=manual       " use manual folding
   set diffopt=filler,vertical " default behavior for diff
 
@@ -102,11 +107,11 @@
 " Save file as sudo on files that require root permission
   cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
-" Auto resize Vim splits to active split
-  set winwidth=104
-  set winheight=5
-  set winminheight=5
-  set winheight=999
+" " Auto resize Vim splits to active split
+"   set winwidth=104
+"   set winheight=5
+"   set winminheight=5
+"   set winheight=999
 
 " HTML Editing
   set matchpairs+=<:>
@@ -174,14 +179,14 @@
 	highlight Pmenu ctermfg=15 ctermbg=0 guifg=#ffffff guibg=#565655
 
 " Don't be a noob, join the no arrows key movement
-  inoremap  <Up>     <NOP>
-  inoremap  <Down>   <NOP>
-  inoremap  <Left>   <NOP>
-  inoremap  <Right>  <NOP>
-  noremap   <Up>     <NOP>
-  noremap   <Down>   <NOP>
-  noremap   <Left>   <NOP>
-  noremap   <Right>  <NOP>
+  " inoremap  <Up>     <NOP>
+  " inoremap  <Down>   <NOP>
+  " inoremap  <Left>   <NOP>
+  " inoremap  <Right>  <NOP>
+  " noremap   <Up>     <NOP>
+  " noremap   <Down>   <NOP>
+  " noremap   <Left>   <NOP>
+  " noremap   <Right>  <NOP>
 
 " Highlight the current line
   set cursorline
@@ -233,61 +238,61 @@
 " Assumes you have a Ruby with SiB available in the PATH
 " If it doesn't work, you may need to `gem install seeing_is_believing`
 
-function! WithoutChangingCursor(fn)
-	let cursor_pos     = getpos('.')
-	let wintop_pos     = getpos('w0')
-	let old_lazyredraw = &lazyredraw
-	let old_scrolloff  = &scrolloff
-	set lazyredraw
+  function! WithoutChangingCursor(fn)
+    let cursor_pos     = getpos('.')
+    let wintop_pos     = getpos('w0')
+    let old_lazyredraw = &lazyredraw
+    let old_scrolloff  = &scrolloff
+    set lazyredraw
 
-	call a:fn()
+    call a:fn()
 
-	call setpos('.', wintop_pos)
-	call setpos('.', cursor_pos)
-	redraw
-	let &lazyredraw = old_lazyredraw
-	let scrolloff   = old_scrolloff
-endfun
+    call setpos('.', wintop_pos)
+    call setpos('.', cursor_pos)
+    redraw
+    let &lazyredraw = old_lazyredraw
+    let scrolloff   = old_scrolloff
+  endfun
 
-function! SibAnnotateAll(scope)
-	call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk"]))
-endfun
+  function! SibAnnotateAll(scope)
+    call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk"]))
+  endfun
 
-function! SibAnnotateMarked(scope)
-	call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --xmpfilter-style --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk"]))
-endfun
+  function! SibAnnotateMarked(scope)
+    call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --xmpfilter-style --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk"]))
+  endfun
 
-function! SibCleanAnnotations(scope)
-	call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --clean"]))
-endfun
+  function! SibCleanAnnotations(scope)
+    call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --clean"]))
+  endfun
 
-function! SibToggleMark()
-	let pos  = getpos('.')
-	let line = getline(".")
-	if line =~ '^\s*$'
-		let line = '# => '
-	elseif line =~ '# =>'
-		let line = substitute(line, ' *# =>.*', '', '')
-	else
-		let line .= '  # => '
-	end
-	call setline('.', line)
-	call setpos('.', pos)
-endfun
+  function! SibToggleMark()
+    let pos  = getpos('.')
+    let line = getline(".")
+    if line =~ '^\s*$'
+      let line = '# => '
+    elseif line =~ '# =>'
+      let line = substitute(line, ' *# =>.*', '', '')
+    else
+      let line .= '  # => '
+    end
+    call setline('.', line)
+    call setpos('.', pos)
+  endfun
 
 " Enable seeing-is-believing mappings only for Ruby
-augroup seeingIsBelievingSettings
-" clear the settings if they already exist (so we don't run them twice)
-	autocmd!
-	autocmd FileType ruby nmap <buffer> <Leader>m :call SibAnnotateAll("%")<CR>;
-	" autocmd FileType ruby nmap <buffer>  <Enter>  :call SibAnnotateMarked("%")<CR>;
-	autocmd FileType ruby nmap <buffer> <Leader>n :call SibCleanAnnotations("%")<CR>;
-	autocmd FileType ruby nmap <buffer> <Leader>b :call SibToggleMark()<CR>;
-	autocmd FileType ruby vmap <buffer> <Leader>b :call SibToggleMark()<CR>;
-	autocmd FileType ruby vmap <buffer> <Leader>m :call SibAnnotateAll("'<,'>")<CR>;
-	" autocmd FileType ruby vmap <buffer> <Enter>   :call SibAnnotateMarked("'<,'>")<CR>;
-	autocmd FileType ruby vmap <buffer> <Leader>n :call SibCleanAnnotations("'<,'>")<CR>;
-augroup END
+  augroup seeingIsBelievingSettings
+  " clear the settings if they already exist (so we don't run them twice)
+    autocmd!
+    autocmd FileType ruby nmap <buffer> <Leader>m :call SibAnnotateAll("%")<CR>;
+    " autocmd FileType ruby nmap <buffer>  <Enter>  :call SibAnnotateMarked("%")<CR>;
+    autocmd FileType ruby nmap <buffer> <Leader>n :call SibCleanAnnotations("%")<CR>;
+    autocmd FileType ruby nmap <buffer> <Leader>b :call SibToggleMark()<CR>;
+    autocmd FileType ruby vmap <buffer> <Leader>b :call SibToggleMark()<CR>;
+    autocmd FileType ruby vmap <buffer> <Leader>m :call SibAnnotateAll("'<,'>")<CR>;
+    " autocmd FileType ruby vmap <buffer> <Enter>   :call SibAnnotateMarked("'<,'>")<CR>;
+    autocmd FileType ruby vmap <buffer> <Leader>n :call SibCleanAnnotations("'<,'>")<CR>;
+  augroup END
 
 " Airline Theme
 	let g:airline_theme='solarized_flood'
@@ -323,8 +328,8 @@ augroup END
   exec 'nnoremap <Leader>sr :so ' . g:sessions_dir. '/*.vim<C-D><BS><BS><BS><BS><BS>'
 
 " move among buffers with CTRL
-  nnoremap <C-l> :bnext<CR>
-  nnoremap <C-h> :bprevious<CR>
+  nnoremap <C-w> :bnext<CR>
+  nnoremap <C-q> :bprevious<CR>
 
 " Rails.vim bindings
   map <Leader>oc :Rcontroller<Space>
@@ -342,7 +347,7 @@ augroup END
   let g:surround_45 = "<% \r %>"
   " = to surround with output erb tag
   let g:surround_61 = "<%= \r %>"
-
+"
 " Startify configuration
 " 'Most Recent Files' number
     let g:startify_files_number           = 30
@@ -351,6 +356,7 @@ augroup END
     let g:startify_session_persistence    = 1
 
   " Simplify the startify list to just recent files and sessions
+
     let g:startify_lists = [
       \ { 'type': 'dir',       'header': ['   - RECENT FILES -'] },
       \ { 'type': 'sessions',  'header': ['   - SAVED SESSIONS -'] },
