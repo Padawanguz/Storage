@@ -45,8 +45,8 @@ bindkey '^e' edit-command-line
 alias getpkg="yay -Slq | fzf --multi --preview 'yay -Si {1}' | xargs -ro yay -S"   # Uses yay and fzf to find Arch packages
 alias remove-orphans="sudo pacman -Rns $(pacman -Qtdq)"
 alias wifi-list="nmcli device wifi list"
-alias wifi-on="nmcli radio wifi on"
 alias wifi-connect="nmcli device wifi connect"
+alias wifi-on="nmcli radio wifi on"
 alias wifi-off="nmcli radio wifi off"
 alias wifi-scan="nmcli device wifi rescan"
 alias batstatus="upower -i /org/freedesktop/UPower/devices/battery_BAT0"
