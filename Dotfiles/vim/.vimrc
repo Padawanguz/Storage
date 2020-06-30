@@ -1,9 +1,5 @@
 " Type :so % to refresh .vimrc after making changes
-
 	set nocompatible
-	set shell=/usr/bin/fish
-	set clipboard=unnamedplus   " Allow Copy and Paste - Must instal gvim
-	let mapleader = ","
 
 " VIM-PLUG CONFIGURATION
 " Vim-Plug Autoinstall Code
@@ -16,9 +12,9 @@
 " Pluggins installed
   call plug#begin()
 
+  Plug 'preservim/nerdtree'
   Plug 'tpope/vim-surround'
   Plug 'tomtom/tcomment_vim'
-  Plug 'jeetsukumaran/vim-filebeagle'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'tpope/vim-fugitive'
@@ -31,6 +27,7 @@
   Plug 'junegunn/fzf.vim'
   Plug 'tpope/vim-obsession'
   Plug 'mhinz/vim-startify'
+  Plug 'zhimsel/vim-stay'
 
   call plug#end()
 
@@ -42,12 +39,13 @@
   nnoremap <C-H> <C-W><C-H>
 
 " move among buffers with CTRL
-  nnoremap <C-w> :bnext<CR>
-  nnoremap <C-q> :bprevious<CR>
+  nnoremap . :bnext<CR>
+  nnoremap , :bprevious<CR>
 
 " Manual Folding
   inoremap <F9> <C-O>za
   nnoremap <F9> za
+  nnoremap ! zD
   onoremap <F9> <C-C>za
   vnoremap <F9> zf
 
@@ -77,7 +75,11 @@
   nnoremap j gj
   nnoremap k gk
 
+" NERDTreeToggle
+  nnoremap - :NERDTreeFind<CR>
+
 " VARIOUS VIM OPTIONS
+  " let mapleader = ","
   set ai                                " set autoindent
   set si                                " set smart indent
   set lbr                               " set linebreak
@@ -117,6 +119,10 @@
   set scrolloff=8
   set sidescrolloff=15
   set sidescroll=1
+	set shell=/usr/bin/fish
+	set clipboard=unnamedplus                   " Allow Copy and Paste - Must instal gvim
+  set viewoptions=cursor,folds,slash,unix     " Vim-Stay configuration
+  let g:plug_window = 'noautocmd vertical topleft new'
 
 " VIM OPTIONS EXTENDED
 " Disables automatic commenting on newline:
@@ -146,11 +152,11 @@
   autocmd BufWritepre * %s/\n\+\%$//e
 
 " Automatically save folds after restart
-  augroup AutoSaveFolds
-    autocmd!
-    autocmd BufWinLeave * mkview
-    autocmd BufWinEnter * silent loadview
-  augroup END
+  " augroup remember_folds
+  "   autocmd!
+  "   au BufWinLeave ?* mkview 1
+  "   au BufWinEnter ?* silent! loadview 1
+  " augroup END
 
 " Syntax highlighting and theme
   syntax on
@@ -382,5 +388,8 @@
   exec 'nnoremap <Leader>sr :so ' . g:sessions_dir. '/*.vim<C-D><BS><BS><BS><BS><BS>'
 
 " AIRLINE THEME
-	let g:airline_theme='solarized_flood'
+	let g:airline_theme='minimalist'
   let g:airline_powerline_fonts = 1
+  let g:airline#extensions#tabline#enabled = 1
+  let g:airline#extensions#tabline#formatter = 'unique_tail'
+  let g:airline#extensions#tabline#buffer_nr_show = 1
