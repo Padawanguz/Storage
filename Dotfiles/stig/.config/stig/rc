@@ -1,5 +1,5 @@
 # Default columns in torrent lists
-set columns.torrents name ratio rate-up rate-down
+set columns.torrents name ratio rate-down rate-up
 
 # Custom there file
 set tui.theme ~/.config/stig/my.theme
