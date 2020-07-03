@@ -39,8 +39,16 @@
   nnoremap <C-H> <C-W><C-H>
 
 " move among buffers with CTRL
-  nnoremap . :bnext<CR>
-  nnoremap , :bprevious<CR>
+  nnoremap ] :bnext<CR>
+  nnoremap [ :bprevious<CR>
+
+" Copy the current word or visually selected text to the clipboard
+  nnoremap <F4> "+yiw
+  vnoremap <F4> "+y
+
+" Prepare a :substitute command using the current word or the selected text
+  nnoremap <F5> yiw:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>
+  vnoremap <F5> y:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>
 
 " Manual Folding
   inoremap <F9> <C-O>za
