@@ -1,16 +1,17 @@
-" Type :so % to refresh .vimrc after making changes
-	set nocompatible
 
 " VIM-PLUG CONFIGURATION
 " Vim-Plug Autoinstall Code
-  if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  let plug_install = 0
+  let autoload_plug_path = stdpath('config') . '/autoload/plug.vim'
+  if !filereadable(autoload_plug_path)
+      silent exe '!curl -fL --create-dirs -o ' . autoload_plug_path .
+          \ ' https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+      execute 'source ' . fnameescape(autoload_plug_path)
+      let plug_install = 1
   endif
+  unlet autoload_plug_path
 
-" Pluggins installed
-  call plug#begin()
+  call plug#begin('~/.config/nvim/plugins')
 
   Plug 'preservim/nerdtree'
   Plug 'tpope/vim-surround'
@@ -30,6 +31,11 @@
   Plug 'zhimsel/vim-stay'
 
   call plug#end()
+
+  if plug_install
+      PlugInstall --sync
+  endif
+  unlet plug_install
 
 " MAPPING AND NAVIGATION CONFIGURATIONS
 " Easier split navigation
@@ -87,7 +93,7 @@
   nnoremap - :NERDTreeFind<CR>
 
 " VARIOUS VIM OPTIONS
-  " let mapleader = ","
+  let mapleader = ","
   set ai                                " set autoindent
   set si                                " set smart indent
   set lbr                               " set linebreak
@@ -186,37 +192,40 @@
 " Save your swp files to a less annoying place than the current directory.
 " " If you have .vim-swap in the current directory, it'll use that.
 " " Otherwise it saves it to ~/.vim/swap, ~/tmp or .
-  if isdirectory($HOME . '/.vim/backup') == 0
-    :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+  if isdirectory($HOME . '/.config/nvim/backup') == 0
+    :silent !mkdir -p ~/.config/nvim/backup >/dev/null 2>&1
   endif
+
   set backupdir-=.
   set backupdir+=.
   set backupdir-=~/
-  set backupdir^=~/.vim/backup/
-  set backupdir^=./.vim-backup/
+  set backupdir^=~/.config/nvim/backup/
+  set backupdir^=./.nvim-backup/
   set backup
 
-  if isdirectory($HOME . '/.vim/swap') == 0
-    :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+  if isdirectory($HOME . '/.config/nvim/swap') == 0
+    :silent !mkdir -p ~/.config/nvim/swap >/dev/null 2>&1
   endif
-  set directory=./.vim-swap//
-  set directory+=~/.vim/swap//
+
+  set directory=./.nvim-swap//
+  set directory+=~/.config/nvim/swap//
   set directory+=~/tmp//
   set directory+=.
 
 " Viminfo stores the the state of your previous editing session
-	set viminfo+=n~/.vim/viminfo
+	set viminfo+=n~/.config/nvim/viminfo
 
 " Undofile - This allows you to use undos after exiting and restarting
 " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
 " :help undo-persistence
 " This is only present in 7.3+
   if exists("+undofile")
-    if isdirectory($HOME . '/.vim/undo') == 0
-      :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+    if isdirectory($HOME . '/.config/nvim/undo') == 0
+      :silent !mkdir -p ~/.config/nvim/undo > /dev/null 2>&1
     endif
-    set undodir=./.vim-undo//
-    set undodir+=~/.vim/undo//
+
+    set undodir=./.nvim-undo//
+    set undodir+=~/.config/nvim/undo//
     set undofile
   endif
 
