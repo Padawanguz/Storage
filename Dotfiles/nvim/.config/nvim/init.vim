@@ -14,6 +14,9 @@
   call plug#begin('~/.config/nvim/plugins')
 
   Plug 'preservim/nerdtree'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'mbbill/undotree'
+  Plug 'sheerun/vim-polyglot'
   Plug 'tpope/vim-surround'
   Plug 'tomtom/tcomment_vim'
   Plug 'vim-airline/vim-airline'
@@ -74,7 +77,7 @@
 " Use enter and space w/o entering insert mode
   nmap <Enter> O<Esc>j
   nmap <CR> o<Esc>k
-  nnoremap <space> i<space><esc>
+  " nnoremap <space> i<space><esc>
 
 " Resize panes
   nnoremap <silent> <Left> :vertical resize +5<cr>
@@ -93,7 +96,7 @@
   nnoremap - :NERDTreeFind<CR>
 
 " VARIOUS VIM OPTIONS
-  let mapleader = ","
+  let mapleader = " "
   set ai                                " set autoindent
   set si                                " set smart indent
   set lbr                               " set linebreak
@@ -104,6 +107,8 @@
   set viminfo=!,h,f1,'100
 	set showcmd
 	set laststatus=2
+  set updatetime=50
+  " set cmdheight=2
 	set autowrite
   set autoread
   set hidden                            " hide buffers instead of closing
@@ -228,6 +233,43 @@
     set undodir+=~/.config/nvim/undo//
     set undofile
   endif
+
+" VIM GO (POLYGLOT) SETTINGS.
+  let g:go_highlight_build_constraints = 1
+  let g:go_highlight_extra_types = 1
+  let g:go_highlight_fields = 1
+  let g:go_highlight_functions = 1
+  let g:go_highlight_methods = 1
+  let g:go_highlight_operators = 1
+  let g:go_highlight_structs = 1
+  let g:go_highlight_types = 1
+  let g:go_highlight_function_parameters = 1
+  let g:go_highlight_function_calls = 1
+  let g:go_highlight_generate_tags = 1
+  let g:go_highlight_format_strings = 1
+  let g:go_highlight_variable_declarations = 1
+  let g:go_auto_sameids = 1
+
+" COC SEARCH SETTINGS
+  nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
+  nnoremap <leader>pw :Rg <C-R>=expand("<cword>")<CR><CR>
+  nnoremap <leader>phw :h <C-R>=expand("<cword>")<CR><CR>
+  nnoremap <leader>h :wincmd h<CR>
+  nnoremap <leader>j :wincmd j<CR>
+  nnoremap <leader>k :wincmd k<CR>
+  nnoremap <leader>l :wincmd l<CR>
+  nnoremap <leader>u :UndotreeShow<CR>
+  nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+  nnoremap <Leader>ps :Rg<SPACE>
+  nnoremap <C-p> :GFiles<CR>
+  nnoremap <Leader>pf :Files<CR>
+  nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
+  nnoremap <Leader>+ :vertical resize +5<CR>
+  nnoremap <Leader>- :vertical resize -5<CR>
+  nnoremap <Leader>rp :resize 100<CR>
+  nnoremap <Leader>ee oif err != nil {<CR>log.Fatalf("%+v\n", err)<CR>}<CR><esc>kkI<esc>
+  vnoremap J :m '>+1<CR>gv=gv
+  vnoremap K :m '<-2<CR>gv=gv
 
 " SEEING IS BELIEVING CONFIGURATION
 " Assumes you have a Ruby with SiB available in the PATH
