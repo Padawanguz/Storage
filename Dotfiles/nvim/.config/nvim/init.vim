@@ -14,7 +14,6 @@
   call plug#begin('~/.config/nvim/plugins')
 
   Plug 'preservim/nerdtree'
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'mbbill/undotree'
   Plug 'sheerun/vim-polyglot'
   Plug 'tpope/vim-surround'
@@ -103,12 +102,12 @@
   set wrap                              " tells Vim to word wrap visually
 	set backspace=2
 	set history=1000
-	set ruler
+  set title                             " show filename at the title of the windowset ruler
+  set textwidth=80
   set viminfo=!,h,f1,'100
 	set showcmd
 	set laststatus=2
   set updatetime=50
-  " set cmdheight=2
 	set autowrite
   set autoread
   set hidden                            " hide buffers instead of closing
@@ -135,6 +134,7 @@
 	set ignorecase
 	set smartcase
 	set showmatch
+  set nohlsearch
   set scrolloff=8
   set sidescrolloff=15
   set sidescroll=1
@@ -170,13 +170,6 @@
   autocmd BufWritePre * %s/\s\+$//e
   autocmd BufWritepre * %s/\n\+\%$//e
 
-" Automatically save folds after restart
-  " augroup remember_folds
-  "   autocmd!
-  "   au BufWinLeave ?* mkview 1
-  "   au BufWinEnter ?* silent! loadview 1
-  " augroup END
-
 " Syntax highlighting and theme
   syntax on
   set bg=dark
@@ -201,21 +194,14 @@
     :silent !mkdir -p ~/.config/nvim/backup >/dev/null 2>&1
   endif
 
-  set backupdir-=.
-  set backupdir+=.
-  set backupdir-=~/
-  set backupdir^=~/.config/nvim/backup/
-  set backupdir^=./.nvim-backup/
+  set backupdir=~/.config/nvim/backup/
   set backup
 
   if isdirectory($HOME . '/.config/nvim/swap') == 0
     :silent !mkdir -p ~/.config/nvim/swap >/dev/null 2>&1
   endif
 
-  set directory=./.nvim-swap//
-  set directory+=~/.config/nvim/swap//
-  set directory+=~/tmp//
-  set directory+=.
+  set directory=~/.config/nvim/swap//
 
 " Viminfo stores the the state of your previous editing session
 	set viminfo+=n~/.config/nvim/viminfo
@@ -249,27 +235,6 @@
   let g:go_highlight_format_strings = 1
   let g:go_highlight_variable_declarations = 1
   let g:go_auto_sameids = 1
-
-" COC SEARCH SETTINGS
-  nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
-  nnoremap <leader>pw :Rg <C-R>=expand("<cword>")<CR><CR>
-  nnoremap <leader>phw :h <C-R>=expand("<cword>")<CR><CR>
-  nnoremap <leader>h :wincmd h<CR>
-  nnoremap <leader>j :wincmd j<CR>
-  nnoremap <leader>k :wincmd k<CR>
-  nnoremap <leader>l :wincmd l<CR>
-  nnoremap <leader>u :UndotreeShow<CR>
-  nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
-  nnoremap <Leader>ps :Rg<SPACE>
-  nnoremap <C-p> :GFiles<CR>
-  nnoremap <Leader>pf :Files<CR>
-  nnoremap <Leader><CR> :so ~/.config/nvim/init.vim<CR>
-  nnoremap <Leader>+ :vertical resize +5<CR>
-  nnoremap <Leader>- :vertical resize -5<CR>
-  nnoremap <Leader>rp :resize 100<CR>
-  nnoremap <Leader>ee oif err != nil {<CR>log.Fatalf("%+v\n", err)<CR>}<CR><esc>kkI<esc>
-  vnoremap J :m '>+1<CR>gv=gv
-  vnoremap K :m '<-2<CR>gv=gv
 
 " SEEING IS BELIEVING CONFIGURATION
 " Assumes you have a Ruby with SiB available in the PATH
@@ -398,25 +363,6 @@
       \ { 'type': 'sessions',  'header': ['   - SAVED SESSIONS -'] },
       \ ]
 
-  " Fancy custom header
-    let g:startify_custom_header = [
-                  \ '     ________ ;;     ________',
-                  \ '    /********\;;;;  /********\',
-                  \ '    \********/;;;;;;\********/',
-                  \ '     |******|;;;;;;;;/*****/',
-                  \ '     |******|;;;;;;/*****/''',
-                  \ '    ;|******|;;;;/*****/'';',
-                  \ '  ;;;|******|;;/*****/'';;;;;',
-                  \ ';;;;;|******|/*****/'';;;;;;;;;',
-                  \ '  ;;;|***********/'';;;;;;;;;',
-                  \ '    ;|*********/'';;;;;;;;;',
-                  \ '     |*******/'';;;;;;;;;',
-                  \ '     |*****/'';;;;;;;;;',
-                  \ '     |***/'';;;;;;;;;',
-                  \ '     |*/''   ;;;;;;',
-                  \ '              ;;',
-                  \]
-
     let g:startify_skiplist = [
           \ 'COMMIT_EDITMSG',
           \ '^/tmp',
@@ -442,7 +388,10 @@
   autocmd User Startified setlocal cursorline
 
 " Sessions management
-  let g:sessions_dir = '~/.vim/session'
+  if isdirectory($HOME . '/.config/nvim/sessions') == 0
+    :silent !mkdir -p ~/.config/nvim/backup >/dev/null 2>&1
+  endif
+  let g:sessions_dir = '~/.config/nvim/sessions'
   exec 'nnoremap <Leader>ss :Obsession ' . g:sessions_dir . '/*.vim<C-D><BS><BS><BS><BS><BS>'
   exec 'nnoremap <Leader>sr :so ' . g:sessions_dir. '/*.vim<C-D><BS><BS><BS><BS><BS>'
 

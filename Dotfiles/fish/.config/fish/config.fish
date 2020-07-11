@@ -2,13 +2,13 @@
 # Puts rbenv on $PATH
 set PATH $HOME/.rbenv/bin $PATH
 set PATH $HOME/.rbenv/shims $PATH
-#rbenv rehash >/dev/null ^&1
+rbenv rehash >/dev/null ^&1
 
 # Change GOPATH
 set -x GOPATH $HOME/.go
 
 # Set Enviroment Variables
-set -Ux EDITOR vim
+set -Ux EDITOR nvim
 set -Ux TERMINAL st
 
 # Start X at login
