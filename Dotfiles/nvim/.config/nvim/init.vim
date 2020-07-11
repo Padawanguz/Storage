@@ -350,25 +350,48 @@
   let g:surround_61 = "<%= \r %>"
 
 " STARTIFY CONFIGURATION
+
+" Sessions Directory
+  let g:startify_session_dir = '~/.config/nvim/sessions'
+
 " 'Most Recent Files' number
-    let g:startify_files_number           = 30
+  let g:startify_files_number           = 30
 
-  " Update session automatically as you exit vim
-    let g:startify_session_persistence    = 1
+" Update session automatically as you exit vim
+  let g:startify_session_persistence    = 1
 
-  " Simplify the startify list to just recent files and sessions
+" Simplify the startify list to just recent files and sessions
 
-    let g:startify_lists = [
-      \ { 'type': 'dir',       'header': ['   - RECENT FILES -'] },
-      \ { 'type': 'sessions',  'header': ['   - SAVED SESSIONS -'] },
-      \ ]
+  let g:startify_lists = [
+    \ { 'type': 'dir',       'header': ['   - RECENT FILES -'] },
+    \ { 'type': 'sessions',  'header': ['   - SAVED SESSIONS -'] },
+    \ ]
 
-    let g:startify_skiplist = [
-          \ 'COMMIT_EDITMSG',
-          \ '^/tmp',
-          \ escape(fnamemodify(resolve($VIMRUNTIME), ':p'), '\') .'doc',
-          \ 'bundle/.*/doc',
-          \ ]
+" Fancy custom header
+  let g:startify_custom_header = [
+                \ '     ________ ;;     ________',
+                \ '    /********\;;;;  /********\',
+                \ '    \********/;;;;;;\********/',
+                \ '     |******|;;;;;;;;/*****/',
+                \ '     |******|;;;;;;/*****/''',
+                \ '    ;|******|;;;;/*****/'';',
+                \ '  ;;;|******|;;/*****/'';;;;;',
+                \ ';;;;;|******|/*****/'';;;;;;;;;',
+                \ '  ;;;|***********/'';;;;;;;;;',
+                \ '    ;|*********/'';;;;;;;;;',
+                \ '     |*******/'';;;;;;;;;',
+                \ '     |*****/'';;;;;;;;;',
+                \ '     |***/'';;;;;;;;;',
+                \ '     |*/''   ;;;;;;',
+                \ '              ;;',
+                \]
+
+  let g:startify_skiplist = [
+        \ 'COMMIT_EDITMSG',
+        \ '^/tmp',
+        \ escape(fnamemodify(resolve($VIMRUNTIME), ':p'), '\') .'doc',
+        \ 'bundle/.*/doc',
+        \ ]
 
   let g:startify_padding_left = 5
   let g:startify_relative_path = 0
@@ -377,6 +400,9 @@
   let g:startify_session_autoload = 1
   let g:startify_update_oldfiles = 1
   let g:startify_use_env = 1
+  let g:startify_session_before_save = [
+    \ 'silent! NERDTreeClose'
+    \ ]
 
   hi! link StartifyHeader Normal
   hi! link StartifyFile Directory
@@ -389,7 +415,7 @@
 
 " Sessions management
   if isdirectory($HOME . '/.config/nvim/sessions') == 0
-    :silent !mkdir -p ~/.config/nvim/backup >/dev/null 2>&1
+    :silent !mkdir -p ~/.config/nvim/sessions >/dev/null 2>&1
   endif
   let g:sessions_dir = '~/.config/nvim/sessions'
   exec 'nnoremap <Leader>ss :Obsession ' . g:sessions_dir . '/*.vim<C-D><BS><BS><BS><BS><BS>'
