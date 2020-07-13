@@ -17,16 +17,7 @@
   Plug 'tomtom/tcomment_vim'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
-  Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-rails'
-  Plug 'vim-ruby/vim-ruby'
-  Plug 'honza/vim-snippets'
-  Plug 'sirver/UltiSnips'
-  Plug 'ervandew/supertab'
-  Plug 'junegunn/fzf'
-  Plug 'junegunn/fzf.vim'
   Plug 'tpope/vim-obsession'
-  Plug 'mhinz/vim-startify'
   Plug 'zhimsel/vim-stay'
 
   call plug#end()
@@ -68,7 +59,7 @@
 " Use enter and space w/o entering insert mode
   nmap <Enter> O<Esc>j
   nmap <CR> o<Esc>k
-  nnoremap <space> i<space><esc>
+  " nnoremap <space> i<space><esc>
 
 " Resize panes
   nnoremap <silent> <Left> :vertical resize +5<cr>
@@ -87,7 +78,7 @@
   nnoremap - :NERDTreeFind<CR>
 
 " VARIOUS VIM OPTIONS
-  " let mapleader = ","
+  let mapleader = " "
   set ai                                " set autoindent
   set si                                " set smart indent
   set lbr                               " set linebreak
@@ -220,65 +211,6 @@
     set undofile
   endif
 
-" SEEING IS BELIEVING CONFIGURATION
-" Assumes you have a Ruby with SiB available in the PATH
-" If it doesn't work, you may need to `gem install seeing_is_believing`
-  function! WithoutChangingCursor(fn)
-    let cursor_pos     = getpos('.')
-    let wintop_pos     = getpos('w0')
-    let old_lazyredraw = &lazyredraw
-    let old_scrolloff  = &scrolloff
-    set lazyredraw
-
-    call a:fn()
-
-    call setpos('.', wintop_pos)
-    call setpos('.', cursor_pos)
-    redraw
-    let &lazyredraw = old_lazyredraw
-    let scrolloff   = old_scrolloff
-  endfun
-
-  function! SibAnnotateAll(scope)
-    call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk"]))
-  endfun
-
-  function! SibAnnotateMarked(scope)
-    call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --xmpfilter-style --timeout 12 --line-length 500 --number-of-captures 300 --alignment-strategy chunk"]))
-  endfun
-
-  function! SibCleanAnnotations(scope)
-    call WithoutChangingCursor(function('execute', [a:scope . "!seeing_is_believing --clean"]))
-  endfun
-
-  function! SibToggleMark()
-    let pos  = getpos('.')
-    let line = getline(".")
-    if line =~ '^\s*$'
-      let line = '# => '
-    elseif line =~ '# =>'
-      let line = substitute(line, ' *# =>.*', '', '')
-    else
-      let line .= '  # => '
-    end
-    call setline('.', line)
-    call setpos('.', pos)
-  endfun
-
-" Enable seeing-is-believing mappings only for Ruby
-  augroup seeingIsBelievingSettings
-  " clear the settings if they already exist (so we don't run them twice)
-    autocmd!
-    autocmd FileType ruby nmap <buffer> <Leader>m :call SibAnnotateAll("%")<CR>;
-    " autocmd FileType ruby nmap <buffer>  <Enter>  :call SibAnnotateMarked("%")<CR>;
-    autocmd FileType ruby nmap <buffer> <Leader>n :call SibCleanAnnotations("%")<CR>;
-    autocmd FileType ruby nmap <buffer> <Leader>b :call SibToggleMark()<CR>;
-    autocmd FileType ruby vmap <buffer> <Leader>b :call SibToggleMark()<CR>;
-    autocmd FileType ruby vmap <buffer> <Leader>m :call SibAnnotateAll("'<,'>")<CR>;
-    " autocmd FileType ruby vmap <buffer> <Enter>   :call SibAnnotateMarked("'<,'>")<CR>;
-    autocmd FileType ruby vmap <buffer> <Leader>n :call SibCleanAnnotations("'<,'>")<CR>;
-  augroup END
-
 " YOUCOMPLETEME AND UTILSNIPS CONFIGUTARION
 " make YCM compatible with UltiSnips (using supertab)
   let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
@@ -304,91 +236,6 @@
     autocmd  FileType fzf set laststatus=0 noshowmode noruler
       \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
   augroup END
-
-" RUBY ON RAILS CONFIGURATION
-" Ruby stuff
-  filetype plugin indent on
-    augroup myfiletypes
-    " Clear old autocmds in group
-      autocmd!
-
-    " autoindent with two spaces, always expand tabs
-      autocmd FileType ruby,eruby,yaml,markdown set ai sw=2 sts=2 et
-    augroup END
-
-" Rails.vim bindings
-  map <Leader>oc :Rcontroller<Space>
-  map <Leader>ov :Rview<Space>
-  map <Leader>om :Rmodel<Space>
-  map <Leader>oh :Rhelper<Space>
-  map <Leader>oj :Rjavascript<Space>
-  map <Leader>os :Rstylesheet<Space>
-  map <Leader>oi :Rintegration<Space>
-
-" surround for adding surround 'physics'
-  " # to surround with ruby string interpolation
-  let g:surround_35 = "#{\r}"
-  " - to surround with no-output erb tag
-  let g:surround_45 = "<% \r %>"
-  " = to surround with output erb tag
-  let g:surround_61 = "<%= \r %>"
-
-" STARTIFY CONFIGURATION
-" 'Most Recent Files' number
-    let g:startify_files_number           = 30
-
-  " Update session automatically as you exit vim
-    let g:startify_session_persistence    = 1
-
-  " Simplify the startify list to just recent files and sessions
-
-    let g:startify_lists = [
-      \ { 'type': 'dir',       'header': ['   - RECENT FILES -'] },
-      \ { 'type': 'sessions',  'header': ['   - SAVED SESSIONS -'] },
-      \ ]
-
-  " Fancy custom header
-    let g:startify_custom_header = [
-                  \ '     ________ ;;     ________',
-                  \ '    /********\;;;;  /********\',
-                  \ '    \********/;;;;;;\********/',
-                  \ '     |******|;;;;;;;;/*****/',
-                  \ '     |******|;;;;;;/*****/''',
-                  \ '    ;|******|;;;;/*****/'';',
-                  \ '  ;;;|******|;;/*****/'';;;;;',
-                  \ ';;;;;|******|/*****/'';;;;;;;;;',
-                  \ '  ;;;|***********/'';;;;;;;;;',
-                  \ '    ;|*********/'';;;;;;;;;',
-                  \ '     |*******/'';;;;;;;;;',
-                  \ '     |*****/'';;;;;;;;;',
-                  \ '     |***/'';;;;;;;;;',
-                  \ '     |*/''   ;;;;;;',
-                  \ '              ;;',
-                  \]
-
-    let g:startify_skiplist = [
-          \ 'COMMIT_EDITMSG',
-          \ '^/tmp',
-          \ escape(fnamemodify(resolve($VIMRUNTIME), ':p'), '\') .'doc',
-          \ 'bundle/.*/doc',
-          \ ]
-
-  let g:startify_padding_left = 5
-  let g:startify_relative_path = 0
-  let g:startify_fortune_use_unicode = 1
-  let g:startify_change_to_vcs_root = 1
-  let g:startify_session_autoload = 1
-  let g:startify_update_oldfiles = 1
-  let g:startify_use_env = 1
-
-  hi! link StartifyHeader Normal
-  hi! link StartifyFile Directory
-  hi! link StartifyPath LineNr
-  hi! link StartifySlash StartifyPath
-  hi! link StartifyBracket StartifyPath
-  hi! link StartifyNumber Title
-
-  autocmd User Startified setlocal cursorline
 
 " Sessions management
   let g:sessions_dir = '~/.vim/session'
