@@ -39,7 +39,7 @@
   set cursorcolumn                                                          " highlight column
   set showtabline=2                                                         " always show tabline
   if exists('+emoji')
-      set noemoji                                                           " handle emoji correctly (https://www.youtube.com/watch?v=F91VWOelFNE)
+     set noemoji                                                           " handle emoji correctly (https://www.youtube.com/watch?v=F91VWOelFNE)
   endif
 
 " ┏━━━━━━━━━━━━━━━━━━━━━┓
@@ -107,9 +107,9 @@
 " ┃ Spell Check ┃
 " ┗━━━━━━━━━━━━━┛
 " https://robots.thoughtbot.com/opt-in-project-specific-vim-spell-checking-and-word-completion
-  set spelllang=en_us,pt_br                                                 " set en_US as primary language, pt_BR as secondary
+  set spelllang=en_us,es                                                    " set en_US as primary language, pt_BR as secondary
 " Set both spellfiles
-  execute 'set spellfile='.$VIMHOME.'/spell/en.utf-8.add'.','.$VIMHOME.'/spell/pt.utf-8.add'
+  execute 'set spellfile='.$VIMHOME.'/spell/en.utf-8.add'.','.$VIMHOME.'/spell/es.utf-8.add'
   set complete+=kspell                                                      " Use spell suggestions for completion
   if has('syntax')
       set spellcapcheck=                                                    " don't check for capital letters at start of sentence
@@ -163,16 +163,16 @@
 " ┏━━━━━━━━┓
 " ┃ Visual ┃
 " ┗━━━━━━━━┛
-  set list                                                                  " show trailing whitespace
-  set listchars=nbsp:░                                                      " Show non-breaking space - LIGHT SHADE (U+2591)
-  set listchars+=eol:¬                                                      " Show End of Line - NOT SIGN (U+00AC)
-  set listchars+=trail:·                                                    " Show trailing space - MID DOT (U+00B7)
-  set listchars=tab:▸\ ,                                                    " Show Tab characters - BLACK RIGH SMALL POINTING TRIANGLE (U+25B8)
-  set listchars+=precedes:«                                                 " Show Line extending indicator to the left - RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB)
-  set listchars+=extends:»                                                  " Show Line extending indicator to the right - LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB)
-  set nojoinspaces                                                          " don't autoinsert two spaces after '.', '?', '!' for join command
-  set concealcursor=n                                                       " Keep it concealed in normal mode, unconceal otherwise
-  set conceallevel=2                                                        " Conceal everything that is concealable
+  " set list                                                                  " show trailing whitespace
+  " set listchars=nbsp:░                                                      " Show non-breaking space - LIGHT SHADE (U+2591)
+  " set listchars+=eol:¬                                                      " Show End of Line - NOT SIGN (U+00AC)
+  " set listchars+=trail:·                                                    " Show trailing space - MID DOT (U+00B7)
+  " set listchars=tab:▸\ ,                                                    " Show Tab characters - BLACK RIGH SMALL POINTING TRIANGLE (U+25B8)
+  " set listchars+=precedes:«                                                 " Show Line extending indicator to the left - RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB)
+  " set listchars+=extends:»                                                  " Show Line extending indicator to the right - LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB)
+  " set nojoinspaces                                                          " don't autoinsert two spaces after '.', '?', '!' for join command
+  " set concealcursor=n                                                       " Keep it concealed in normal mode, unconceal otherwise
+  " set conceallevel=2                                                        " Conceal everything that is concealable
   " set virtualedit=block
 
   if has('windows')

@@ -1,3 +1,5 @@
+" Change supertab behavior, now press TAB and start at the top
+let g:SuperTabDefaultCompletionType = "<c-n>"
 
 " YouCompleteMe and UltiSnips compatibility.
 let g:UltiSnipsExpandTrigger = '<Tab>'

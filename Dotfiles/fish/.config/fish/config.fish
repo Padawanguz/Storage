@@ -1,4 +1,7 @@
 
+# Puts local/bin on $PATH
+set PATH $HOME/.local/bin $PATH
+
 # Puts rbenv on $PATH
 set PATH $HOME/.rbenv/bin $PATH
 set PATH $HOME/.rbenv/shims $PATH

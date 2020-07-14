@@ -1,4 +1,4 @@
-" Type :so % to refresh .vimrc after making changes
+ Type :so % to refresh .vimrc after making changes
 	set nocompatible
 
 " VIM-PLUG CONFIGURATION

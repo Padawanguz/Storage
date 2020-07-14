@@ -5,6 +5,7 @@
 
 nnoremap <SPACE> <Nop>
 let mapleader = "\<Space>"
+let maplocalleader ="\<Space>"
 
 " ┌──────────────────────┐
 " │ Cursor/Text Movement │
@@ -124,9 +125,17 @@ nnoremap <expr><silent> _     v:count == 0 ? ":new +terminal<CR>"  : ":<C-U>norm
 nnoremap <tab>   :bnext<CR>
 nnoremap <S-tab> :bprevious<CR>
 
+" [N] <space> xa quits all windows
+" [N] <space> xx close buffer AND closes window - destroy layout
+nnoremap <Leader>XX :qall<CR>
+nnoremap <Leader>xx :bdelete<CR>
+
 " ┌──────────────────┐
 " │ Utility Mappings │
 " └──────────────────┘
+
+" Toggle Spellcheck
+  nnoremap <Leader>sc :setlocal spell! spelllang=es<CR>
 
 " Copy the current word or visually selected text to the clipboard
   nnoremap <F4> "+yiw

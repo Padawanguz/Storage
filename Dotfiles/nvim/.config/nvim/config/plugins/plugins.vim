@@ -35,6 +35,8 @@
   Plug 'ryanoasis/vim-devicons'
   Plug 'tpope/vim-surround'
   Plug 'psliwka/vim-smoothie'
+  Plug 'lervag/vimtex'
+  Plug 'airblade/vim-rooter'
 
   call plug#end()
 
@@ -55,7 +57,8 @@ source $VIMHOME/config/plugins/config/fzf.vim
 source $VIMHOME/config/plugins/config/startify.vim
 source $VIMHOME/config/plugins/config/obsession.vim
 source $VIMHOME/config/plugins/config/lightline.vim
-source $VIMHOME/config/plugins/config/lightline-bufferline.vim
 source $VIMHOME/config/plugins/config/nerdtree.vim
+source $VIMHOME/config/plugins/config/vimtex.vim
+source $VIMHOME/config/plugins/config/vim-rooter.vim
 
 " REMENBER to use :PlugInstall or :PlugClean once you ADD or REMOVE a pluggin from the list

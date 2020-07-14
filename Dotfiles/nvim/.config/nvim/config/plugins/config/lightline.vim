@@ -1,12 +1,31 @@
 " lightline
+
 let g:lightline = {
-  \ 'separator': { 'left': '', 'right': '' },
-  \ 'subseparator': { 'left': '', 'right': '' },
-  \ }
-let g:lightline.tabline = {
-  \ 'left': [ [ 'buffers' ] ],
-  \ 'right': [ [ 'close' ] ],
-  \ }
+      \ 'colorscheme': 'one',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], ['gitbranch', 'readonly', 'filename', 'modified'] ]
+      \ },
+      \ 'tabline': {
+      \   'left': [ ['buffers'] ],
+      \   'right': [ ['close'] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ 'component_expand': {
+      \   'buffers': 'lightline#bufferline#buffers'
+      \ },
+      \ 'component_type': {
+      \   'buffers': 'tabsel'
+      \ }
+      \ }
+
+let g:lightline#bufferline#enable_devicons = 1
+let g:lightline#bufferline#unicode_symbols = 1
+let g:lightline#bufferline#filename_modifier = ':t'
+let g:lightline#bufferline#min_buffer_count = 1
+let g:lightline#bufferline#reverse_buffers = 1
+let g:lightline#bufferline#right_aligned = 1
 let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers' }
 let g:lightline.component_type   = { 'buffers': 'tabsel' }
 let g:lightline#bufferline#number_map = {
