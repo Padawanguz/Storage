@@ -1,0 +1,193 @@
+
+**Bootable Flash Drive**
+$ dd bs=4M if=/path/to/archlinux.iso of=/dev/sdx status=progress oflag=sync && sync
+
+**Pre installation**
+_Boot from usb drive: F12_
+
+_Change resolution kernel options (press 'e')_
+
+quiet loglevel=0 video=1920x1080 acpi_rev_override=1 pci=nommconf nouveau.modeset=0
+...or setfont
+
+setfont sun12x22
+
+**Check boot mode**
+_ls /sys/firmware/efi/efivars_
+
+**Set Keyboard Layout**
+_loadkeys uk_
+
+**Select Wifi Network**
+
+_ip link set down wlan0_
+
+_wifi-menu_
+
+_ping -c 4 www.google.com_
+
+**Set Localtimei**
+
+_timedatectl set-ntp true_
+
+**Forman drive**
+_fdisk /dev/nvme0n1_
+_> g_
+_> w_
+
+**Create partitions**
+
+_cgdisk /dev/nvme0n1_
+_250MB EFI partition # Hex code ef00_
+_2GB SWAP partition # Hex code 8200_
+_100% System partition # Hex code 8300_
+
+**Format partitions**
+
+ mkfs.vfat -F32 /dev/nvme0n1p1
+ mkfs.ext4 /dev/nvme0n1p3
+ mkswap /dev/nvme0n1p2
+ swapon /dev/nvme0n1p2
+
+Mount partitions
+
+# mount /dev/nvme0n1p3 /mnt # mkdir /mnt/boot
+# mkdir /mnt/boot/efi 
+# mount /dev/nvme0n1p1 /mnt/boot/efi
+
+Install Reflector and run
+
+# pacman -Sy
+# pacman -S reflector
+# reflector --verbose --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
+
+Install Base Packages
+# pacstrap /mnt base base-devel linux linux-firmware net-tools grub-efi-x86_64 zsh vim git efibootmgr dialog wpa_supplicant wireless_tools networkmanager tmux openssl openssh pkgfile unzip unrar p7zip the_silver_searcher reflector dosfstools os-prober mtools curl wget
+
+# genfstab -U -p /mnt >> /mnt/etc/fstab
+# cat /mnt/etc/fstab
+
+Chroot
+# arch-chroot /mnt
+
+Check pacman keys
+# pacman-key --init
+# pacman-key --populate archlinux
+
+Set timezone
+
+# ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
+# hwclock --systohc —utc
+
+Set locale
+
+# vim /etc/locale.gen 
+# locale-gen
+echo LANG=en_GB.UTF-8 >> /etc/locale.conf
+echo LANGUAGE=en_US >> /etc/locale.conf
+echo LC_ALL=C >> /etc/locale.conf
+# export LANG=en_GB.UTF-8
+
+Hostname
+
+# echo dell > /etc/hostname
+
+Hosts
+
+# vim /etc/hosts
+
+# IPv4 Hosts
+127.0.0.1	localhost dell
+# Machine FQDN
+127.0.1.1	myhostname.localdomain dell
+# IPv6 Hosts
+::1		localhost	ip6-localhost	ip6-loopback
+ff02::1 	ip6-allnodes
+ff02::2 	ip6-allrouters
+
+Nameservers
+
+# vim /etc/resolv.conf
+
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+search example.com
+
+(Optional) No Watchdog
+
+# vim /etc/modprobe.d/nowatchdog.conf
+
+blacklist iTCO_wdt
+
+Initramfs
+
+# vim /etc/mkinitcpio.conf
+MODULES=”nvme ext4”
+# mkinitcpio -p linux
+
+Set-up Wi-Fi
+
+1 - Go to /etc/netctl (with cd command)
+2 - List profiles with netctl list
+3 - Enable wifi-menu to automatically connect on boot:
+
+      # netctl enable wlp1s0-MyWiFi
+
+Bootloader
+
+# grub-install /dev/nvme0n1
+# vim /etc/default/grub
+
+GRUB_CMDLINE_LINUX_DEFAULT and add
+
+	acpi_rev_override=1 pci=nommconf nouveau.modeset=0 video=1920x1080
+
+# grub-mkconfig -o /boot/grub/grub.cfg
+
+Root password
+
+# passwd
+
+Users
+
+# pacman -S sudo
+# visudo
+
+## Uncomment to allow members of group wheel to execute any command
+%wheel ALL=(ALL) ALL
+
+# useradd -m -G users,wheel,audio -s /bin/bash guz
+# passwd guz
+
+Exit new system and go into the cd shell
+
+# exit
+
+Unmount all partitions
+
+# umount -R /mnt
+# swapoff -a
+
+Reboot into the new system, don't forget to remove the cd/usb
+
+# reboot
+
+Xorg xorg-xinit
+
+# pacman -S xorg
+
+Video Drivers
+
+# pacman -S nvidia
+
+Audio Drivers
+
+# pacman -S alsa-utils
+
+
+
+
+
+sudo xbps-install -S xorg-minimal xorg-fonts xf86-video-intel font-inconsolata-otf
+sudo xbps-install -S git curl wget
+xbps-install -S base-devel libX11-devel libXft-devel libXinerama-devel

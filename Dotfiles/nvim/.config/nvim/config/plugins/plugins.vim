@@ -37,6 +37,8 @@
   Plug 'psliwka/vim-smoothie'
   Plug 'lervag/vimtex'
   Plug 'airblade/vim-rooter'
+  Plug 'majutsushi/tagbar'
+  Plug 'jceb/vim-orgmode'
 
   call plug#end()
 
@@ -60,5 +62,8 @@ source $VIMHOME/config/plugins/config/lightline.vim
 source $VIMHOME/config/plugins/config/nerdtree.vim
 source $VIMHOME/config/plugins/config/vimtex.vim
 source $VIMHOME/config/plugins/config/vim-rooter.vim
+source $VIMHOME/config/plugins/config/tagbar.vim
+source $VIMHOME/config/plugins/config/vim-orgmode.vim
+
 
 " REMENBER to use :PlugInstall or :PlugClean once you ADD or REMOVE a pluggin from the list

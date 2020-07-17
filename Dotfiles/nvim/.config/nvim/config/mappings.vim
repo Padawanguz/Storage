@@ -125,14 +125,20 @@ nnoremap <expr><silent> _     v:count == 0 ? ":new +terminal<CR>"  : ":<C-U>norm
 nnoremap <tab>   :bnext<CR>
 nnoremap <S-tab> :bprevious<CR>
 
-" [N] <space> xa quits all windows
+" [N] <Ctrl> q quits all windows
+" [N] <Ctrl> s saves all windows
 " [N] <space> xx close buffer AND closes window - destroy layout
-nnoremap <Leader>XX :qall<CR>
+nnoremap <C-q> :qall<CR>
+nnoremap <C-s> :wall<CR>
 nnoremap <Leader>xx :bdelete<CR>
 
 " ┌──────────────────┐
 " │ Utility Mappings │
 " └──────────────────┘
+
+" PlugInstall & PlugClean - Vim-Plug
+  nnoremap <Leader>pi :w <bar> :so % <bar> :PlugInstall<CR>
+  nnoremap <Leader>pc :w <bar> :so % <bar> :PlugClean<CR>
 
 " Toggle Spellcheck
   nnoremap <Leader>sc :setlocal spell! spelllang=es<CR>
@@ -151,3 +157,12 @@ nnoremap <Leader>xx :bdelete<CR>
   nnoremap ! zD
   onoremap <F9> <C-C>za
   vnoremap <F9> zf
+
+  "Autoclose Settings
+  inoremap " ""<left>
+  inoremap ' ''<left>
+  inoremap ( ()<left>
+  inoremap [ []<left>
+  inoremap { {}<left>
+  inoremap {<CR> {<CR>}<ESC>O
+  inoremap {;<CR> {<CR>};<ESC>O " inoremap (; (<CR>);<C-c>O

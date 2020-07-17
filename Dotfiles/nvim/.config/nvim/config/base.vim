@@ -147,7 +147,7 @@
   set nowrap                                                                " no wrap
   set textwidth=80                                                          " maximum text width
                                                                             " Formating options…
-  set foldmethod=manual                                                     " use manual folding
+  set foldmethod=syntax                                                     " use manual folding
   set formatoptions+=n                                                      " …smart auto-indenting inside numbered lists
   set formatoptions+=r                                                      " …insert current comment leader when entering new-line in insert mode
   set formatoptions+=1                                                      " …try to break lines before one letter words instead of after

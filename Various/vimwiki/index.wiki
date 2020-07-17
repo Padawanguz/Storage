@@ -1,0 +1,20 @@
+#Knowledge
+
+##ArchLinux
+*[How to Install](Arch/Install)
+
+##Markdown
+*[CheatSheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+
+##VIM
+###General Settings
+*[Spell Check Settings](https://linuxhint.com/vim_spell_check/)
+
+###Plugins
+*[VimWiki Keybindings](VIM/vimwiki-keybindings)
+*[VimTex Setup](https://samsudar.com/code/vim_and_latex/)
+
+##LaTeX
+*[CheatSheet](https://wch.github.io/latexsheet/latexsheet.pdf)
+*[Tutorial](https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes)
+
