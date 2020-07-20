@@ -1,1 +1,1 @@
-autocmd FileType org setlocal foldlevelstart=20
+autocmd FileType org set nofoldenable
