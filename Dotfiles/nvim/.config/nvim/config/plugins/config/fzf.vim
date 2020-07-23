@@ -4,7 +4,7 @@
         \ 'ctrl-s': 'split',
         \ 'ctrl-v': 'vsplit'
         \ }
-  let $FZF_DEFAULT_COMMAND = "find -L"
+  " let $FZF_DEFAULT_COMMAND = "find -L"
   let g:fzf_preview_window = 'right:60%'
   nnoremap <c-p> :Files<cr>
   nnoremap <c-o> :Buffers<cr>

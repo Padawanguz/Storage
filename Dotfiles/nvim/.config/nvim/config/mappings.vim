@@ -159,10 +159,12 @@ nnoremap <Leader>xx :bdelete<CR>
   vnoremap <F9> zf
 
   "Autoclose Settings
-  inoremap " ""<left>
-  inoremap ' ''<left>
-  inoremap ( ()<left>
-  inoremap [ []<left>
-  inoremap { {}<left>
-  inoremap {<CR> {<CR>}<ESC>O
-  inoremap {;<CR> {<CR>};<ESC>O " inoremap (; (<CR>);<C-c>O
+  " inoremap " ""<left>
+  " inoremap ' ''<left>
+  " inoremap ( ()<left>
+  " inoremap [ []<left>
+  " inoremap { {}<left>
+  " inoremap < <><left>
+  " inoremap ~ ~~<left>
+  " inoremap {<CR> {<CR>}<ESC>O
+  " inoremap {;<CR> {<CR>};<ESC>O " inoremap (; (<CR>);<C-c>O
