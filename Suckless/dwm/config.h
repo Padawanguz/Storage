@@ -82,10 +82,12 @@ static const char* upvol[]           = { "/usr/bin/pulseaudio-ctl", "up", NULL }
 static const char* brightup[]        = { "xbacklight", "-inc", "10", NULL };
 static const char* brightdown[]      = { "xbacklight", "-dec", "10", NULL };
 static const char* browsecmd[]       = { "firefox", "-P", "Hardened", NULL };
+static const char* ffaccountscmd[]   = { "firefox", "-ProfileManager", NULL };
 static const char* searchcmd[]       = { "dmenu_websearch", NULL };
 static const char* transmissioncmd[] = { "st", "-e", "stig", NULL };
 static const char* muttcmd[]         = { "st", "-e", "neomutt", NULL };
 static const char* sabnzbdcmd[]      = { "firefox", "-P", "WebApps", "--new-window", "http://127.0.0.1:64602/sabnzbd/", NULL };
+static const char* googlecmd[]       = { "firefox", "-P", "Google", "--new-window", "https://myaccount.google.com/", NULL };
 static const char* youtubecmd[]      = { "firefox", "-P", "Google", "--new-window", "https://www.youtube.com", NULL };
 static const char* plexcmd[]         = { "firefox", "-P", "WebApps", "--new-window", "https://app.plex.tv", NULL };
 static const char* scrotcmd[]        = { "scrot", "%Y-%m-%d-%T_$wx$h_scrot.png", "-e", "mv $f ~/Downloads/screenshots/", NULL };
@@ -103,15 +105,17 @@ static const char* slock[]           = { "slock", NULL };
 static Key keys[] = {
     /* modifier                     key        function        argument */
   { MODKEY | ShiftMask,             XK_f,      spawn,          { .v = browsecmd } },
-  { MODKEY | ShiftMask,             XK_l,      spawn,          { .v = plexcmd } },
+  { MODKEY | ShiftMask,             XK_p,      spawn,          { .v = plexcmd } },
   { MODKEY | ShiftMask,             XK_t,      spawn,          { .v = transmissioncmd } },
   { MODKEY | ShiftMask,             XK_y,      spawn,          { .v = youtubecmd } },
+  { MODKEY | ShiftMask,             XK_g,      spawn,          { .v = googlecmd } },
+  { MODKEY | ShiftMask,             XK_d,      spawn,          { .v = ffaccountscmd } },
   { MODKEY | ShiftMask,             XK_e,      spawn,          { .v = muttcmd } },
   { MODKEY | ShiftMask,             XK_s,      spawn,          { .v = sabnzbdcmd } },
   { MODKEY | ShiftMask,             XK_Return, spawn,          { .v = termcmd } },
+  { MODKEY | ShiftMask,             XK_c,      killclient,     { 0 } },
   { MODKEY | ShiftMask,             XK_space,  spawn,          { .v = trackpadon } },
   { MODKEY | ControlMask,           XK_space,  spawn,          { .v = trackpadoff } },
-  { MODKEY | ShiftMask,             XK_c,      killclient,     { 0 } },
   { MODKEY | ControlMask,           XK_m,      spawn,          { .v = udiskiecmd } },
   { MODKEY | ControlMask,           XK_c,      spawn,          { .v = networkmngrcmd } },
   { MODKEY | ControlMask,           XK_b,      spawn,          { .v = bitwardencmd } },
