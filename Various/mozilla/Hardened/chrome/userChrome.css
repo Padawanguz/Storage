@@ -10,14 +10,17 @@
 }
 
 /* hides MenuBar*/
-menubar > menu {
+/* menubar > menu { */
   /* visibility: collapse; */
-}
+/* } */
 
 /* Nav-Bar with transparency */
-#nav-bar {
-	  visibility: collapse;
-}
+/* #nav-bar { */
+	  /* visibility: collapse; */
+/* } */
+
+#tracking-protection-icon-container {display: none !important;}
+#pageActionButton{ display:none }
 
 #sidebar-header {
   overflow: hidden !important;
@@ -41,7 +44,6 @@ menubar > menu {
   z-index:1;
 }
 
-
 /* #sidebar-box:hover :-moz-any(#sidebar,#sidebar-header) { */
 /*   background-color: var(--toolbar-bgcolor) !important; */
 /*   min-width: var(--sidebar-visible-width) !important; */
@@ -60,13 +62,13 @@ menubar > menu {
 #TabsToolbar > .titlebar-spacer{ visibility: hidden }
 /* #nav-bar{ margin-top: -32px; margin-right: 20px; padding: 0px 150px 0px 0px !important; } */
 
-/*Hide ScrollBar*/
-/* :-moz-any(#content,#appcontent) browser{ */
-/* 	  margin-right:-14px!important; */
-/* 	  overflow-y:scroll; */
-/* 	  margin-bottom:-6px!important; */
-/* 	  overflow-x:scroll; */
-/* } */
+/* Hide ScrollBar */
+:-moz-any(#content,#appcontent) browser{
+	  margin-right:-14px!important;
+	  overflow-y:scroll;
+	  margin-bottom:-6px!important;
+	  overflow-x:scroll;
+}
 
 #context-back > .menu-iconic-left, #context-forward > .menu-iconic-left, #context-reload > .menu-iconic-left, #context-stop > .menu-iconic-left, #context-bookmarkpage > .menu-iconic-left {
 	padding: 0px !important;
