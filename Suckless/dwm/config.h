@@ -81,10 +81,10 @@ static const char* mutevol[]         = { "/usr/bin/pulseaudio-ctl", "mute", NULL
 static const char* upvol[]           = { "/usr/bin/pulseaudio-ctl", "up", NULL };
 static const char* brightup[]        = { "xbacklight", "-inc", "10", NULL };
 static const char* brightdown[]      = { "xbacklight", "-dec", "10", NULL };
-static const char* browsecmd[]       = { "firefox", "-P", "Hardened", NULL };
-static const char* ffaccountscmd[]   = { "firefox", "-ProfileManager", NULL };
+static const char* browsecmd[]       = { "palemoon", "-P", "Default", NULL };
+static const char* profilemngrcmd[]  = { "palemoon", "-ProfileManager", NULL };
 static const char* searchcmd[]       = { "dmenu_websearch", NULL };
-static const char* transmissioncmd[] = { "st", "-e", "stig", NULL };
+static const char* transmissioncmd[] = { "transmission-remote-gtk", NULL };
 static const char* muttcmd[]         = { "st", "-e", "neomutt", NULL };
 static const char* sabnzbdcmd[]      = { "firefox", "-P", "WebApps", "--new-window", "http://127.0.0.1:64602/sabnzbd/", NULL };
 static const char* googlecmd[]       = { "firefox", "-P", "Google", "--new-window", "https://myaccount.google.com/", NULL };
@@ -99,7 +99,7 @@ static const char* rebootcmd[]       = { "systemctl", "reboot", NULL };
 static const char* shutdowncmd[]     = { "systemctl", "poweroff", NULL };
 static const char* udiskiecmd[]      = { "udiskie-dmenu", NULL };
 static const char* networkmngrcmd[]  = { "networkmanager_dmenu", NULL };
-static const char* bitwardencmd[]    = { "bitwarden-dmenu", NULL };
+static const char* bitwardencmd[]    = { "bitwarden", NULL };
 static const char* slock[]           = { "slock", NULL };
 
 static Key keys[] = {
@@ -109,7 +109,7 @@ static Key keys[] = {
   { MODKEY | ShiftMask,             XK_t,      spawn,          { .v = transmissioncmd } },
   { MODKEY | ShiftMask,             XK_y,      spawn,          { .v = youtubecmd } },
   { MODKEY | ShiftMask,             XK_g,      spawn,          { .v = googlecmd } },
-  { MODKEY | ShiftMask,             XK_d,      spawn,          { .v = ffaccountscmd } },
+  { MODKEY | ShiftMask,             XK_d,      spawn,          { .v = profilemngrcmd } },
   { MODKEY | ShiftMask,             XK_e,      spawn,          { .v = muttcmd } },
   { MODKEY | ShiftMask,             XK_s,      spawn,          { .v = sabnzbdcmd } },
   { MODKEY | ShiftMask,             XK_Return, spawn,          { .v = termcmd } },
@@ -128,8 +128,8 @@ static Key keys[] = {
   { MODKEY,               XK_bracketleft,      spawn,          { .v = dmenufmcmd } },
   { MODKEY,              XK_bracketright,      spawn,          { .v = searchcmd } },
   { MODKEY,                         XK_b,      togglebar,      { 0 } },
-	STACKKEYS(MODKEY,                          focus)
-	STACKKEYS(MODKEY|ShiftMask,                push)
+	STACKKEYS(MODKEY,focus)
+	STACKKEYS(MODKEY|ShiftMask,push)
   { MODKEY,                         XK_i,      incnmaster,     { .i = +1 } },
   { MODKEY,                         XK_d,      incnmaster,     { .i = -1 } },
   { MODKEY,                         XK_h,      setmfact,       { .f = -0.05 } },
