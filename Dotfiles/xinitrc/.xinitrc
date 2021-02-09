@@ -12,16 +12,17 @@ slstatus &
 xwallpaper --maximize ~/Storage/Images/Wallpapers/25462.jpg &
 
 # Transmission torrent daemon
-transmission-daemon &
-
-# Mullvad VPN at start
-mullvad connect &
+# transmission-daemon &
 
 # Clipmenu control with dmenu
 clipmenud &
 
 # Mouse unclutter
 unclutter &
+
+# Mullvad VPN at start
+# mullvad connect && sleep 5 && mullvad reconnect &
+mullvad connect
 
 # Protonmail bridge daemon
 sleep 10 && protonmail-bridge --noninteractive &
