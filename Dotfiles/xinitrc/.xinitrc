@@ -20,10 +20,6 @@ clipmenud &
 # Mouse unclutter
 unclutter &
 
-# Mullvad VPN at start
-# mullvad connect && sleep 5 && mullvad reconnect &
-mullvad connect
-
 # Protonmail bridge daemon
 sleep 10 && protonmail-bridge --noninteractive &
 
