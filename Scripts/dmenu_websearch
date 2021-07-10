@@ -10,7 +10,7 @@
 # cursor is on a web browser it acts as the address bar of that browser.
 
 browser='palemoon -P Default'
-engine="https://searx.be/?q=%s"
+engine="https://duckduckgo.com/?q=%s"
 bookmarks="$HOME/.config/dmenu/bookmarks"
 
 gotourl() {

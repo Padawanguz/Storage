@@ -1,5 +1,5 @@
 # Fix Display and make it 1080p
-# xrandr --setprovideroutputsource modesetting NVIDIA-0
+xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --output eDP1 --mode 1920x1080
 
 #Mount utility controlled with udiskie-dmenu

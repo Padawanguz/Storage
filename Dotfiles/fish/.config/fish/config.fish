@@ -5,7 +5,7 @@ set PATH $HOME/.local/bin $PATH
 # Puts rbenv on $PATH
 set PATH $HOME/.rbenv/bin $PATH
 set PATH $HOME/.rbenv/shims $PATH
-rbenv rehash >/dev/null ^&1
+# rbenv rehash >/dev/null ^&1
 
 # Change GOPATH
 set -x GOPATH $HOME/.go
@@ -14,12 +14,6 @@ set -x GOPATH $HOME/.go
 set -Ux EDITOR nvim
 set -Ux TERMINAL st
 
-# Start X at login
-if status is-login
-    if test -z "$DISPLAY" -a $XDG_VTNR = 1
-        exec startx -- -keeptty
-    end
-end
 
 # Fisher installer
 if not functions -q fisher
@@ -40,4 +34,13 @@ function ranger-cd
     if test "$PWD" != $rangerpwd
         cd $rangerpwd
     end
+end
+
+# Start X at login
+if status is-login
+  sleep 0.5 &
+  wait $last_pid
+  if test -z "$DISPLAY" -a $XDG_VTNR = 1
+    exec startx -- -keeptty
+  end
 end
