@@ -12,6 +12,7 @@
 " Pluggins installed
   call plug#begin()
 
+  Plug 'lambdalisue/suda'
   Plug 'preservim/nerdtree'
   Plug 'tpope/vim-surround'
   Plug 'tomtom/tcomment_vim'

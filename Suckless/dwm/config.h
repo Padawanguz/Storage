@@ -82,11 +82,11 @@ static const char* mutevol[]         = { "/usr/bin/pulseaudio-ctl", "mute", NULL
 static const char* upvol[]           = { "/usr/bin/pulseaudio-ctl", "up", NULL };
 static const char* brightup[]        = { "xbacklight", "-inc", "10", NULL };
 static const char* brightdown[]      = { "xbacklight", "-dec", "10", NULL };
-static const char* searchcmd[]       = { "dmenu_websearch", NULL };
+// static const char* searchcmd[]       = { "dmenu_websearch", NULL };
 static const char* transmissioncmd[] = { "transmission-remote-gtk", NULL };
 static const char* muttcmd[]         = { "st", "-e", "neomutt", NULL };
 static const char* profilemngrcmd[]  = { "firefox", "-ProfileManager", NULL };
-// static const char* browsecmd[]       = { "palemoon", "-P", "Default", NULL };
+static const char* browsecmd[]       = { "palemoon", "-P", "Default", NULL };
 static const char* servercmd[]       = { "firefox", "-P", "WebApps", "--new-window", "http://192.168.0.13", NULL };
 static const char* googlecmd[]       = { "firefox", "-P", "Google", "--new-window", "https://myaccount.google.com/", NULL };
 static const char* youtubecmd[]      = { "firefox", "-P", "Google", "--new-window", "https://www.youtube.com", NULL };
@@ -105,7 +105,7 @@ static const char* slock[]           = { "slock", NULL };
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
-  { MODKEY | ShiftMask,             XK_f,      spawn,          { .v = searchcmd } },
+  { MODKEY | ShiftMask,             XK_f,      spawn,          { .v = browsecmd } },
   { MODKEY | ShiftMask,             XK_p,      spawn,          { .v = plexcmd } },
   { MODKEY | ShiftMask,             XK_t,      spawn,          { .v = transmissioncmd } },
   { MODKEY | ShiftMask,             XK_y,      spawn,          { .v = youtubecmd } },

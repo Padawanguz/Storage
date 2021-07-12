@@ -11,7 +11,8 @@
 " ┌───────────────────────────────────────┐
 " │ Force write readonly files using sudo │
 " └───────────────────────────────────────┘
-  cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+  " cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+  cnoremap SW execute 'SudaWrite'
 
 " ┌──────────────────────────────────────────┐
 " │ Disables automatic commenting on newline │

@@ -39,6 +39,7 @@
   Plug 'airblade/vim-rooter'
   Plug 'majutsushi/tagbar'
   Plug 'jceb/vim-orgmode'
+  Plug 'lambdalisue/suda.vim'
 
   call plug#end()
 

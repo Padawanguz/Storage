@@ -38,7 +38,7 @@ end
 
 # Start X at login
 if status is-login
-  sleep 0.5 &
+  sleep 1 &
   wait $last_pid
   if test -z "$DISPLAY" -a $XDG_VTNR = 1
     exec startx -- -keeptty

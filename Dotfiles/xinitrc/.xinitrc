@@ -9,7 +9,7 @@ udiskie -ANT &
 slstatus &
 
 # Wallpaper
-xwallpaper --maximize ~/Storage/Images/Wallpapers/25462.jpg &
+xwallpaper --maximize ~/Storage/Images/Wallpapers/AJLTxv3ua0eivZS9R9IaBNnfbkE2QX4BBVagazZPyV8.jpg &
 
 # Transmission torrent daemon
 # transmission-daemon &

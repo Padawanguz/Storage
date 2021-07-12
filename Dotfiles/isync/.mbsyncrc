@@ -30,8 +30,8 @@ Patterns *
 SyncState *
 
 Channel protonmail-inbox
-Master :protonmail-remote:"Inbox"
-Slave :protonmail-local:"Inbox"
+Master :protonmail-remote:"INBOX"
+Slave :protonmail-local:"INBOX"
 Create Both
 Expunge Both
 SyncState *
