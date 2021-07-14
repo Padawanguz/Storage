@@ -11,6 +11,9 @@ slstatus &
 # Wallpaper
 xwallpaper --maximize ~/Storage/Images/Wallpapers/AJLTxv3ua0eivZS9R9IaBNnfbkE2QX4BBVagazZPyV8.jpg &
 
+# Disable trackpad on boot - good habits!
+xinput disable 'DLL07BE:01 06CB:7A13 Touchpad'
+
 # Transmission torrent daemon
 # transmission-daemon &
 
