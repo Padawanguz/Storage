@@ -3,9 +3,11 @@
  * To understand surf, start reading main().
  */
 #include <sys/file.h>
+#include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <glib.h>
+#include <inttypes.h>
 #include <libgen.h>
 #include <limits.h>
 #include <pwd.h>
@@ -49,7 +51,6 @@ enum {
 };
 
 typedef enum {
-	AcceleratedCanvas,
 	AccessMicrophone,
 	AccessWebcam,
 	CaretBrowsing,
@@ -58,6 +59,7 @@ typedef enum {
 	DiskCache,
 	DefaultCharset,
 	DNSPrefetch,
+	Ephemeral,
 	FileURLsCrossAccess,
 	FontSize,
 	FrameFlattening,
@@ -69,7 +71,6 @@ typedef enum {
 	KioskMode,
 	LoadImages,
 	MediaManualPlay,
-	Plugins,
 	PreferredLanguages,
 	RunInFullscreen,
 	ScrollBars,
@@ -82,7 +83,6 @@ typedef enum {
 	Style,
 	WebGL,
 	ZoomLevel,
-	ClipboardNotPrimary,
 	ParameterLast
 } ParamName;
 
@@ -106,7 +106,7 @@ typedef struct Client {
 	GTlsCertificate *cert, *failedcert;
 	GTlsCertificateFlags tlserr;
 	Window xid;
-	unsigned long pageid;
+	guint64 pageid;
 	int progress, fullscreen, https, insecure, errorpage;
 	const char *title, *overtitle, *targeturi;
 	const char *needle;
@@ -147,6 +147,7 @@ typedef struct {
 } SiteSpecific;
 
 /* Surf */
+static void die(const char *errstr, ...);
 static void usage(void);
 static void setup(void);
 static void sigchld(int unused);
@@ -192,7 +193,7 @@ static gboolean buttonreleased(GtkWidget *w, GdkEvent *e, Client *c);
 static GdkFilterReturn processx(GdkXEvent *xevent, GdkEvent *event,
                                 gpointer d);
 static gboolean winevent(GtkWidget *w, GdkEvent *e, Client *c);
-static gboolean readpipe(GIOChannel *s, GIOCondition ioc, gpointer unused);
+static gboolean readsock(GIOChannel *s, GIOCondition ioc, gpointer unused);
 static void showview(WebKitWebView *v, Client *c);
 static GtkWidget *createwindow(Client *c);
 static gboolean loadfailedtls(WebKitWebView *v, gchar *uri,
@@ -239,6 +240,7 @@ static void togglefullscreen(Client *c, const Arg *a);
 static void togglecookiepolicy(Client *c, const Arg *a);
 static void toggleinspector(Client *c, const Arg *a);
 static void find(Client *c, const Arg *a);
+static void externalpipe(Client *c, const Arg *a);
 static void insert(Client *c, const Arg *a);
 
 /* Buttons */
@@ -247,7 +249,7 @@ static void clicknewwindow(Client *c, const Arg *a, WebKitHitTestResult *h);
 static void clickexternplayer(Client *c, const Arg *a, WebKitHitTestResult *h);
 
 static char winid[64];
-static char togglestats[12];
+static char togglestats[11];
 static char pagestats[2];
 static Atom atoms[AtomLast];
 static Window embed;
@@ -260,7 +262,7 @@ static char *stylefile;
 static const char *useragent;
 static Parameter *curconfig;
 static int modparams[ParameterLast];
-static int pipein[2], pipeout[2];
+static int spair[2];
 char *argv0;
 
 static ParamName loadtransient[] = {
@@ -278,7 +280,6 @@ static ParamName loadtransient[] = {
 };
 
 static ParamName loadcommitted[] = {
-	AcceleratedCanvas,
 //	AccessMicrophone,
 //	AccessWebcam,
 	CaretBrowsing,
@@ -291,7 +292,6 @@ static ParamName loadcommitted[] = {
 	Java,
 //	KioskMode,
 	MediaManualPlay,
-	Plugins,
 	RunInFullscreen,
 	ScrollBars,
 	SiteQuirks,
@@ -300,7 +300,6 @@ static ParamName loadcommitted[] = {
 	SpellLanguages,
 	Style,
 	ZoomLevel,
-	ClipboardNotPrimary,
 	ParameterLast
 };
 
@@ -310,6 +309,91 @@ static ParamName loadfinished[] = {
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
+
+static void
+externalpipe_execute(char* buffer, Arg *arg) {
+	int to[2];
+	void (*oldsigpipe)(int);
+
+	if (pipe(to) == -1)
+		return;
+
+	switch (fork()) {
+	case -1:
+		close(to[0]);
+		close(to[1]);
+		return;
+	case 0:
+		dup2(to[0], STDIN_FILENO); close(to[0]); close(to[1]);
+		execvp(((char **)arg->v)[0], (char **)arg->v);
+		fprintf(stderr, "st: execvp %s\n", ((char **)arg->v)[0]);
+		perror("failed");
+		exit(0);
+	}
+
+	close(to[0]);
+	oldsigpipe = signal(SIGPIPE, SIG_IGN);
+	write(to[1], buffer, strlen(buffer));
+	close(to[1]);
+	signal(SIGPIPE, oldsigpipe);
+}
+
+static void
+externalpipe_resource_done(WebKitWebResource *r, GAsyncResult *s, Arg *arg)
+{
+	GError *gerr = NULL;
+	guchar *buffer = webkit_web_resource_get_data_finish(r, s, NULL, &gerr);
+	if (gerr == NULL) {
+		externalpipe_execute((char *) buffer, arg);
+	} else {
+		g_error_free(gerr);
+	}
+	g_free(buffer);
+}
+
+static void
+externalpipe_js_done(WebKitWebView *wv, GAsyncResult *s, Arg *arg)
+{
+	WebKitJavascriptResult *j = webkit_web_view_run_javascript_finish(
+		wv, s, NULL);
+	if (!j) {
+		return;
+	}
+	JSCValue *v = webkit_javascript_result_get_js_value(j);
+	if (jsc_value_is_string(v)) {
+		char *buffer = jsc_value_to_string(v);
+		externalpipe_execute(buffer, arg);
+		g_free(buffer);
+	}
+	webkit_javascript_result_unref(j);
+}
+
+void
+externalpipe(Client *c, const Arg *arg)
+{
+	if (curconfig[JavaScript].val.i) {
+		webkit_web_view_run_javascript(
+			c->view, "window.document.documentElement.outerHTML",
+			NULL, externalpipe_js_done, arg);
+	} else {
+		WebKitWebResource *resource = webkit_web_view_get_main_resource(c->view);
+		if (resource != NULL) {
+			webkit_web_resource_get_data(
+				resource, NULL, externalpipe_resource_done, arg);
+		}
+	}
+}
+
+void
+die(const char *errstr, ...)
+{
+       va_list ap;
+
+       va_start(ap, errstr);
+       vfprintf(stderr, errstr, ap);
+       va_end(ap);
+       exit(1);
+}
 
 void
 usage(void)
@@ -348,18 +432,24 @@ setup(void)
 	/* dirs and files */
 	cookiefile = buildfile(cookiefile);
 	scriptfile = buildfile(scriptfile);
-	cachedir   = buildpath(cachedir);
 	certdir    = buildpath(certdir);
+	if (curconfig[Ephemeral].val.i)
+		cachedir = NULL;
+	else
+		cachedir   = buildpath(cachedir);
 
 	gdkkb = gdk_seat_get_keyboard(gdk_display_get_default_seat(gdpy));
 
-	if (pipe(pipeout) < 0 || pipe(pipein) < 0) {
-		fputs("Unable to create pipes\n", stderr);
+	if (socketpair(AF_UNIX, SOCK_DGRAM, 0, spair) < 0) {
+		fputs("Unable to create sockets\n", stderr);
+		spair[0] = spair[1] = -1;
 	} else {
-		gchanin = g_io_channel_unix_new(pipein[0]);
+		gchanin = g_io_channel_unix_new(spair[0]);
 		g_io_channel_set_encoding(gchanin, NULL, NULL);
+		g_io_channel_set_flags(gchanin, g_io_channel_get_flags(gchanin)
+		                       | G_IO_FLAG_NONBLOCK, NULL);
 		g_io_channel_set_close_on_unref(gchanin, TRUE);
-		g_io_add_watch(gchanin, G_IO_IN, readpipe, NULL);
+		g_io_add_watch(gchanin, G_IO_IN, readsock, NULL);
 	}
 
 
@@ -569,15 +659,7 @@ loaduri(Client *c, const Arg *a)
 			url = g_strdup_printf("file://%s", path);
 			free(path);
 		} else {
-			regex_t urlregex;
-			int urlcheck;
-			urlcheck = regcomp(&urlregex, "^[a-z0-9-]+[.][a-z.]+[^[:space:]]*$", REG_EXTENDED | REG_ICASE);
-			urlcheck = regexec(&urlregex, uri, 0, NULL, 0);
-			if (!urlcheck)
-				url = g_strdup_printf("http://%s", uri);
-			else
-				url = parseuri(uri);
-			regfree(&urlregex);
+  		url = parseuri(uri);
 		}
 		if (apath != uri)
 			free(apath);
@@ -669,12 +751,10 @@ gettogglestats(Client *c)
 	togglestats[3] = curconfig[DiskCache].val.i ?       'D' : 'd';
 	togglestats[4] = curconfig[LoadImages].val.i ?      'I' : 'i';
 	togglestats[5] = curconfig[JavaScript].val.i ?      'S' : 's';
-	togglestats[6] = curconfig[Plugins].val.i ?         'V' : 'v';
-	togglestats[7] = curconfig[Style].val.i ?           'M' : 'm';
-	togglestats[8] = curconfig[FrameFlattening].val.i ? 'F' : 'f';
-	togglestats[9] = curconfig[Certificate].val.i ?     'X' : 'x';
-	togglestats[10] = curconfig[StrictTLS].val.i ?      'T' : 't';
-	togglestats[11] = '\0';
+	togglestats[6] = curconfig[Style].val.i ?           'M' : 'm';
+	togglestats[7] = curconfig[FrameFlattening].val.i ? 'F' : 'f';
+	togglestats[8] = curconfig[Certificate].val.i ?     'X' : 'x';
+	togglestats[9] = curconfig[StrictTLS].val.i ?       'T' : 't';
 }
 
 void
@@ -754,9 +834,6 @@ setparameter(Client *c, int refresh, ParamName p, const Arg *a)
 	modparams[p] = curconfig[p].prio;
 
 	switch (p) {
-	case AcceleratedCanvas:
-		webkit_settings_set_enable_accelerated_2d_canvas(s, a->i);
-		break;
 	case AccessMicrophone:
 		return; /* do nothing */
 	case AccessWebcam:
@@ -821,9 +898,6 @@ setparameter(Client *c, int refresh, ParamName p, const Arg *a)
 		break;
 	case MediaManualPlay:
 		webkit_settings_set_media_playback_requires_user_gesture(s, a->i);
-		break;
-	case Plugins:
-		webkit_settings_set_enable_plugins(s, a->i);
 		break;
 	case PreferredLanguages:
 		return; /* do nothing */
@@ -1027,7 +1101,6 @@ newwindow(Client *c, const Arg *a, int noembed)
 	cmd[i++] = curconfig[KioskMode].val.i ?       "-K" : "-k" ;
 	cmd[i++] = curconfig[Style].val.i ?           "-M" : "-m" ;
 	cmd[i++] = curconfig[Inspector].val.i ?       "-N" : "-n" ;
-	cmd[i++] = curconfig[Plugins].val.i ?         "-P" : "-p" ;
 	if (scriptfile && g_strcmp0(scriptfile, "")) {
 		cmd[i++] = "-r";
 		cmd[i++] = scriptfile;
@@ -1056,8 +1129,8 @@ spawn(Client *c, const Arg *a)
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));
-		close(pipein[0]);
-		close(pipeout[1]);
+		close(spair[0]);
+		close(spair[1]);
 		setsid();
 		execvp(((char **)a->v)[0], (char **)a->v);
 		fprintf(stderr, "%s: execvp %s", argv0, ((char **)a->v)[0]);
@@ -1091,8 +1164,8 @@ cleanup(void)
 	while (clients)
 		destroyclient(clients);
 
-	close(pipein[0]);
-	close(pipeout[1]);
+	close(spair[0]);
+	close(spair[1]);
 	g_free(cookiefile);
 	g_free(scriptfile);
 	g_free(stylefile);
@@ -1127,8 +1200,6 @@ newview(Client *c, WebKitWebView *rv)
 		   "enable-html5-local-storage", curconfig[DiskCache].val.i,
 		   "enable-java", curconfig[Java].val.i,
 		   "enable-javascript", curconfig[JavaScript].val.i,
-		   "enable-plugins", curconfig[Plugins].val.i,
-		   "enable-accelerated-2d-canvas", curconfig[AcceleratedCanvas].val.i,
 		   "enable-site-specific-quirks", curconfig[SiteQuirks].val.i,
 		   "enable-smooth-scrolling", curconfig[SmoothScrolling].val.i,
 		   "enable-webgl", curconfig[WebGL].val.i,
@@ -1147,11 +1218,16 @@ newview(Client *c, WebKitWebView *rv)
 
 		contentmanager = webkit_user_content_manager_new();
 
-		context = webkit_web_context_new_with_website_data_manager(
-		          webkit_website_data_manager_new(
-		          "base-cache-directory", cachedir,
-		          "base-data-directory", cachedir,
-		          NULL));
+		if (curconfig[Ephemeral].val.i) {
+			context = webkit_web_context_new_ephemeral();
+		} else {
+			context = webkit_web_context_new_with_website_data_manager(
+			          webkit_website_data_manager_new(
+			          "base-cache-directory", cachedir,
+			          "base-data-directory", cachedir,
+			          NULL));
+		}
+
 
 		cookiemanager = webkit_web_context_get_cookie_manager(context);
 
@@ -1169,8 +1245,9 @@ newview(Client *c, WebKitWebView *rv)
 		    WEBKIT_CACHE_MODEL_DOCUMENT_VIEWER);
 
 		/* Currently only works with text file to be compatible with curl */
-		webkit_cookie_manager_set_persistent_storage(cookiemanager,
-		    cookiefile, WEBKIT_COOKIE_PERSISTENT_STORAGE_TEXT);
+		if (!curconfig[Ephemeral].val.i)
+			webkit_cookie_manager_set_persistent_storage(cookiemanager,
+			    cookiefile, WEBKIT_COOKIE_PERSISTENT_STORAGE_TEXT);
 		/* cookie policy */
 		webkit_cookie_manager_set_accept_policy(cookiemanager,
 		    cookiepolicy_get());
@@ -1225,28 +1302,24 @@ newview(Client *c, WebKitWebView *rv)
 }
 
 static gboolean
-readpipe(GIOChannel *s, GIOCondition ioc, gpointer unused)
+readsock(GIOChannel *s, GIOCondition ioc, gpointer unused)
 {
-	static char msg[MSGBUFSZ], msgsz;
+	static char msg[MSGBUFSZ];
 	GError *gerr = NULL;
+	gsize msgsz;
 
-	if (g_io_channel_read_chars(s, msg, sizeof(msg), NULL, &gerr) !=
+	if (g_io_channel_read_chars(s, msg, sizeof(msg), &msgsz, &gerr) !=
 	    G_IO_STATUS_NORMAL) {
-		fprintf(stderr, "surf: error reading pipe: %s\n",
-		        gerr->message);
-		g_error_free(gerr);
+		if (gerr) {
+			fprintf(stderr, "surf: error reading socket: %s\n",
+			        gerr->message);
+			g_error_free(gerr);
+		}
 		return TRUE;
 	}
-	if ((msgsz = msg[0]) < 3) {
+	if (msgsz < 2) {
 		fprintf(stderr, "surf: message too short: %d\n", msgsz);
 		return TRUE;
-	}
-
-	switch (msg[2]) {
-	case 'i':
-		close(pipein[1]);
-		close(pipeout[0]);
-		break;
 	}
 
 	return TRUE;
@@ -1257,10 +1330,10 @@ initwebextensions(WebKitWebContext *wc, Client *c)
 {
 	GVariant *gv;
 
-	if (!pipeout[0] || !pipein[1])
+	if (spair[1] < 0)
 		return;
 
-	gv = g_variant_new("(ii)", pipeout[0], pipein[1]);
+	gv = g_variant_new("i", spair[1]);
 
 	webkit_web_context_set_web_extensions_initialization_user_data(wc, gv);
 	webkit_web_context_set_web_extensions_directory(wc, WEBEXTDIR);
@@ -1443,7 +1516,7 @@ createwindow(Client *c)
 		gtk_window_set_wmclass(GTK_WINDOW(w), wmstr, "Surf");
 		g_free(wmstr);
 
-		wmstr = g_strdup_printf("%s[%lu]", "Surf", c->pageid);
+		wmstr = g_strdup_printf("%s[%"PRIu64"]", "Surf", c->pageid);
 		gtk_window_set_role(GTK_WINDOW(w), wmstr);
 		g_free(wmstr);
 
@@ -1535,6 +1608,8 @@ loadchanged(WebKitWebView *v, WebKitLoadEvent e, Client *c)
 		seturiparameters(c, uri, loadtransient);
 		break;
 	case WEBKIT_LOAD_COMMITTED:
+		setatom(c, AtomUri, uri);
+		c->title = uri;
 		seturiparameters(c, uri, loadcommitted);
 		c->https = webkit_web_view_get_tls_info(c->view, &c->cert,
 		                                        &c->tlserr);
@@ -1800,7 +1875,7 @@ parseuri(const gchar *uri) {
 					       uri + strlen(searchengines[i].token) + 1);
 	}
 
-	return g_strdup_printf("%s%s", searchengine, uri);
+	return g_strdup_printf("http://%s", uri);
 }
 
 void
@@ -1854,18 +1929,13 @@ showcert(Client *c, const Arg *a)
 void
 clipboard(Client *c, const Arg *a)
 {
-	/* User defined choice of selection, see config.h */
-	  GdkAtom	selection = GDK_SELECTION_PRIMARY;
-	if (curconfig[ClipboardNotPrimary].val.i > 0)
-		selection = GDK_SELECTION_CLIPBOARD;
-
 	if (a->i) { /* load clipboard uri */
 		gtk_clipboard_request_text(gtk_clipboard_get(
-					                     selection),
+		                           GDK_SELECTION_PRIMARY),
 		                           pasteuri, c);
 	} else { /* copy uri */
 		gtk_clipboard_set_text(gtk_clipboard_get(
-							             selection), c->targeturi
+		                       GDK_SELECTION_PRIMARY), c->targeturi
 		                       ? c->targeturi : geturi(c), -1);
 	}
 }
@@ -1891,15 +1961,18 @@ msgext(Client *c, char type, const Arg *a)
 	static char msg[MSGBUFSZ];
 	int ret;
 
-	if ((ret = snprintf(msg, sizeof(msg), "%c%c%c%c",
-	                    4, c->pageid, type, a->i))
+	if (spair[0] < 0)
+		return;
+
+	if ((ret = snprintf(msg, sizeof(msg), "%c%c%c", c->pageid, type, a->i))
 	    >= sizeof(msg)) {
 		fprintf(stderr, "surf: message too long: %d\n", ret);
 		return;
 	}
 
-	if (pipeout[1] && write(pipeout[1], msg, sizeof(msg)) < 0)
-		fprintf(stderr, "surf: error sending: %.*s\n", ret-2, msg+2);
+	if (send(spair[0], msg, ret, 0) != ret)
+		fprintf(stderr, "surf: error sending: %u%c%d (%d)\n",
+		        c->pageid, type, a->i, ret);
 }
 
 void
@@ -2107,14 +2180,6 @@ main(int argc, char *argv[])
 		defconfig[Inspector].val.i = 1;
 		defconfig[Inspector].prio = 2;
 		break;
-	case 'p':
-		defconfig[Plugins].val.i = 0;
-		defconfig[Plugins].prio = 2;
-		break;
-	case 'P':
-		defconfig[Plugins].val.i = 1;
-		defconfig[Plugins].prio = 2;
-		break;
 	case 'r':
 		scriptfile = EARGF(usage());
 		break;
@@ -2160,7 +2225,11 @@ main(int argc, char *argv[])
 	if (argc > 0)
 		arg.v = argv[0];
 	else
+#ifdef HOMEPAGE
+		arg.v = HOMEPAGE;
+#else
 		arg.v = "about:blank";
+#endif
 
 	setup();
 	c = newclient(NULL);

@@ -22,12 +22,12 @@ Inbox ~/.mail/protonmail/gus.sosa@pm.me/Inbox
 Trash ~/.mail/protonmail/gus.sosa@pm.me/Trash
 Subfolders Verbatim
 
-Channel protonmail-all-mail
-Master :protonmail-remote:"All Mail"
-Slave :protonmail-local:"All Mail"
-Create Both
-Patterns *
-SyncState *
+# Channel protonmail-all-mail
+# Master :protonmail-remote:"All Mail"
+# Slave :protonmail-local:"All Mail"
+# Create Both
+# Patterns *
+# SyncState *
 
 Channel protonmail-inbox
 Master :protonmail-remote:"INBOX"
@@ -72,7 +72,7 @@ SyncState *
 
 Group protonmail
 Channel protonmail-inbox
-Channel protonmail-all-mail
+# Channel protonmail-all-mail
 Channel protonmail-archive
 Channel protonmail-sent
 Channel protonmail-trash
