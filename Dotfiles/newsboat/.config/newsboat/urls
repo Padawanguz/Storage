@@ -1,0 +1,188 @@
+https://www.diariolibre.com/rss/portada.xml "~Diario Libre" DomRep
+https://listindiario.com/rss/portada/ "~Listin Diario" DomRep
+https://eldia.com.do/feed/ "~Periodico El Dia" DomRep
+https://feeds.bbci.co.uk/news/world/africa/rss.xml "~BBC Africa" BBC Africa
+https://feeds.bbci.co.uk/news/world/asia/rss.xml "~BBC Asia" BBC Asia
+https://feeds.bbci.co.uk/news/world/europe/rss.xml "~BBC Europe" BBC Europe
+https://feeds.bbci.co.uk/news/world/latin_america/rss.xml "~BBC Latin America" BBC "Latin America"
+https://feeds.bbci.co.uk/news/world/middle_east/rss.xml "~BBC Middle East" BBC "Middle East"
+https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml "~BBC US & Canada" BBC US Canada
+https://feeds.bbci.co.uk/news/england/rss.xml "~BBC England" BBC England UK
+https://feeds.bbci.co.uk/news/northern_ireland/rss.xml "~BBC Northen Ireland" BBC "Northen Ireland" UK
+https://feeds.bbci.co.uk/news/scotland/rss.xml "~BBC Scotland" BBC Scotland UK
+https://feeds.bbci.co.uk/news/wales/rss.xml "~BBC Wales" BBC Wales UK
+https://www.reutersagency.com/feed/?taxonomy=best-topics&post_type=best "~Reuters - Top Stories" Reuters
+https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best "~Reuters - Business & Finance" Reuters Business Finance Markets
+https://www.reutersagency.com/feed/?best-topics=political-general&post_type=best "~Reuters - Politics" Reuters Politics
+https://www.reutersagency.com/feed/?best-topics=tech&post_type=best "~Reuters - Technology" Reuters Technology
+https://www.reutersagency.com/feed/?best-sectors&post_type=best "~Reuters - Markets" Reuters Markets
+https://www.reutersagency.com/feed/?best-sectors=economy&post_type=best "~Reuters - Economy" Reuters Economy
+https://www.reutersagency.com/feed/?best-regions=europe&post_type=best "~Reuters - Europe" Reuters Europe
+https://www.reutersagency.com/feed/?best-regions=middle-east&post_type=best "~Reuters - Middle East" Reuters "Middle East"
+https://www.reutersagency.com/feed/?best-regions=africa&post_type=best "~Reuters - Africa" Reuters Africa
+https://www.reutersagency.com/feed/?best-regions=north-america&post_type=best "~Reuters - North America" Reuters EU Canada
+https://www.reutersagency.com/feed/?best-regions=south-america&post_type=best "~Reuters - South America" Reuters "Latin America"
+https://www.reutersagency.com/feed/?best-regions=asia&post_type=best "~Reuters - Asia" Reuters Asia
+https://www.rt.com/rss/news/ "~RT World News" RT "World News"
+https://www.rt.com/rss/usa/ "~RT USA" RT US
+https://www.rt.com/rss/uk/ "~RT UK" RT UK
+https://www.rt.com/rss/russia/ "~RT Russia" RT Russia
+https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada "~El Pais España" "El Pais" Spain Europe
+https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/internacional/portada "~El Pais Internacional" El Pais World News
+http://feeds.nytimes.com/nyt/rss/HomePage "~NYTimes" US NYTimes
+https://feeds.washingtonpost.com/rss/world?itid=lk_inline_manual_43 "~Washington Post World" "Washigton Post" "World News"
+https://feeds.washingtonpost.com/rss/politics?itid=lk_inline_manual_2 "~Washington Post Politics" "Washington Post" US Politics
+https://feeds.washingtonpost.com/rss/national?itid=lk_inline_manual_39 "~Washington Post US" "Washimgton Post" US
+https://rssfeeds.usatoday.com/usatoday-NewsTopStories "~USA Today Top Stories" "USA Today" US
+https://www.ft.com/world?format=rss "~Finantial Times World" FT "World News"
+https://www.ft.com/uk?format=rss "~Finantial Times UK" FT UK
+https://www.ft.com/us?format=rss "~Finantial Times US" FT US
+https://www.ft.com/china?format=rss "~Finantial Times China" FT China
+https://www.ft.com/africa?format=rss "~Finantial Times Africa" FT Africa
+https://www.ft.com/asia-pacific?format=rss "~Finantial Times Asia Pacific" FT Asia
+https://www.ft.com/emerging-markets?format=rss "~Finantial Times Emerging Markets" FT "Emerging Markets"
+https://www.ft.com/europe?format=rss "~Finantial Times Europe" FT Europe
+https://www.ft.com/americas?format=rss "~Finantial Times Americas" FT "Latin America US Canada
+https://www.ft.com/global-economy?format=rss "~Finantial Times Global Economy" FT Economy
+https://www.ft.com/markets?format=rss "~Finantial Times Markets" FT Markets
+https://www.ft.com/opinion?format=rss "~Finantial Times Opinion" FT Opinion
+https://www.economist.com/the-world-this-week/rss.xml "~The Economist - World News" "World News" "The Economist" Politics
+https://www.economist.com/united-states/rss.xml "~The Economist - US" "The Economist" US Politics
+https://www.economist.com/the-americas/rss.xml "~The Economist - The Americas" "The Economist" "Latin America" US Canada
+https://www.economist.com/middle-east-and-africa/rss.xml "~The Economist - Middle East & Africa" "The Economist" "Middle East" "Africa"
+https://www.economist.com/asia/rss.xml "~The Economist - Asia" "The Economist" Asia
+https://www.economist.com/china/rss.xml "~The Economist - China" "The Economist" China
+https://www.economist.com/international/rss.xml "~The Economist - World News" "The Economist" "World News"
+https://www.economist.com/business/rss.xml "~The Economist - Business" "The Economist" Business
+https://www.economist.com/finance-and-economics/rss.xml "~The Economist - Markets" "The Econosmist" Markets
+https://www.economist.com/science-and-technology/rss.xml "~The Economist - Technology" "The Economist" Technology"
+https://www.economist.com/letters/rss.xml "~The Economist - Opinion" Opinion "The Economist" Politics
+https://www.economist.com/briefing/rss.xml "~The Economist - Briefings" "The Economist" Briefings Politics
+https://www.economist.com/special-report/rss.xml "~The Economist - Special Report" "The Economist" "Special Report" Politics
+https://www.economist.com/britain/rss.xml "~The Economist - Britain" "THe Economist" UK Politics
+https://www.economist.com/europe/rss.xml "~The Economist - Europe" "~The Economist" Europe Politics
+https://www.adweek.com/feed/ “~AdWeek” Advertising
+http://adtechdaily.com/feed "~Ad Tech Daily" Advertising
+http://feeds.feedburner.com/Adpulp "~AdPulp" Advertising
+http://www.moreaboutadvertising.com/feed "~More About Advertising" Advertising
+https://adage.com/section/rss?section_id=301 "~Advertising Age" Advertising
+https://adexchanger.com/feed "~AdExchanger" Advertising
+https://adland.tv/rss.xml "~AdLand" Advertising
+https://www.americanbanker.com/feed?rss=true "~American Banker" Banking US
+https://bankunderground.co.uk/feed/ "~Bank Underground" Banking UK
+https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/topic/subject/banking-industry/rss.xml "~The New York Times Banking" NYTimes US Banking
+https://www.cnbc.com/id/10000876/device/rss "~CNBC Banking News" US Banking
+https://thefinancialbrand.com/feed "~The Financial Brand" Banking
+https://markets.businessinsider.com/rss/news "~MarketInsider" Business Finance
+http://feeds.washingtonpost.com/rss/business "~Washington Post Business" "Washington Post" US Business
+https://www.theguardian.com/business/economics/rss "~The Guardian Business" "The Guardian" UK Business
+https://www.forbes.com/real-time/feed2/ "~Forbes" Forbes Business
+https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml "~The WSJ Business News" WSJ US Business
+https://feeds.a.dj.com/rss/RSSWorldNews.xml "~The WSJ World News" WSJ "World News"
+https://feeds.a.dj.com/rss/RSSOpinion.xml "~The WSJ Opinion" WSJ Opinion US
+https://feeds.a.dj.com/rss/RSSWSJD.xml "~The WSJ Technology" WSJ Technology
+https://feeds.a.dj.com/rss/RSSMarketsMain.xml "~The WSJ Market News" WSJ Investing Markets US
+https://rss.dailyfx.com/feeds/all "~DailyFX" Markets
+http://estaticos.elmundo.es/elmundo/rss/economia.xml "~El Mundo Economia" Markets Spain Europe
+http://feeds.marketwatch.com/marketwatch/topstories/ "~Marketwatch" Markets Investing
+http://seekingalpha.com/feed.xml "~SeekingAlpha" Markets Investing
+https://www.investing.com/rss/news_25.rss "~Investing.com" Markets Investing
+https://www.cnbc.com/id/20409666/device/rss/rss.html?x=1 "~CNBC Market Insider" Markets Investing
+http://www.fool.ca/feed/ "~The Motley Fool" Markets Investing
+http://business.financialpost.com/feed "~Financial Post" Markets Investing
+http://www.chinadaily.com.cn/rss/world_rss.xml "~China Daily" China Asia
+http://indianexpress.com/section/world/feed/ "~Indian Express" India Asia
+http://www.arabianbusiness.com/feed/feed.xml "Arabian Business" Business "Middle East"
+http://www.heraldsun.com.au/rss "~The Herald Sun Australia" Australia
+http://estaticos.elmundo.es/elmundo/rss/espana.xml "~El Mundo Spain" Spain Europe
+https://www.scmp.com/rss/91/feed "~South China Morning Post" China Asia
+https://feeds.thelocal.com/rss/es "The Local Spain" Spain Europe
+https://www.politico.eu/feed/ "~Politico - Europe" Politics Europe
+https://en.trend.az/feeds/index.rss "~Trend News Azerbaijan" Asia Azerbaijan
+https://www.eureporter.co/feed/ "~The EU Reporter" Europe
+https://xml.euobserver.com/rss.xml "~The EU Observer Magazine" Politics Europe
+https://www.euractiv.com/feed/ "~Euroactive" Politics Europe
+http://rss.cnn.com/rss/cnn_topstories.rss "~CNN" US CNN
+http://feeds.foxnews.com/foxnews/latest "Fox News" US
+http://feeds.nbcnews.com/feeds/topstories "NBC News" US
+http://abcnews.go.com/abcnews/topstories "ABC News" US
+http://rssfeeds.usatoday.com/usatoday-NewsTopStories "USA Today" US
+http://www.latimes.com/rss2.0.xml "~LA Times" US
+https://nypost.com/feed/ "~The NY Post" US
+https://www.cbsnews.com/latest/rss/main "~CBS News" US
+https://www.chicagotribune.com/news/local/breaking/rss2.0.xml "~The Chicago Tribune" US
+http://www.dailymail.co.uk/articles.rss "~Daily Mail UK" UK
+http://www.telegraph.co.uk/rss.xml "~The Telegraph" "The Telegraph" Uk
+http://www.independent.co.uk/rss "~The Independent" UK
+https://www.thesun.co.uk/feed/ "The Sun UK" UK
+https://www.huffingtonpost.com/section/front-page/feed "~Huffington Post" "World News"
+http://fortune.com/feed/ "~Fortune Magazine" Business Economy
+https://www.prnewswire.com/rss/all-news-releases-from-PR-newswire-news.rss "~PR News Wire" "World News"
+http://feeds.hbr.org/harvardbusiness "~Harvard Business Review" Business US
+https://www.entrepreneur.com/latest.rss "~Entrepreneur Magazine" Business
+https://www.inc.com/rss/ "~Inc Magazine" Business
+https://techcrunch.com/startups/feed/ "~TechCrunch" Technology
+https://time.com/feed/ "~Time Magazine" Business Politics
+http://rss.dw.com/xml/rss-en-all "DW News" "World News"
+http://estaticos.elmundo.es/elmundo/rss/internacional.xml "~El Mundo Internacional" "World News"
+http://www.heraldsun.com.au/news/world/rss "~The Herald Sun World News" "World News"
+https://www.buzzfeed.com/world.xml "~BuzzFeed - World News" "World News"
+http://www.aljazeera.com/xml/rss/all.xml "~Al Jazeera" "World News"
+https://defence-blog.com/feed/ "~Defence Blog" "World News"
+https://www.thecipherbrief.com/feed "~The Cipher Brief" "World News"
+https://timesofindia.indiatimes.com/rssfeeds/296589292.cms "Times Of India" India Asia
+http://feeds.washingtonpost.com/rss/world "~The Washington Post World News" "The Washington Post" "World News"
+https://www.cnbc.com/id/100727362/device/rss/rss.html "~CNBC - World News" "World News"
+http://feeds.feedburner.com/ndtvnews-world-news "~NDTV India - World News" "World News"
+http://abcnews.go.com/abcnews/internationalheadlines "~ABC News International" "World News"
+http://www.npr.org/rss/rss.php?id=1004 "~NPR World" "World News"
+https://sputniknews.com/export/rss2/world/index.xml "~Sputnik News World" "World News"
+https://www.latimes.com/world/rss2.0.xml "LA Times World" "World News"
+https://www.cbsnews.com/latest/rss/world "CBS World" "World News"
+https://www.abc.net.au/news/feed/52278/rss.xml "~ABC Australia - World News" "World News"
+http://www.independent.co.uk/news/world/rss "~The Independent - World News" "World News"
+http://www.mirror.co.uk/news/world-news/rss.xml "~Daily Mirror - World News" "World News"
+https://www.thesun.co.uk/news/worldnews/feed/ "~The Sun - World News" "World News"
+https://www.euronews.com/rss?level=theme&name=news "~EuroNews International" Europe
+https://www.vox.com/rss/world/index.xml "~Vox - World News" "World News"
+https://www.france24.com/en/rss "~France 24" France
+http://feeds.skynews.com/feeds/rss/world.xml "~Sky News - World News" "World News"
+http://www.smh.com.au/rssheadlines/world/article/rss.xml "~Sydney Morning Herald - World News" "World News"
+https://globalnews.ca/world/feed/ "~Global News Canada - World News" "World News"
+http://www.channelnewsasia.com/rssfeeds/8395884 "~Channel NewsAsia Singapore - World News" "World News"
+https://www.dailytelegraph.com.au/news/world/rss "~Daily Telegraph Australia - World News" "World News" "World News"
+https://www.neweurope.eu/category/world/feed/ "~New Europe - World News" "World News"
+https://live.engadget.com/rss.xml "~Engadget" Technology
+http://feeds.mashable.com/Mashable "~Mashable" Technology
+https://www.wired.com/rss/ "~Wired" Technology
+http://feeds.arstechnica.com/arstechnica/index/ "ARS Technica" Technology
+https://foreignpolicy.com/feed/ "~Foreign Policy" Diplomacy
+https://foreignpolicyblogs.com/feed/ "~Foreign Policy Association" Diplomacy
+http://www.fpri.org/feed/ "Foreign Policy Research Institute" Diplomacy
+https://chargedaffairs.org/feed/ "Charged Affairs" Diplomacy
+https://foreignpolicyi.org/feed/ "Foreign Policy Initiative" Diplomacy
+http://foreignpolicynews.org/feed "Foreign Policy News" Diplomacy
+https://medium.com/feed/tag/foreign-policy "Medium - Foreign Policy" Diplomacy
+https://www.diplomatie.gouv.fr/spip.php?page=backend&id_rubrique=53404/feed "~France-Diplomatie" Diplomacy
+https://www.brookings.edu/topic/u-s-foreign-policy/feed/ "~Brookings US Foreign Policy" Diplomacy
+https://www.brookings.edu/topic/international-affairs/feed/ "Brookings International Affairs" Diplomacy
+https://www.thenation.com/subject/foreign-policy/feed/ "~The Nation - Foreign Affairs" Diplomacy
+https://www.politico.eu/tag/foreign-policy/feed/ "~Politico - Foreign Affairs" Diplomacy
+https://blogs.fco.gov.uk/feed/ "~UK Foreign Office Blog" Diplomacy
+https://www.cips-cepi.ca/feed/ "~Centre for International Policy Studies - Canada" Diplomacy
+https://thehill.com/taxonomy/term/1138/feed "The Hill - Foreign Policy" Diplomacy
+https://www.eufp.eu/rss.xml "~EU Foreign Policy" Diplomacy
+https://www.worldaffairs.org/media/blog?format=feed "~World Affairs Council" Diplomacy
+https://rideauinstitute.ca/category/blog/feed/ "~Rideau Institute" Diplomacy
+https://www.theguardian.com/politics/foreignpolicy/rss "~The Guardian - Foreign Policy" Diplomacy
+https://www.theguardian.com/us-news/us-foreign-policy/rss "~The Guardian - US Foreign Policy" Diplomacy
+https://www.worldaffairsjournal.org/blog/feed "~World Affairs" Diplomacy
+https://www.rand.org/topics/international-affairs.xml/feed "Rand Corporation" Diplomacy
+https://www.globalissues.org/news/feed "~Global Issues" Diplomacy
+https://pecuniaetbellum.com/feed/ "~Pecunia et Bellum" Diplomacy
+https://www.iiea.com/feed/ "~The Institute of International and European Affairs" Diplomacy
+https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/topic/subject/international-relations/rss.xml "~The New York Times - International Relations" Diplomacy
+https://blogs.lse.ac.uk/internationalrelations/feed/ "~LSE International Relations" Diplomacy
+https://www.internationalaffairs.org.au/feed/atom/ "~The Australian Institute Of International Affairs" Diplomacy
+https://opencanada.org/feed/ "~Open Canada - International Affairs" Diplomacy
+https://spheresofinfluence.ca/feed/ "~Spheres of Influence"  Diplomacy

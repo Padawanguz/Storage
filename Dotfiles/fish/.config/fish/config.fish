@@ -1,3 +1,9 @@
+# Fisher installer
+if not functions -q fisher
+    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
+    fish -c fisher
+end
 
 # Puts local/bin on $PATH
 set PATH $HOME/.local/bin $PATH
@@ -7,33 +13,31 @@ set PATH $HOME/.rbenv/bin $PATH
 set PATH $HOME/.rbenv/shims $PATH
 # rbenv rehash >/dev/null ^&1
 
-# Change GOPATH
-set -x GOPATH $HOME/.go
-
 # Set Enviroment Variables
 set -Ux EDITOR nvim
 set -Ux TERMINAL st
+set -Ux BROWSER surf
 
-
-# Fisher installer
-if not functions -q fisher
-    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-    curl https://git.io/fisher --create-dirs -sLo $XDG_CONFIG_HOME/fish/functions/fisher.fish
-    fish -c fisher
-end
+# Removes unnecesary $HOME clutter
+set -x XDG_CONFIG_HOME $HOME/.config
+set -x XDG_DATA_HOME $HOME/.local/share
+set -x XDG_CACHE_HOME $HOME/.cache
+set -x WGETRC $HOME/.config/wget/wgetrc
+set -x GNUPGHOME $HOME/.config/gnupg
+set -x GTK2_RC_FILES $HOME/.config/gtk-2.0/.gtkrc-2.0
+set -x ELECTRUMDIR $HOME/.local/share/electrum
+set -x HISTFILE $HOME/.local/share/history
+set -x GOPATH $HOME/.local/share/go
+set -x GEM_HOME $HOME/.local/share/gem
+set -x GEM_PATH $HOME/.local/share/gem
+set -x NPM_CONFIG_USERCONFIG $HOME/.config/npm
+set -x MBSYNCRC $HOME/.config/mbsync/config
+set -x CARGO_HOME $HOME/.local/share/cargo
+set -x PASSWORD_STORE_DIR $HOME/.local/share/password-store
 
 # Open 'su' with fish shell
 function su
    command su --shell=/usr/bin/fish $argv
-end
-
-function ranger-cd
-    set tmpfile "/tmp/pwd-from-ranger"
-    ranger --choosedir=$tmpfile $argv
-    set rangerpwd (cat $tmpfile)
-    if test "$PWD" != $rangerpwd
-        cd $rangerpwd
-    end
 end
 
 # Start X at login

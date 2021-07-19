@@ -85,7 +85,7 @@
   set clipboard=unnamed                                                     " yank and paste with the system clipboard
   set autowrite
   set autoread                                                              " reload files when changed on disk, i.e. via `git checkout`
-  set scrolloff=5                                                           " Start scrolling slightly before the cursor reaches an edge
+  set scrolloff=10                                                           " Start scrolling slightly before the cursor reaches an edge
   set sidescrolloff=5
   set sidescroll=3                                                          " Scroll sideways a character at a time, rather than a screen at a time
   set timeout
@@ -145,7 +145,7 @@
   set shiftwidth=2                                                          " spaces per tab (when shifting)
   set shiftround                                                            " always indent by multiple of shiftwidth
   set nowrap                                                                " no wrap
-  set textwidth=80                                                          " maximum text width
+  " set textwidth=80                                                          " maximum text width
                                                                             " Formating options…
   set foldmethod=manual                                                     " use manual folding
   set formatoptions+=n                                                      " …smart auto-indenting inside numbered lists

@@ -1,3 +1,4 @@
+
 #################################
 ###### Account Protonmail #######
 #################################
@@ -6,8 +7,6 @@ IMAPAccount protonmail
 Host 127.0.0.1
 Port 1143
 User gus.sosa@pm.me
-# Pass k2KqXxTGZl3RKCpVVB4j3A
-# PassCmd "gpg2 -q -d ~/.authinfo.gpg | awk 'FNR == 1 {print $8}'"
 PassCmd "pass protonmail/bridge/gus.sosa@pm.me"
 SSLType none
 AuthMechs PLAIN
@@ -17,9 +16,9 @@ Account protonmail
 
 # Local storage
 MaildirStore protonmail-local
-Path ~/.mail/protonmail/gus.sosa@pm.me/
-Inbox ~/.mail/protonmail/gus.sosa@pm.me/Inbox
-Trash ~/.mail/protonmail/gus.sosa@pm.me/Trash
+Path ~/.cache/mbsync/mail/protonmail/gus.sosa@pm.me/
+Inbox ~/.cache/mbsync/mail/protonmail/gus.sosa@pm.me/Inbox
+Trash ~/.cache/mbsync/mail/protonmail/gus.sosa@pm.me/Trash
 Subfolders Verbatim
 
 # Channel protonmail-all-mail

@@ -75,21 +75,19 @@ static char        dmenumon[2]       = "0"; /* component of dmenucmd, manipulate
 static const char* dmenucmd[]        = { "dmenu_run", "-p", "Run:", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char* clipboardcmd[]    = { "clipmenu", NULL };
 static const char* dmenufmcmd[]      = { "dmenufm", NULL };
-static const char* nemocmd[]         = { "nemo", NULL };
 static const char* termcmd[]         = { "st", NULL };
 static const char* downvol[]         = { "/usr/bin/pulseaudio-ctl", "down", NULL };
 static const char* mutevol[]         = { "/usr/bin/pulseaudio-ctl", "mute", NULL };
 static const char* upvol[]           = { "/usr/bin/pulseaudio-ctl", "up", NULL };
 static const char* brightup[]        = { "xbacklight", "-inc", "10", NULL };
 static const char* brightdown[]      = { "xbacklight", "-dec", "10", NULL };
-// static const char* searchcmd[]       = { "dmenu_websearch", NULL };
 static const char* transmissioncmd[] = { "transmission-remote-gtk", NULL };
 static const char* muttcmd[]         = { "st", "-e", "neomutt", NULL };
 static const char* profilemngrcmd[]  = { "firefox", "-ProfileManager", NULL };
-static const char* browsecmd[]       = { "surf", NULL };
-// static const char* browsecmd[]       = { "palemoon", "-P", "Default", NULL };
+static const char* browsercmd[]      = { "surf", NULL };
 static const char* servercmd[]       = { "firefox", "-P", "WebApps", "--new-window", "http://192.168.0.13", NULL };
 static const char* googlecmd[]       = { "firefox", "-P", "Google", "--new-window", "https://myaccount.google.com/", NULL };
+static const char* accountscmd[]     = { "firefox", "-P", "Accounts", NULL };
 static const char* youtubecmd[]      = { "firefox", "-P", "Google", "--new-window", "https://www.youtube.com", NULL };
 static const char* plexcmd[]         = { "firefox", "-P", "WebApps", "--new-window", "https://app.plex.tv", NULL };
 static const char* scrotcmd[]        = { "scrot", "%Y-%m-%d-%T_$wx$h_scrot.png", "-e", "mv $f ~/Downloads/screenshots/", NULL };
@@ -101,27 +99,25 @@ static const char* rebootcmd[]       = { "systemctl", "reboot", NULL };
 static const char* shutdowncmd[]     = { "systemctl", "poweroff", NULL };
 static const char* udiskiecmd[]      = { "udiskie-dmenu", NULL };
 static const char* networkmngrcmd[]  = { "networkmanager_dmenu", NULL };
-static const char* bitwardencmd[]    = { "bitwarden", NULL };
 static const char* slock[]           = { "slock", NULL };
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
-  { MODKEY | ShiftMask,             XK_f,      spawn,          { .v = browsecmd } },
+  { MODKEY | ShiftMask,             XK_f,      spawn,          { .v = browsercmd } },
   { MODKEY | ShiftMask,             XK_p,      spawn,          { .v = plexcmd } },
   { MODKEY | ShiftMask,             XK_t,      spawn,          { .v = transmissioncmd } },
   { MODKEY | ShiftMask,             XK_y,      spawn,          { .v = youtubecmd } },
   { MODKEY | ShiftMask,             XK_g,      spawn,          { .v = googlecmd } },
-  { MODKEY | ShiftMask,             XK_d,      spawn,          { .v = profilemngrcmd } },
+  { MODKEY | ShiftMask,             XK_d,      spawn,          { .v = accountscmd } },
+  { MODKEY | ControlMask,           XK_d,      spawn,          { .v = profilemngrcmd } },
   { MODKEY | ShiftMask,             XK_e,      spawn,          { .v = muttcmd } },
   { MODKEY | ShiftMask,             XK_s,      spawn,          { .v = servercmd } },
   { MODKEY | ShiftMask,             XK_Return, spawn,          { .v = termcmd } },
   { MODKEY | ShiftMask,             XK_c,      killclient,     { 0 } },
-  { MODKEY | ShiftMask,             XK_n,      spawn,          { .v = nemocmd } },
   { MODKEY | ShiftMask,             XK_space,  spawn,          { .v = trackpadon } },
   { MODKEY | ControlMask,           XK_space,  spawn,          { .v = trackpadoff } },
   { MODKEY | ControlMask,           XK_m,      spawn,          { .v = udiskiecmd } },
   { MODKEY | ControlMask,           XK_c,      spawn,          { .v = networkmngrcmd } },
-  { MODKEY | ControlMask,           XK_b,      spawn,          { .v = bitwardencmd } },
   { MODKEY | ControlMask,           XK_r,      spawn,          { .v = rebootcmd } },
   { MODKEY | ControlMask,           XK_s,      spawn,          { .v = suspendcmd } },
   { MODKEY | ControlMask,           XK_l,      spawn,          { .v = slock } },
@@ -129,7 +125,6 @@ static Key keys[] = {
   { MODKEY,                         XK_p,      spawn,          { .v = dmenucmd } },
   { MODKEY,                         XK_o,      spawn,          { .v = clipboardcmd } },
   { MODKEY,               XK_bracketleft,      spawn,          { .v = dmenufmcmd } },
-  // { MODKEY,              XK_bracketright,      spawn,          { .v = searchcmd } },
   { MODKEY,                         XK_b,      togglebar,      { 0 } },
 	STACKKEYS(MODKEY,focus)
 	STACKKEYS(MODKEY|ShiftMask,push)

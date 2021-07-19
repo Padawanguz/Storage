@@ -1,15 +1,17 @@
 /* modifier 0 means no modifier */
 static int surfuseragent    = 0;  /* Append Surf version to default WebKit user agent */
+
 static char *fulluseragent  = ""; /* Or override the whole user agent string */
-static char *scriptfile     = "~/.surf/script.js";
-static char *styledir       = "~/.surf/styles/";
-static char *certdir        = "~/.surf/certificates/";
-static char *cachedir       = "~/.surf/cache/";
-static char *cookiefile     = "~/.surf/cookies.txt";
+static char *scriptfile     = "~/.config/surf/script.js";
+static char *styledir       = "~/.config/surf/styles/";
+static char *certdir        = "~/.config/surf/certificates/";
+static char *cachedir       = "~/.cache/surf/cache/";
+static char *cookiefile     = "~/.config/surf/cookies.txt";
 
 
 static SearchEngine searchengines[] = {
 
+    { "b",   "https://search.brave.com/search?q=%s"   },
     { "g",   "http://www.google.de/search?q=%s"   },
     { "leo", "http://dict.leo.org/ende?search=%s" },
 
@@ -76,7 +78,7 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 #define SETPROP(r, s, p) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
              "prop=\"$(printf '%b' \"$(xprop -id $1 $2 " \
-             "| sed \"s/^$2(STRING) = //;s/^\\\"\\(.*\\)\\\"$/\\1/\" && cat ~/.surf/bookmarks)\" " \
+             "| sed \"s/^$2(STRING) = //;s/^\\\"\\(.*\\)\\\"$/\\1/\" && cat ~/.config/surf/bookmarks)\" " \
              "| dmenu -l 10 -p \"$4\" -w $1)\" && " \
              "xprop -id $1 -f $3 8s -set $3 \"$prop\"", \
              "surf-setprop", winid, r, s, p, NULL \
@@ -115,9 +117,9 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 #define BM_ADD(r) {\
         .v = (const char *[]){ "/bin/sh", "-c", \
              "(echo $(xprop -id $0 $1) | cut -d '\"' -f2 " \
-             "| sed 's/.*https*:\\/\\/\\(www\\.\\)\\?//' && cat ~/.surf/bookmarks) " \
-             "| awk '!seen[$0]++' > ~/.surf/bookmarks.tmp && " \
-             "mv ~/.surf/bookmarks.tmp ~/.surf/bookmarks", \
+             "| sed 's/.*https*:\\/\\/\\(www\\.\\)\\?//' && cat ~/.config/surf/bookmarks) " \
+             "| awk '!seen[$0]++' > ~/.cache/surf/bookmarks.tmp && " \
+             "mv ~/.cache/surf/bookmarks.tmp ~/config/surf/bookmarks", \
              winid, r, NULL \
         } \
 }
@@ -143,14 +145,14 @@ static SiteSpecific certs[] = {
 
 /*EXTERNAL PIPE*/
 static char *linkselect_curwin [] = { "/bin/sh", "-c",
-	"surf_linkselect.sh $0 'Link' | xargs -r xprop -id $0 -f _SURF_GO 8s -set _SURF_GO",
+	"surf_linkselect $0 'Link' | xargs -r xprop -id $0 -f _SURF_GO 8s -set _SURF_GO",
 	winid, NULL
 };
 static char *linkselect_newwin [] = { "/bin/sh", "-c",
-	"surf_linkselect.sh $0 'Link (new window)' | xargs -r surf",
+	"surf_linkselect $0 'Link (new window)' | xargs -r surf",
 	winid, NULL
 };
-static char *editscreen[] = { "/bin/sh", "-c", "edit_screen.sh", NULL };
+static char *editscreen[] = { "/bin/sh", "-c", "surf_editscreen", NULL };
 
 #define MODKEY GDK_CONTROL_MASK
 

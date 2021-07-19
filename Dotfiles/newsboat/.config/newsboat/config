@@ -1,0 +1,74 @@
+auto-reload yes
+refresh-on-startup yes
+max-items 100
+reload-threads 42
+auto-reload yes
+reload-time 30
+prepopulate-query-feeds yes
+show-keymap-hint no
+show-read-articles yes
+show-read-feeds yes
+swap-title-and-hints yes  # Like Mutt.
+ignore-mode "display"
+
+external-url-viewer "urlscan -dc -r 'linkhandler {}'"
+
+unbind-key C
+unbind-key ^D
+unbind-key q
+unbind-key Q
+unbind-key h
+
+bind-key j down
+bind-key k up
+bind-key j next articlelist
+bind-key k prev articlelist
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+bind-key G end
+bind-key g home
+bind-key d pagedown
+bind-key u pageup
+bind-key l open
+bind-key h quit
+bind-key a toggle-article-read
+bind-key n next-unread
+bind-key N prev-unread
+bind-key D pb-download
+bind-key U show-urls
+bind-key x pb-delete
+
+bind-key q quit filebrowser
+bind-key q quit help
+bind-key q quit articlelist
+bind-key q quit article
+bind-key q quit tagselection
+bind-key q quit filterselection
+bind-key q quit urlview
+bind-key q quit dialogs
+bind-key h quit filebrowser
+bind-key h quit help
+bind-key h quit articlelist
+bind-key h quit article
+bind-key h quit tagselection
+bind-key h quit filterselection
+bind-key h quit urlview
+bind-key h quit dialogs
+
+color listnormal color10 color234
+color listnormal_unread color244 color234
+color listfocus  color1 color0 blink
+color info red default bold
+color listfocus_unread color166 color0 bold
+color info color38 color235
+color background color15 color0
+color article color15 color0
+
+browser linkhandler
+macro , open-in-browser
+macro a set browser "tsp youtube-dl --add-metadata -xic -f bestaudio/best" ; open-in-browser ; set browser linkhandler
+macro v set browser "setsid -f mpv" ; open-in-browser ; set browser linkhandler
+macro w set browser "firefox -P WebApps" ; open-in-browser ; set browser linkhandler
+macro d set browser "dmenuhandler" ; open-in-browser ; set browser linkhandler
+macro c set browser "echo %u | xclip -r -sel c" ; open-in-browser ; set browser linkhandler
+macro y set browser "youtube-viewer --comments=%u" ; open-in-browser ; set browser linkhandler

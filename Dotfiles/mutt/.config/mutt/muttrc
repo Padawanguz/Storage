@@ -1,10 +1,10 @@
 
 # paths
-set folder = ~/.mail
-set message_cachedir = ~/.mutt/cache/bodies
+set folder = ~/.cache/mbsync/mail
+set message_cachedir = ~/.cache/mutt/cache/bodies
 set certificate_file = ~/dotfiles/office/certificates.crt
-set mailcap_path = ~/.mutt/mailcap
-set tmpdir = ~/.mutt/tmp
+set mailcap_path = ~/.config/mutt/mailcap
+set tmpdir = ~/.cache/mutt/tmp
 
 # basic options
 set wait_key = no
@@ -99,8 +99,8 @@ mailboxes =protonmail/gus.sosa@pm.me/Inbox =protonmail/gus.sosa@pm.me/Archive =p
 
 # source colors and keybindings
 # keeping those in one place makes it easier for my brain
-source ~/.mutt/colors
-source ~/.mutt/bindings
+source ~/.config/mutt/colors
+source ~/.config/mutt/bindings
 
 # Account config for multiple accounts
 #############################################################
@@ -108,10 +108,10 @@ source ~/.mutt/bindings
 # by default, use mailbox
 set realname = "Gustavo Sosa"
 set spoolfile = "+gus.sosa@pm.me/Inbox"
-source ~/.mutt/accounts/protonmail/gus.sosa@pm.me
+source ~/.config/mutt/accounts/protonmail/gus.sosa@pm.me
 
 # when changing into other mailboxes, use different adresses etc.
-folder-hook protonmail/* source ~/.mutt/accounts/protonmail/gus.sosa@pm.me
+folder-hook protonmail/* source ~/.config/mutt/accounts/protonmail/gus.sosa@pm.me
 
 # Useful Macros
 ############################################################

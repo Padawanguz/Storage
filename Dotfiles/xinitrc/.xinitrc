@@ -9,7 +9,7 @@ udiskie -ANT &
 slstatus &
 
 # Wallpaper
-xwallpaper --maximize ~/Storage/Images/Wallpapers/AJLTxv3ua0eivZS9R9IaBNnfbkE2QX4BBVagazZPyV8.jpg &
+setbg &
 
 # Disable trackpad on boot - good habits!
 xinput disable 'DLL07BE:01 06CB:7A13 Touchpad'
@@ -24,7 +24,7 @@ clipmenud &
 unclutter &
 
 # Protonmail bridge daemon
-sleep 10 && protonmail-bridge --noninteractive &
+sleep 0 && protonmail-bridge --noninteractive &
 
 #Start dwm with startx
 exec dwm
