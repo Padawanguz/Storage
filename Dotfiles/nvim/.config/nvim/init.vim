@@ -7,6 +7,7 @@
   let &runtimepath .= ','.$VIMHOME.','.$VIMHOME.'/after'.','.$VIMHOME.'/doc'
 
 " MODULAR NVIM CONFIGURATION
+
 " Contains general nvim settings
   source $VIMHOME/config/base.vim
 
