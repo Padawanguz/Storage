@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ "$(bluetoothctl show | grep "Powered" | awk '{print $2}')" != "yes" ]; then
+    icon=""
+else
+    if [ "$(bluetoothctl info)" != "Missing device address argument" ]; then
+      icon=""
+    else
+      icon=""
+    fi
+fi
+printf "%s\\n" "$icon"

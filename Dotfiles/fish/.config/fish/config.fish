@@ -23,7 +23,7 @@ set -x XDG_CONFIG_HOME $HOME/.config
 set -x XDG_DATA_HOME $HOME/.local/share
 set -x XDG_CACHE_HOME $HOME/.cache
 set -x WGETRC $HOME/.config/wget/wgetrc
-set -x GNUPGHOME $HOME/.config/gnupg
+# set -x GNUPGHOME $HOME/.config/gnupg
 set -x GTK2_RC_FILES $HOME/.config/gtk-2.0/.gtkrc-2.0
 set -x ELECTRUMDIR $HOME/.local/share/electrum
 set -x HISTFILE $HOME/.local/share/history
@@ -33,7 +33,7 @@ set -x GEM_PATH $HOME/.local/share/gem
 set -x NPM_CONFIG_USERCONFIG $HOME/.config/npm
 set -x MBSYNCRC $HOME/.config/mbsync/config
 set -x CARGO_HOME $HOME/.local/share/cargo
-set -x PASSWORD_STORE_DIR $HOME/.local/share/password-store
+# set -x PASSWORD_STORE_DIR $HOME/.local/share/password-store
 
 # Open 'su' with fish shell
 function su

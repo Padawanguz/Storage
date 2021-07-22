@@ -1,8 +1,15 @@
 #!/bin/sh
 
-case "$(cat /sys/class/net/w*/operstate 2>/dev/null)" in
-	down) wifiicon="  " ;;
-	up) wifiicon="$(awk '/^\s*w/ { print " ", int($3 * 100 / 70) "% " }' /proc/net/wireless)" ;;
-esac
+if [ "$(nmcli g | awk '{print $4}' | grep "enabled")" != "disabled" ]; then
+  if [ "$(nmcli d | grep -E '(^|\s)wlp2s0($|\s)' | awk '{print $3}')" != "disconnected" ]; then
+	  wifiicon="$(awk '/^\s*w/ { print " ", int($3 * 100 / 70) "% " }' /proc/net/wireless)"
+  else
+    wifiicon=" "
+  fi
+fi
+
+if [ "$(nmcli g | awk '{print $4}' | grep "enabled")" != "enabled" ]; then
+  wifiicon="睊 "
+fi
 
 printf "%s%s%s\n" "$wifiicon" "$(sed "s/down//;s/up//" /sys/class/net/e*/operstate 2>/dev/null)" "$(sed "s/.*/  /" /sys/class/net/tun*/operstate 2>/dev/null)"

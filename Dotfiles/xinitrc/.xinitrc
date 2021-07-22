@@ -12,7 +12,7 @@ slstatus &
 setbg &
 
 # Disable trackpad on boot - good habits!
-xinput disable 'DLL07BE:01 06CB:7A13 Touchpad'
+# xinput disable 'DLL07BE:01 06CB:7A13 Touchpad'
 
 # Transmission torrent daemon
 # transmission-daemon &
@@ -24,7 +24,7 @@ clipmenud &
 unclutter &
 
 # Protonmail bridge daemon
-sleep 0 && protonmail-bridge --noninteractive &
+# protonmail-bridge --noninteractive &
 
 #Start dwm with startx
 exec dwm

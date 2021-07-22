@@ -8,14 +8,7 @@ static char *certdir        = "~/.config/surf/certificates/";
 static char *cachedir       = "~/.cache/surf/cache/";
 static char *cookiefile     = "~/.config/surf/cookies.txt";
 
-
-static SearchEngine searchengines[] = {
-
-    { "b",   "https://search.brave.com/search?q=%s"   },
-    { "g",   "http://www.google.de/search?q=%s"   },
-    { "leo", "http://dict.leo.org/ende?search=%s" },
-
-};
+#define HOMEPAGE "https://search.brave.com/"
 
 /* Webkit default features */
 /* Highest priority value will be used.
@@ -31,7 +24,7 @@ static Parameter defconfig[ParameterLast] = {
 	[CaretBrowsing]       =       { { .i = 0 },     },
 	[CookiePolicies]      =       { { .v = "a" }, },
 	[DefaultCharset]      =       { { .v = "UTF-8" }, },
-	[DiskCache]           =       { { .i = 1 },     },
+	[DiskCache]           =       { { .i = 0 },     },
 	[DNSPrefetch]         =       { { .i = 0 },     },
 	[Ephemeral]           =       { { .i = 0 },     },
 	[FileURLsCrossAccess] =       { { .i = 0 },     },
@@ -78,9 +71,8 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 #define SETPROP(r, s, p) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
              "prop=\"$(printf '%b' \"$(xprop -id $1 $2 " \
-             "| sed \"s/^$2(STRING) = //;s/^\\\"\\(.*\\)\\\"$/\\1/\" && cat ~/.config/surf/bookmarks)\" " \
-             "| dmenu -l 10 -p \"$4\" -w $1)\" && " \
-             "xprop -id $1 -f $3 8s -set $3 \"$prop\"", \
+             "| sed \"s/^$2(STRING) = //;s/^\\\"\\(.*\\)\\\"$/\\1/\")\" " \
+             "| dmenu -p \"$4\" -w $1)\" && xprop -id $1 -f $3 8s -set $3 \"$prop\"", \
              "surf-setprop", winid, r, s, p, NULL \
         } \
 }
@@ -113,17 +105,6 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
         } \
 }
 
-/* BM_ADD(readprop) */
-#define BM_ADD(r) {\
-        .v = (const char *[]){ "/bin/sh", "-c", \
-             "(echo $(xprop -id $0 $1) | cut -d '\"' -f2 " \
-             "| sed 's/.*https*:\\/\\/\\(www\\.\\)\\?//' && cat ~/.config/surf/bookmarks) " \
-             "| awk '!seen[$0]++' > ~/.cache/surf/bookmarks.tmp && " \
-             "mv ~/.cache/surf/bookmarks.tmp ~/config/surf/bookmarks", \
-             winid, r, NULL \
-        } \
-}
-
 /* styles */
 /*
  * The iteration will stop at the first match, beginning at the beginning of
@@ -152,7 +133,7 @@ static char *linkselect_newwin [] = { "/bin/sh", "-c",
 	"surf_linkselect $0 'Link (new window)' | xargs -r surf",
 	winid, NULL
 };
-static char *editscreen[] = { "/bin/sh", "-c", "surf_editscreen", NULL };
+static char *editscreen[] = { "/bin/sh", "-c", "edit_screen", NULL };
 
 #define MODKEY GDK_CONTROL_MASK
 
@@ -163,49 +144,45 @@ static char *editscreen[] = { "/bin/sh", "-c", "surf_editscreen", NULL };
  */
 static Key keys[] = {
 	/* modifier              keyval          function    arg */
-	{ 0,                     GDK_KEY_g,      spawn,      SETPROP("_SURF_URI", "_SURF_GO", PROMPT_GO) },
-	{ 0,                     GDK_KEY_f,      spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
-	{ 0,                     GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
-	{ 0,                     GDK_KEY_m,      spawn,      BM_ADD("_SURF_URI") },
+	{ MODKEY,                GDK_KEY_g,      spawn,      SETPROP("_SURF_URI", "_SURF_GO", PROMPT_GO) },
+	{ MODKEY,                GDK_KEY_f,      spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
+	{ MODKEY,                GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 
-	{ 0,                     GDK_KEY_i,      insert,     { .i = 1 } },
-	{ 0,                     GDK_KEY_Escape, insert,     { .i = 0 } },
+	{ 0,                     GDK_KEY_Escape, stop,       { 0 } },
+	{ MODKEY,                GDK_KEY_c,      stop,       { 0 } },
 
-	{ 0,                     GDK_KEY_d,      externalpipe, { .v = linkselect_curwin } },
-	{ GDK_SHIFT_MASK|0,      GDK_KEY_d,      externalpipe, { .v = linkselect_newwin } },
-	{ 0,                     GDK_KEY_o,      externalpipe, { .v = editscreen        } },
+	{ MODKEY,                GDK_KEY_d,      externalpipe, { .v = linkselect_curwin } },
+	{ GDK_SHIFT_MASK|MODKEY, GDK_KEY_d,      externalpipe, { .v = linkselect_newwin } },
+	{ MODKEY,                GDK_KEY_o,      externalpipe, { .v = editscreen        } },
 
-	{ 0,                     GDK_KEY_c,      stop,       { 0 } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_r,      reload,     { .i = 1 } },
+	{ MODKEY,                GDK_KEY_r,      reload,     { .i = 0 } },
 
-	{ MODKEY,                GDK_KEY_r,      reload,     { .i = 1 } },
-	{ 0,                     GDK_KEY_r,      reload,     { .i = 0 } },
-
-	{ 0,                     GDK_KEY_l,      navigate,   { .i = +1 } },
-	{ 0,                     GDK_KEY_h,      navigate,   { .i = -1 } },
-
+	{ MODKEY,                GDK_KEY_l,      navigate,   { .i = +1 } },
+	{ MODKEY,                GDK_KEY_h,      navigate,   { .i = -1 } },
+  { MODKEY,                GDK_KEY_z,      loaduri,    { .v = HOMEPAGE} },
 	/* vertical and horizontal scrolling, in viewport percentage */
-	{ 0,                     GDK_KEY_j,      scrollv,    { .i = +10 } },
-	{ 0,                     GDK_KEY_k,      scrollv,    { .i = -10 } },
-	{ 0,                     GDK_KEY_space,  scrollv,    { .i = +50 } },
-	{ 0,                     GDK_KEY_b,      scrollv,    { .i = -50 } },
-	{ 0,                     GDK_KEY_i,      scrollh,    { .i = +10 } },
-	{ 0,                     GDK_KEY_u,      scrollh,    { .i = -10 } },
+	{ MODKEY,                GDK_KEY_j,      scrollv,    { .i = +10 } },
+	{ MODKEY,                GDK_KEY_k,      scrollv,    { .i = -10 } },
+	{ MODKEY,                GDK_KEY_space,  scrollv,    { .i = +50 } },
+	{ MODKEY,                GDK_KEY_b,      scrollv,    { .i = -50 } },
+	{ MODKEY,                GDK_KEY_i,      scrollh,    { .i = +10 } },
+	{ MODKEY,                GDK_KEY_u,      scrollh,    { .i = -10 } },
 
 
-	{ 0|GDK_SHIFT_MASK,      GDK_KEY_j,      zoom,       { .i = -1 } },
-	{ 0|GDK_SHIFT_MASK,      GDK_KEY_k,      zoom,       { .i = +1 } },
-	{ 0|GDK_SHIFT_MASK,      GDK_KEY_q,      zoom,       { .i = 0  } },
-	{ 0,                     GDK_KEY_minus,  zoom,       { .i = -1 } },
-	{ 0|GDK_SHIFT_MASK,      GDK_KEY_plus,   zoom,       { .i = +1 } },
-	{ 0,                     GDK_KEY_equal,  zoom,       { .i = 0  } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_j,      zoom,       { .i = -1 } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_k,      zoom,       { .i = +1 } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_q,      zoom,       { .i = 0  } },
+	{ MODKEY,                GDK_KEY_minus,  zoom,       { .i = -1 } },
+	{ MODKEY,                GDK_KEY_plus,   zoom,       { .i = +1 } },
 
-	{ 0,                     GDK_KEY_p,      clipboard,  { .i = 1 } },
-	{ 0,                     GDK_KEY_y,      clipboard,  { .i = 0 } },
+	{ MODKEY,                GDK_KEY_p,      clipboard,  { .i = 1 } },
+	{ MODKEY,                GDK_KEY_y,      clipboard,  { .i = 0 } },
 
-	{ 0,                     GDK_KEY_n,      find,       { .i = +1 } },
-	{ 0|GDK_SHIFT_MASK,      GDK_KEY_n,      find,       { .i = -1 } },
+	{ MODKEY,                GDK_KEY_n,      find,       { .i = +1 } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_n,      find,       { .i = -1 } },
 
-	{ MODKEY,                GDK_KEY_p,      print,      { 0 } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_p,      print,      { 0 } },
 	{ MODKEY,                GDK_KEY_t,      showcert,   { 0 } },
 
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_a,      togglecookiepolicy, { 0 } },
@@ -233,5 +210,3 @@ static Button buttons[] = {
 	{ OnAny,        0,              9,      clicknavigate,  { .i = +1 },    1 },
 	{ OnMedia,      MODKEY,         1,      clickexternplayer, { 0 },       1 },
 };
-
-#define HOMEPAGE "https://search.brave.com/"

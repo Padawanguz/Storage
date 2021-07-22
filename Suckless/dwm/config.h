@@ -83,6 +83,7 @@ static const char* brightup[]        = { "xbacklight", "-inc", "10", NULL };
 static const char* brightdown[]      = { "xbacklight", "-dec", "10", NULL };
 static const char* transmissioncmd[] = { "transmission-remote-gtk", NULL };
 static const char* muttcmd[]         = { "st", "-e", "neomutt", NULL };
+static const char* newsbtcmd[]       = { "st", "-e", "newsboat", NULL };
 static const char* profilemngrcmd[]  = { "firefox", "-ProfileManager", NULL };
 static const char* browsercmd[]      = { "surf", NULL };
 static const char* servercmd[]       = { "firefox", "-P", "WebApps", "--new-window", "http://192.168.0.13", NULL };
@@ -111,6 +112,7 @@ static Key keys[] = {
   { MODKEY | ShiftMask,             XK_d,      spawn,          { .v = accountscmd } },
   { MODKEY | ControlMask,           XK_d,      spawn,          { .v = profilemngrcmd } },
   { MODKEY | ShiftMask,             XK_e,      spawn,          { .v = muttcmd } },
+  { MODKEY | ShiftMask,             XK_n,      spawn,          { .v = newsbtcmd } },
   { MODKEY | ShiftMask,             XK_s,      spawn,          { .v = servercmd } },
   { MODKEY | ShiftMask,             XK_Return, spawn,          { .v = termcmd } },
   { MODKEY | ShiftMask,             XK_c,      killclient,     { 0 } },

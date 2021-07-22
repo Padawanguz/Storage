@@ -130,11 +130,6 @@ typedef struct {
 } Button;
 
 typedef struct {
-	char *token;
-	char *uri;
-} SearchEngine;
-
-typedef struct {
 	const char *uri;
 	Parameter config[ParameterLast];
 	regex_t re;
@@ -182,7 +177,6 @@ static void spawn(Client *c, const Arg *a);
 static void msgext(Client *c, char type, const Arg *a);
 static void destroyclient(Client *c);
 static void cleanup(void);
-static int insertmode = 0;
 
 /* GTK/WebKit */
 static WebKitWebView *newview(Client *c, WebKitWebView *rv);
@@ -222,7 +216,6 @@ static void webprocessterminated(WebKitWebView *v,
                                  Client *c);
 static void closeview(WebKitWebView *v, Client *c);
 static void destroywin(GtkWidget* w, Client *c);
-static gchar *parseuri(const gchar *uri);
 
 /* Hotkeys */
 static void pasteuri(GtkClipboard *clipboard, const char *text, gpointer d);
@@ -241,7 +234,6 @@ static void togglecookiepolicy(Client *c, const Arg *a);
 static void toggleinspector(Client *c, const Arg *a);
 static void find(Client *c, const Arg *a);
 static void externalpipe(Client *c, const Arg *a);
-static void insert(Client *c, const Arg *a);
 
 /* Buttons */
 static void clicknavigate(Client *c, const Arg *a, WebKitHitTestResult *h);
@@ -659,7 +651,7 @@ loaduri(Client *c, const Arg *a)
 			url = g_strdup_printf("file://%s", path);
 			free(path);
 		} else {
-  		url = parseuri(uri);
+			url = g_strdup_printf("http://%s", uri);
 		}
 		if (apath != uri)
 			free(apath);
@@ -1424,11 +1416,7 @@ winevent(GtkWidget *w, GdkEvent *e, Client *c)
 		updatetitle(c);
 		break;
 	case GDK_KEY_PRESS:
-		if (!curconfig[KioskMode].val.i &&
-		    !insertmode ||
-		    CLEANMASK(e->key.state) == (MODKEY|GDK_SHIFT_MASK) ||
-		    CLEANMASK(e->key.state) == (MODKEY) ||
-		    gdk_keyval_to_lower(e->key.keyval) == (GDK_KEY_Escape)) {
+		if (!curconfig[KioskMode].val.i) {
 			for (i = 0; i < LENGTH(keys); ++i) {
 				if (gdk_keyval_to_lower(e->key.keyval) ==
 				    keys[i].keyval &&
@@ -1862,22 +1850,6 @@ destroywin(GtkWidget* w, Client *c)
 		gtk_main_quit();
 }
 
-gchar *
-parseuri(const gchar *uri) {
-	guint i;
-
-	for (i = 0; i < LENGTH(searchengines); i++) {
-		if (searchengines[i].token == NULL || searchengines[i].uri == NULL ||
-		    *(uri + strlen(searchengines[i].token)) != ' ')
-			continue;
-		if (g_str_has_prefix(uri, searchengines[i].token))
-			return g_strdup_printf(searchengines[i].uri,
-					       uri + strlen(searchengines[i].token) + 1);
-	}
-
-	return g_strdup_printf("http://%s", uri);
-}
-
 void
 pasteuri(GtkClipboard *clipboard, const char *text, gpointer d)
 {
@@ -2061,12 +2033,6 @@ find(Client *c, const Arg *a)
 		if (strcmp(s, "") == 0)
 			webkit_find_controller_search_finish(c->finder);
 	}
-}
-
-void
-insert(Client *c, const Arg *a)
-{
-		insertmode = (a->i);
 }
 
 void

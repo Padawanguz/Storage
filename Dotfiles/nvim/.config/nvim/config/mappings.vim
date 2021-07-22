@@ -3,18 +3,18 @@
 " │ Leader │
 " └────────┘
 
-nnoremap <SPACE> <Nop>
-let mapleader = "\<Space>"
-let maplocalleader ="\<Space>"
+" nnoremap <SPACE> <Nop>
+let mapleader = ","
+let maplocalleader =","
 
 " ┌──────────────────────┐
 " │ Cursor/Text Movement │
 " └──────────────────────┘
 
 " Use enter and space w/o entering insert mode
-nmap <Enter> O<Esc>j
+nmap <Enter> O<Esc>
 nmap <CR> o<Esc>k
-" nnoremap <space> i<space><esc>
+nnoremap <space> i<space><esc>
 
 " Disable arrow keys (hardcore)
 nmap  <up>    <nop>

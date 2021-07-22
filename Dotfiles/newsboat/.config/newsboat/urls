@@ -61,7 +61,7 @@ https://www.economist.com/briefing/rss.xml "~The Economist - Briefings" "The Eco
 https://www.economist.com/special-report/rss.xml "~The Economist - Special Report" "The Economist" "Special Report" Politics
 https://www.economist.com/britain/rss.xml "~The Economist - Britain" "THe Economist" UK Politics
 https://www.economist.com/europe/rss.xml "~The Economist - Europe" "~The Economist" Europe Politics
-https://www.adweek.com/feed/ “~AdWeek” Advertising
+https://www.adweek.com/feed/ "~AdWeek” Advertising
 http://adtechdaily.com/feed "~Ad Tech Daily" Advertising
 http://feeds.feedburner.com/Adpulp "~AdPulp" Advertising
 http://www.moreaboutadvertising.com/feed "~More About Advertising" Advertising
@@ -108,14 +108,40 @@ http://feeds.nbcnews.com/feeds/topstories "NBC News" US
 http://abcnews.go.com/abcnews/topstories "ABC News" US
 http://rssfeeds.usatoday.com/usatoday-NewsTopStories "USA Today" US
 http://www.latimes.com/rss2.0.xml "~LA Times" US
-https://nypost.com/feed/ "~The NY Post" US
 https://www.cbsnews.com/latest/rss/main "~CBS News" US
+https://www.newyorker.com/feed/everything "~The NewYorker" US Magazine
+https://abc7ny.com/feed/ "~ABC Eyewitness News" US
+https://www.nbcnewyork.com/?rss=y "~NBC New York" US
+https://newyork.cbslocal.com/feed/ "~CBS New York" US
 https://www.chicagotribune.com/news/local/breaking/rss2.0.xml "~The Chicago Tribune" US
 http://www.dailymail.co.uk/articles.rss "~Daily Mail UK" UK
-http://www.telegraph.co.uk/rss.xml "~The Telegraph" "The Telegraph" Uk
+http://www.telegraph.co.uk/rss.xml "~The Telegraph" "The Telegraph" UK
+https://www.telegraph.co.uk/politics/rss.xml "~The Telegraph - Politics" UK Politics
+https://www.telegraph.co.uk/business/rss.xml "~The Telegraph - Business" UK Business
+https://www.telegraph.co.uk/technology/rss.xml "~The Telegraph - Technology" UK Technology
+https://www.telegraph.co.uk/opinion/rss.xml "~The Telegraph - Opinion" UK Opinion
+http://rss.cbc.ca/lineup/topstories.xml "~CBC Canada" Canada
+http://www.ctvnews.ca/rss/ctvnews-ca-top-stories-public-rss-1.822009 "~CTV News Canada" Canada
+https://globalnews.ca/feed/ "~Global News Canada" Canada
+http://www.thestar.com/content/thestar/feed.RSSManagerServlet.topstories.full.rss "~The Toronto Star" Canada
+https://torontosun.com/feed/ "~The Toronto Sun" Canada
 http://www.independent.co.uk/rss "~The Independent" UK
 https://www.thesun.co.uk/feed/ "The Sun UK" UK
-https://www.huffingtonpost.com/section/front-page/feed "~Huffington Post" "World News"
+https://www.newstatesman.com/feeds/site_feed.rss "~NewStateman" UK
+https://nypost.com/feed/ "The NY Post" US
+https://www.huffingtonpost.com/section/front-page/feed "~Huffington Post"
+https://chaski.huffpost.com/us/auto "~Huffington Post - US" US
+https://www.huffingtonpost.com/section/politics/feed "~The Huffington Post - Politics" Politics
+https://www.huffingtonpost.com/section/world-news/feed "~Huffington Post - World News"
+https://www.huffpost.com/section/business/feed "~Huffington Post - Business" Business
+https://www.huffingtonpost.com/section/technology/feed "~Huffington Post - Technology" Technology
+http://www.huffingtonpost.co.uk/feeds/verticals/uk-politics/index.xml "~Huffington Post - UK Politics" UK Politics
+https://www.politics.co.uk/feed/ "~Politics UK" Politics UK
+https://blog.politics.ox.ac.uk/feed/ "~Oxford Department Of Politics" UK Politics
+http://ukpollingreport.co.uk/feed "~UK Polling Report" UK Politics
+https://offchan.com/feed "~Official UK Government News" UK Politics
+https://sluggerotoole.com/feed/ "~Slugger O'Toole" UK "Northern Ireland" Politics
+https://www.totalpolitics.com/articles/news/rss.xml "~Total Politics UK" UK Politics
 http://fortune.com/feed/ "~Fortune Magazine" Business Economy
 https://www.prnewswire.com/rss/all-news-releases-from-PR-newswire-news.rss "~PR News Wire" "World News"
 http://feeds.hbr.org/harvardbusiness "~Harvard Business Review" Business US
@@ -126,11 +152,10 @@ https://time.com/feed/ "~Time Magazine" Business Politics
 http://rss.dw.com/xml/rss-en-all "DW News" "World News"
 http://estaticos.elmundo.es/elmundo/rss/internacional.xml "~El Mundo Internacional" "World News"
 http://www.heraldsun.com.au/news/world/rss "~The Herald Sun World News" "World News"
-https://www.buzzfeed.com/world.xml "~BuzzFeed - World News" "World News"
+https://www.buzzfeed.com/uk/index.xml "~Buzzfeed" World News
 http://www.aljazeera.com/xml/rss/all.xml "~Al Jazeera" "World News"
-https://defence-blog.com/feed/ "~Defence Blog" "World News"
-https://www.thecipherbrief.com/feed "~The Cipher Brief" "World News"
 https://timesofindia.indiatimes.com/rssfeeds/296589292.cms "Times Of India" India Asia
+http://www.dailytelegraph.com.au/feed "~The Daily Telegraph - Australia" Australia
 http://feeds.washingtonpost.com/rss/world "~The Washington Post World News" "The Washington Post" "World News"
 https://www.cnbc.com/id/100727362/device/rss/rss.html "~CNBC - World News" "World News"
 http://feeds.feedburner.com/ndtvnews-world-news "~NDTV India - World News" "World News"
@@ -139,7 +164,6 @@ http://www.npr.org/rss/rss.php?id=1004 "~NPR World" "World News"
 https://sputniknews.com/export/rss2/world/index.xml "~Sputnik News World" "World News"
 https://www.latimes.com/world/rss2.0.xml "LA Times World" "World News"
 https://www.cbsnews.com/latest/rss/world "CBS World" "World News"
-https://www.abc.net.au/news/feed/52278/rss.xml "~ABC Australia - World News" "World News"
 http://www.independent.co.uk/news/world/rss "~The Independent - World News" "World News"
 http://www.mirror.co.uk/news/world-news/rss.xml "~Daily Mirror - World News" "World News"
 https://www.thesun.co.uk/news/worldnews/feed/ "~The Sun - World News" "World News"
@@ -152,7 +176,6 @@ https://globalnews.ca/world/feed/ "~Global News Canada - World News" "World News
 http://www.channelnewsasia.com/rssfeeds/8395884 "~Channel NewsAsia Singapore - World News" "World News"
 https://www.dailytelegraph.com.au/news/world/rss "~Daily Telegraph Australia - World News" "World News" "World News"
 https://www.neweurope.eu/category/world/feed/ "~New Europe - World News" "World News"
-https://live.engadget.com/rss.xml "~Engadget" Technology
 http://feeds.mashable.com/Mashable "~Mashable" Technology
 https://www.wired.com/rss/ "~Wired" Technology
 http://feeds.arstechnica.com/arstechnica/index/ "ARS Technica" Technology
@@ -171,18 +194,19 @@ https://www.politico.eu/tag/foreign-policy/feed/ "~Politico - Foreign Affairs" D
 https://blogs.fco.gov.uk/feed/ "~UK Foreign Office Blog" Diplomacy
 https://www.cips-cepi.ca/feed/ "~Centre for International Policy Studies - Canada" Diplomacy
 https://thehill.com/taxonomy/term/1138/feed "The Hill - Foreign Policy" Diplomacy
-https://www.eufp.eu/rss.xml "~EU Foreign Policy" Diplomacy
 https://www.worldaffairs.org/media/blog?format=feed "~World Affairs Council" Diplomacy
 https://rideauinstitute.ca/category/blog/feed/ "~Rideau Institute" Diplomacy
 https://www.theguardian.com/politics/foreignpolicy/rss "~The Guardian - Foreign Policy" Diplomacy
 https://www.theguardian.com/us-news/us-foreign-policy/rss "~The Guardian - US Foreign Policy" Diplomacy
-https://www.worldaffairsjournal.org/blog/feed "~World Affairs" Diplomacy
 https://www.rand.org/topics/international-affairs.xml/feed "Rand Corporation" Diplomacy
 https://www.globalissues.org/news/feed "~Global Issues" Diplomacy
 https://pecuniaetbellum.com/feed/ "~Pecunia et Bellum" Diplomacy
-https://www.iiea.com/feed/ "~The Institute of International and European Affairs" Diplomacy
 https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/topic/subject/international-relations/rss.xml "~The New York Times - International Relations" Diplomacy
 https://blogs.lse.ac.uk/internationalrelations/feed/ "~LSE International Relations" Diplomacy
 https://www.internationalaffairs.org.au/feed/atom/ "~The Australian Institute Of International Affairs" Diplomacy
 https://opencanada.org/feed/ "~Open Canada - International Affairs" Diplomacy
 https://spheresofinfluence.ca/feed/ "~Spheres of Influence"  Diplomacy
+https://www.foreignpolicyjournal.com/feed/ "~Foreign Policy Journal" Diplomacy
+https://foreignpolicyblogs.com/feed/ "~Foreign Policy Association" Diplomacy
+http://www.fpri.org/feed/ "~The Foreign Policy Research Institute" Diplomacy
+https://foreignpolicyi.org/feed/ "~The Foreign Policy Initiative" Diplomacy
