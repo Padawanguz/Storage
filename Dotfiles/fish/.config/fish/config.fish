@@ -6,12 +6,12 @@ if not functions -q fisher
 end
 
 # Puts local/bin on $PATH
-set PATH $HOME/.local/bin $PATH
+set fish_user_paths $HOME/.local/bin $fish_user_paths
 
 # Puts rbenv on $PATH
-set PATH $HOME/.rbenv/bin $PATH
-set PATH $HOME/.rbenv/shims $PATH
-# rbenv rehash >/dev/null ^&1
+set fish_user_paths $HOME/.rbenv/bin $fish_user_paths
+set fish_user_paths $HOME/.rbenv/shims $fish_user_paths
+rbenv rehash >/dev/null
 
 # Set Enviroment Variables
 set -Ux EDITOR nvim
@@ -28,8 +28,8 @@ set -x GTK2_RC_FILES $HOME/.config/gtk-2.0/.gtkrc-2.0
 set -x ELECTRUMDIR $HOME/.local/share/electrum
 set -x HISTFILE $HOME/.local/share/history
 set -x GOPATH $HOME/.local/share/go
-set -x GEM_HOME $HOME/.local/share/gem
-set -x GEM_PATH $HOME/.local/share/gem
+# set -x GEM_HOME $HOME/.local/share/gem
+# set -x GEM_PATH $HOME/.local/share/gem
 set -x NPM_CONFIG_USERCONFIG $HOME/.config/npm
 set -x MBSYNCRC $HOME/.config/mbsync/config
 set -x CARGO_HOME $HOME/.local/share/cargo
