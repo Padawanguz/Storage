@@ -74,7 +74,6 @@ static const Layout layouts[] = {
 static char        dmenumon[2]       = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char* dmenucmd[]        = { "dmenu_run", "-p", "Run:", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char* clipboardcmd[]    = { "clipmenu", NULL };
-static const char* dmenufmcmd[]      = { "dmenufm", NULL };
 static const char* termcmd[]         = { "st", NULL };
 static const char* downvol[]         = { "/usr/bin/pulseaudio-ctl", "down", NULL };
 static const char* mutevol[]         = { "/usr/bin/pulseaudio-ctl", "mute", NULL };
@@ -86,13 +85,14 @@ static const char* muttcmd[]         = { "st", "-e", "neomutt", NULL };
 static const char* newsbtcmd[]       = { "st", "-e", "newsboat", NULL };
 static const char* profilemngrcmd[]  = { "firefox", "-ProfileManager", NULL };
 static const char* browsercmd[]      = { "surf", NULL };
+static const char* filemngrcmd[]     = { "st", "-e", "ranger", NULL };
 static const char* servercmd[]       = { "firefox", "-P", "WebApps", "--new-window", "http://192.168.0.13", NULL };
 static const char* googlecmd[]       = { "firefox", "-P", "Google", "--new-window", "https://myaccount.google.com/", NULL };
 static const char* accountscmd[]     = { "firefox", "-P", "Accounts", NULL };
 static const char* youtubecmd[]      = { "firefox", "-P", "Google", "--new-window", "https://www.youtube.com", NULL };
 static const char* plexcmd[]         = { "firefox", "-P", "WebApps", "--new-window", "https://app.plex.tv", NULL };
 static const char* scrotcmd[]        = { "scrot", "%Y-%m-%d-%T_$wx$h_scrot.png", "-e", "mv $f ~/Downloads/screenshots/", NULL };
-static const char* scrotselcmd[]     = { "scrot", "%Y-%m-%d-%T_$wx$h_scrot.png", "-se", "mv $f ~/Downloads/screenshots/", NULL };
+static const char* scrotselcmd[]     = { "scrot", "%Y-%m-%d-%T_$wx$h_scrot.png", "-s", "-e", "mv $f ~/Downloads/screenshots/", NULL };
 static const char* trackpadoff[]     = { "xinput", "disable", "DLL07BE:01 06CB:7A13 Touchpad", NULL };
 static const char* trackpadon[]      = { "xinput", "enable", "DLL07BE:01 06CB:7A13 Touchpad", NULL };
 static const char* suspendcmd[]      = { "systemctl", "suspend", NULL };
@@ -105,6 +105,7 @@ static const char* slock[]           = { "slock", NULL };
 static Key keys[] = {
     /* modifier                     key        function        argument */
   { MODKEY | ShiftMask,             XK_f,      spawn,          { .v = browsercmd } },
+  { MODKEY | ShiftMask,             XK_b,      spawn,          { .v = filemngrcmd } },
   { MODKEY | ShiftMask,             XK_p,      spawn,          { .v = plexcmd } },
   { MODKEY | ShiftMask,             XK_t,      spawn,          { .v = transmissioncmd } },
   { MODKEY | ShiftMask,             XK_y,      spawn,          { .v = youtubecmd } },
@@ -126,7 +127,6 @@ static Key keys[] = {
   { MODKEY | ControlMask,           XK_q,      spawn,          { .v = shutdowncmd } },
   { MODKEY,                         XK_p,      spawn,          { .v = dmenucmd } },
   { MODKEY,                         XK_o,      spawn,          { .v = clipboardcmd } },
-  { MODKEY,               XK_bracketleft,      spawn,          { .v = dmenufmcmd } },
   { MODKEY,                         XK_b,      togglebar,      { 0 } },
 	STACKKEYS(MODKEY,focus)
 	STACKKEYS(MODKEY|ShiftMask,push)

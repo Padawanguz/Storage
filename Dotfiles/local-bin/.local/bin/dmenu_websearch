@@ -9,9 +9,9 @@
 # A  browser-independent address  bar  with bookmark  support. When  the
 # cursor is on a web browser it acts as the address bar of that browser.
 
-browser='palemoon -P Default'
+browser='surf'
 # engine="https://duckduckgo.com/?q=%s"
-engine="https://www.google.com/search?q=%s"
+engine="https://www.startpage.com/sp/search?query=%s"
 bookmarks="$HOME/.config/dmenu/bookmarks"
 
 gotourl() {

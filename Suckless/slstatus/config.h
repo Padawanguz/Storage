@@ -10,6 +10,7 @@ static const char unknown_str[] = "ﮖ ";
 #define MAXLEN 2048
 
 static const struct arg args[] = {
+  // { run_command,  " %4s" , "slstatus-playstatus"  },
   { run_command,  " %4s  " , "slstatus-bluetooth"  },
   { run_command,  " %4s  " , "slstatus-volume"  },
   { run_command,  "%4s  " , "slstatus-internet"  },

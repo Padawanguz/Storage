@@ -115,22 +115,22 @@ nnoremap <C-l> <C-w><C-l>
 
 "" [N] <Bar> -- Split window vertically
 "" [N] _ -- Split Window Horizontally
-" nnoremap <expr><silent> <Bar> v:count == 0 ? "<C-W>v<C-W><Right>" : ":<C-U>normal! 0".v:count."<Bar><CR>"
-" nnoremap <expr><silent> _     v:count == 0 ? "<C-W>s<C-W><Down>"  : ":<C-U>normal! ".v:count."_<CR>"
-nnoremap <expr><silent> <Bar> v:count == 0 ? ":vnew +terminal<CR>" : ":<C-U>normal! 0".v:count."<Bar><CR>"
-nnoremap <expr><silent> _     v:count == 0 ? ":new +terminal<CR>"  : ":<C-U>normal! ".v:count."_<CR>"
+nnoremap <expr><silent> <Bar> v:count == 0 ? "<C-W>v<C-W><Right>" : ":<C-U>normal! 0".v:count."<Bar><CR>"
+nnoremap <expr><silent> _     v:count == 0 ? "<C-W>s<C-W><Down>"  : ":<C-U>normal! ".v:count."_<CR>"
+" nnoremap <expr><silent> <Bar> v:count == 0 ? ":vnew +terminal<CR>" : ":<C-U>normal! 0".v:count."<Bar><CR>"
+" nnoremap <expr><silent> _     v:count == 0 ? ":new +terminal<CR>"  : ":<C-U>normal! ".v:count."_<CR>"
 
 "" [N] <tab> -- Next buffer
-"" [N] <S-tab> -- Previous buffer
+"" [N] <S-tab> -- Next Window
 nnoremap <tab>   :bnext<CR>
-nnoremap <S-tab> :bprevious<CR>
+nnoremap <S-tab> <C-w><C-w>
 
-" [N] <Ctrl> q quits all windows
-" [N] <Ctrl> s saves all windows
-" [N] <space> xx close buffer AND closes window - destroy layout
-nnoremap <C-q> :qall<CR>
-nnoremap <C-s> :wall<CR>
-nnoremap <Leader>xx :bdelete<CR>
+" [N] <Ctrl> q quits windows
+" [N] <Ctrl> s saves windows
+" [N] <Ctrl> x close buffer
+nnoremap <C-q> :q<CR>
+nnoremap <C-s> :w<CR>
+nnoremap <C-x> :bp<bar>sp<bar>bn<bar>bd<CR>
 
 " ┌──────────────────┐
 " │ Utility Mappings │
@@ -144,12 +144,12 @@ nnoremap <Leader>xx :bdelete<CR>
   nnoremap <Leader>sc :setlocal spell! spelllang=es<CR>
 
 " Copy the current word or visually selected text to the clipboard
-  nnoremap <F4> "+yiw
-  vnoremap <F4> "+y
+  " nnoremap <F4> "+yiw
+  " vnoremap <F4> "+y
 
 " Prepare a :substitute command using the current word or the selected text
-  nnoremap <F5> yiw:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>
-  vnoremap <F5> y:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>
+  nnoremap <leader>/ yiw:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>
+  vnoremap <leader>/ y:%s/\<<C-r>"\>/<C-r>"/gc<Left><Left><Left>
 
 " Manual Folding
   inoremap <F9> <C-O>za

@@ -8,7 +8,7 @@ static char *certdir        = "~/.config/surf/certificates/";
 static char *cachedir       = "~/.cache/surf/cache/";
 static char *cookiefile     = "~/.config/surf/cookies.txt";
 
-#define HOMEPAGE "https://search.brave.com/"
+#define HOMEPAGE "https://www.startpage.com/do/mypage.pl?prfe=cb58fdf87a845f5f9f68c4831997f78b5de930db0e7cf1eba1d0ad09b127eb74be9373b4e57276e93c0845262d071e5b34fdc9fd637a183f4f944c063ef8d0c34f07644ed11d18f923548e70ce03316b38"
 
 /* Webkit default features */
 /* Highest priority value will be used.
@@ -24,8 +24,8 @@ static Parameter defconfig[ParameterLast] = {
 	[CaretBrowsing]       =       { { .i = 0 },     },
 	[CookiePolicies]      =       { { .v = "a" }, },
 	[DefaultCharset]      =       { { .v = "UTF-8" }, },
-	[DiskCache]           =       { { .i = 0 },     },
-	[DNSPrefetch]         =       { { .i = 0 },     },
+	[DiskCache]           =       { { .i = 1 },     },
+	[DNSPrefetch]         =       { { .i = 1 },     },
 	[Ephemeral]           =       { { .i = 0 },     },
 	[FileURLsCrossAccess] =       { { .i = 0 },     },
 	[FontSize]            =       { { .i = 12 },    },

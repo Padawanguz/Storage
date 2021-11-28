@@ -7,7 +7,7 @@ nnoremap <silent> - :NERDTreeToggle<CR>:wincmd p<CR>
 
 " Reveal currently editted file in nerdtree widnow,
 " see https://stackoverflow.com/q/7692233/6064933
-nnoremap <silent> <C-f> :NERDTreeFind<CR>
+nnoremap <silent> ¬ :NERDTreeFind<CR>
 
 " Ignore certain files and folders
 let NERDTreeIgnore = ['\.pyc$', '^__pycache__$']

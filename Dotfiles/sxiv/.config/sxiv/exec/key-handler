@@ -1,4 +1,5 @@
 #!/bin/sh
+# You need to press <C-x> to execute the command.
 while read file
 do
         case "$1" in

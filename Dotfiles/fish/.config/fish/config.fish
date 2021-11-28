@@ -8,6 +8,10 @@ end
 # Puts local/bin on $PATH
 set fish_user_paths $HOME/.local/bin $fish_user_paths
 
+
+# Puts snap on $PATH
+set fish_user_paths /var/lib/snapd/snap/bin $fish_user_paths
+
 # Puts rbenv on $PATH
 set fish_user_paths $HOME/.rbenv/bin $fish_user_paths
 set fish_user_paths $HOME/.rbenv/shims $fish_user_paths

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+playstatus="$(pacmd list-sink-inputs | grep "media.name" | grep -v "playStream" | awk -v FS='("|")' '{print $2}'
+)"
+
+
+echo "$playstatus"
