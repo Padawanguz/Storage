@@ -2,9 +2,6 @@
 xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --output eDP1 --mode 1920x1080
 
-#Mount utility controlled with udiskie-dmenu
-udiskie -ANT &
-
 # Status msgs on system tray
 slstatus &
 
@@ -19,6 +16,10 @@ setbg &
 
 # Clipmenu control with dmenu
 clipmenud &
+
+# Climenu synchronization
+autocutsel -fork &
+autocutsel -selection PRIMARY -fork &
 
 # Mouse unclutter
 unclutter &

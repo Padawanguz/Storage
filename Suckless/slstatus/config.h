@@ -13,7 +13,8 @@ static const struct arg args[] = {
   // { run_command,  " %4s" , "slstatus-playstatus"  },
   { run_command,  " %4s  " , "slstatus-bluetooth"  },
   { run_command,  " %4s  " , "slstatus-volume"  },
-  { run_command,  "%4s  " , "slstatus-internet"  },
+  { run_command,  "%4s " , "slstatus-wpa_supplicant"  },
+  { run_command,  "%4s  " , "slstatus-mullvadvpn"  },
   { run_command,  "%4s " , "slstatus-battery"  },
   { datetime, "%s", " %a %T " },
 };

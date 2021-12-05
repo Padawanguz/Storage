@@ -84,7 +84,6 @@ static const char* transmissioncmd[] = { "transmission-remote-gtk", NULL };
 static const char* muttcmd[]         = { "st", "-e", "neomutt", NULL };
 static const char* newsbtcmd[]       = { "st", "-e", "newsboat", NULL };
 static const char* profilemngrcmd[]  = { "firefox", "-ProfileManager", NULL };
-static const char* browsercmd[]      = { "surf", NULL };
 static const char* filemngrcmd[]     = { "st", "-e", "ranger", NULL };
 static const char* servercmd[]       = { "firefox", "-P", "WebApps", "--new-window", "http://192.168.0.13", NULL };
 static const char* googlecmd[]       = { "firefox", "-P", "Google", "--new-window", "https://myaccount.google.com/", NULL };
@@ -93,18 +92,14 @@ static const char* youtubecmd[]      = { "firefox", "-P", "Google", "--new-windo
 static const char* plexcmd[]         = { "firefox", "-P", "WebApps", "--new-window", "https://app.plex.tv", NULL };
 static const char* scrotcmd[]        = { "scrot", "%Y-%m-%d-%T_$wx$h_scrot.png", "-e", "mv $f ~/Downloads/screenshots/", NULL };
 static const char* scrotselcmd[]     = { "scrot", "%Y-%m-%d-%T_$wx$h_scrot.png", "-s", "-e", "mv $f ~/Downloads/screenshots/", NULL };
-static const char* trackpadoff[]     = { "xinput", "disable", "DLL07BE:01 06CB:7A13 Touchpad", NULL };
-static const char* trackpadon[]      = { "xinput", "enable", "DLL07BE:01 06CB:7A13 Touchpad", NULL };
 static const char* suspendcmd[]      = { "systemctl", "suspend", NULL };
 static const char* rebootcmd[]       = { "systemctl", "reboot", NULL };
 static const char* shutdowncmd[]     = { "systemctl", "poweroff", NULL };
 static const char* udiskiecmd[]      = { "udiskie-dmenu", NULL };
-static const char* networkmngrcmd[]  = { "networkmanager_dmenu", NULL };
 static const char* slock[]           = { "slock", NULL };
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
-  { MODKEY | ShiftMask,             XK_f,      spawn,          { .v = browsercmd } },
   { MODKEY | ShiftMask,             XK_b,      spawn,          { .v = filemngrcmd } },
   { MODKEY | ShiftMask,             XK_p,      spawn,          { .v = plexcmd } },
   { MODKEY | ShiftMask,             XK_t,      spawn,          { .v = transmissioncmd } },
@@ -117,10 +112,7 @@ static Key keys[] = {
   { MODKEY | ShiftMask,             XK_s,      spawn,          { .v = servercmd } },
   { MODKEY | ShiftMask,             XK_Return, spawn,          { .v = termcmd } },
   { MODKEY | ShiftMask,             XK_c,      killclient,     { 0 } },
-  { MODKEY | ShiftMask,             XK_space,  spawn,          { .v = trackpadon } },
-  { MODKEY | ControlMask,           XK_space,  spawn,          { .v = trackpadoff } },
   { MODKEY | ControlMask,           XK_m,      spawn,          { .v = udiskiecmd } },
-  { MODKEY | ControlMask,           XK_c,      spawn,          { .v = networkmngrcmd } },
   { MODKEY | ControlMask,           XK_r,      spawn,          { .v = rebootcmd } },
   { MODKEY | ControlMask,           XK_s,      spawn,          { .v = suspendcmd } },
   { MODKEY | ControlMask,           XK_l,      spawn,          { .v = slock } },

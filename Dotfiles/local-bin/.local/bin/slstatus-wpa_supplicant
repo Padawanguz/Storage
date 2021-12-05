@@ -1,0 +1,19 @@
+#!/bin/bash
+
+ifname=$(iw dev | awk -F '[ ]' '/Interface/ {print $2}')
+
+wpastate=$(wpa_cli -i $ifname status | awk -F '[=]' '/wpa_state/ {print $2}')
+
+case $wpastate in
+
+  COMPLETED)
+    wifiicon="$(awk '/^\s*w/ { print " ", int($3 * 100 / 70) "%" }' /proc/net/wireless)"
+    ;;
+
+  DISCONNECTED)
+    wifiicon="睊"
+    ;;
+
+esac
+
+echo "$wifiicon"
