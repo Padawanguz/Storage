@@ -68,6 +68,13 @@ See the above repository for updates as well as full license text. */
   :root[sizemode="fullscreen"] #window-controls{ right: unset }
 }
 
+
+/* Always hide the tracking protection icon */
+#tracking-protection-icon-container,
+#tracking-protection-icon-box {
+    display: none;
+  }
+
 /*  HIDE TABS TOOLBAR */
 
 /* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/hide_tabs_toolbar.css made available under Mozilla Public License v. 2.0
