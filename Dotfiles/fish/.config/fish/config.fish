@@ -8,10 +8,6 @@ end
 # Puts local/bin on $PATH
 set fish_user_paths $HOME/.local/bin $fish_user_paths
 
-
-# Puts snap on $PATH
-set fish_user_paths /var/lib/snapd/snap/bin $fish_user_paths
-
 # Puts rbenv on $PATH
 set fish_user_paths $HOME/.rbenv/bin $fish_user_paths
 set fish_user_paths $HOME/.rbenv/shims $fish_user_paths
@@ -20,7 +16,7 @@ rbenv rehash >/dev/null
 # Set Enviroment Variables
 set -Ux EDITOR nvim
 set -Ux TERMINAL st
-set -Ux BROWSER surf
+set -Ux BROWSER firefox
 
 # Removes unnecesary $HOME clutter
 set -x XDG_CONFIG_HOME $HOME/.config

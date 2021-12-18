@@ -14,6 +14,9 @@ setbg &
 # Transmission torrent daemon
 # transmission-daemon &
 
+# Launch slock on boot
+slock &
+
 # Clipmenu control with dmenu
 clipmenud &
 
