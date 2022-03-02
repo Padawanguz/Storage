@@ -11,8 +11,11 @@ setbg &
 # Disable trackpad on boot - good habits!
 # xinput disable 'DLL07BE:01 06CB:7A13 Touchpad'
 
+# Udisk automount
+udiskie-mount /dev/sda1
+
 # Transmission torrent daemon
-# transmission-daemon &
+transmission-daemon &
 
 # Launch slock on boot
 slock &
@@ -21,8 +24,8 @@ slock &
 clipmenud &
 
 # Climenu synchronization
-autocutsel -fork &
-autocutsel -selection PRIMARY -fork &
+# autocutsel -fork &
+# autocutsel -selection PRIMARY -fork &
 
 # Mouse unclutter
 unclutter &

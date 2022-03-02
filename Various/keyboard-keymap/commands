@@ -1,0 +1,2 @@
+qmk json2c -o keymap.c custom-col.json
+qmk flash -kb redox/rev1 -km custom-col
