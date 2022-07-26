@@ -11,9 +11,6 @@ setbg &
 # Disable trackpad on boot - good habits!
 # xinput disable 'DLL07BE:01 06CB:7A13 Touchpad'
 
-# Udisk automount
-udiskie-mount /dev/sda1
-
 # Transmission torrent daemon
 transmission-daemon &
 
@@ -29,6 +26,9 @@ clipmenud &
 
 # Mouse unclutter
 unclutter &
+
+# Udisk automount
+udiskie-mount /dev/sda1
 
 # Protonmail bridge daemon
 # protonmail-bridge --noninteractive &
