@@ -1,6 +1,10 @@
 # Fix Display and make it 1080p
+sleep 2
 xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --output eDP1 --mode 1920x1080
+
+# Set Bluetooth scan on
+bluetoothctl scan on &
 
 # Status msgs on system tray
 slstatus &
@@ -28,6 +32,7 @@ clipmenud &
 unclutter &
 
 # Udisk automount
+sleep 2
 udiskie-mount /dev/sda1
 
 # Protonmail bridge daemon

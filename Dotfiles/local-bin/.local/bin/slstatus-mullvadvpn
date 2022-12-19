@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mullvadstatus=$(mullvad status | awk -F '[ ]' '/Connected/ {print $3}')
+mullvadstatus=$(mullvad status | awk -F '[ ]' '/Connected/ {print $1}')
 
 if [ "$mullvadstatus" == "Connected" ]; then vpnstatus="  "; fi
 
