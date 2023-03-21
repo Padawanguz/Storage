@@ -1,7 +1,7 @@
 
   syntax on
   set bg=dark
-	colorscheme ron
+	" colorscheme ron
 
 " Set cursorline Style
   set cursorline

@@ -6,6 +6,9 @@ xrandr --output eDP1 --mode 1920x1080
 # Set Bluetooth scan on
 bluetoothctl scan on &
 
+# Polkit Authentication Agent
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
 # Status msgs on system tray
 slstatus &
 
@@ -32,8 +35,8 @@ clipmenud &
 unclutter &
 
 # Udisk automount
-sleep 2
-udiskie-mount /dev/sda1
+# udiskie -NT &
+# udiskie-mount /dev/sda1
 
 # Protonmail bridge daemon
 # protonmail-bridge --noninteractive &
