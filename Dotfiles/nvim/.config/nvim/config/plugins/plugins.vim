@@ -40,6 +40,7 @@
   Plug 'majutsushi/tagbar'
   Plug 'jceb/vim-orgmode'
   Plug 'lambdalisue/suda.vim'
+  Plug 'github/copilot.vim'
 
   call plug#end()
 
@@ -53,7 +54,7 @@
 " " source $VIMHOME/plugins/config/plugin.vim
 
 source $VIMHOME/config/plugins/config/ale.vim
-source $VIMHOME/config/plugins/config/youcompleteme.vim
+" source $VIMHOME/config/plugins/config/youcompleteme.vim
 source $VIMHOME/config/plugins/config/cursorline.vim
 source $VIMHOME/config/plugins/config/SiB.vim
 source $VIMHOME/config/plugins/config/fzf.vim

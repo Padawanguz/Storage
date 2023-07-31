@@ -1,15 +1,21 @@
 #!/bin/sh
 
-[ $(pamixer --get-mute) = true ] && echo "婢 " && exit
-
-vol="$(pamixer --get-volume)"
-
-if [ "$vol" -gt "70" ]; then
-	icon="  "
-elif [ "$vol" -lt "30" ]; then
-	icon="  "
-else
-	icon="墳  "
+# Check if the volume is muted and exit if it is
+if [ "$(pamixer --get-mute)" = "true" ]; then
+    echo "婢 ";
+    exit;
 fi
 
-echo "$icon$vol%"
+volume="$(pamixer --get-volume)"
+volume_icon=""
+
+# Set the volume icon depending on the volume level
+if [ "$volume" -gt "70" ]; then
+    volume_icon="  "
+elif [ "$volume" -lt "30" ]; then
+    volume_icon="  "
+else
+    volume_icon="墳  "
+fi
+
+echo "${volume_icon}${volume}%"

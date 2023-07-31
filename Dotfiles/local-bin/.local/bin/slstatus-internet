@@ -1,15 +1,33 @@
+
 #!/bin/sh
 
-if [ "$(nmcli g | awk '{print $4}' | grep "enabled")" != "disabled" ]; then
-  if [ "$(nmcli d | grep -E '(^|\s)wlp2s0($|\s)' | awk '{print $3}')" != "disconnected" ]; then
-	  wifiicon="$(awk '/^\s*w/ { print " ", int($3 * 100 / 70) "% " }' /proc/net/wireless)"
+# Checks the overall network status
+network_status=$(nmcli general status | awk 'FNR == 2 {print $1}')
+
+wifi_icon=""
+# Checking if network is connected
+if [ "$network_status" != "disconnected" ]; then
+  # Checking wifi connection status
+  wifi_connection_status=$(nmcli device status | awk '/wifi/ && /connected/ {print $3}')
+
+  if [ "$wifi_connection_status" == "connected" ]; then
+    # Getting wifi signal strength and converting to percentage
+    wifi_signal=$(grep '^\s*w' /proc/net/wireless | awk '{print int($3 * 100 / 70) "% "}')
+    # Assign wifi icon with signal strength
+    wifi_icon="  $wifi_signal"
   else
-    wifiicon=" "
+    # Assign wifi icon for disconnected status
+    wifi_icon=" "
   fi
+else
+  # Assign wifi icon for network disabled status
+  wifi_icon="睊 "
 fi
 
-if [ "$(nmcli g | awk '{print $4}' | grep "enabled")" != "enabled" ]; then
-  wifiicon="睊 "
-fi
+# Checking ethernet status and replacing the status with corresponding icons
+ethernet_status=$(cat /sys/class/net/e*/operstate 2>/dev/null | sed "s/down//;s/up//")
+# Checking vpn status and replacing the status with corresponding icons
+vpn_status=$(cat /sys/class/net/tun*/operstate 2>/dev/null | sed "s/down//;s/up//")
 
-printf "%s%s%s\n" "$wifiicon" "$(sed "s/down//;s/up//" /sys/class/net/e*/operstate 2>/dev/null)" "$(sed "s/.*/  /" /sys/class/net/tun*/operstate 2>/dev/null)"
+# Print wifi, ethernet and vpn status with respective icons
+printf "%s %s %s\n" "$wifi_icon" "$ethernet_status" "$vpn_status"

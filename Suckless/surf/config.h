@@ -1,14 +1,11 @@
 /* modifier 0 means no modifier */
-static int surfuseragent    = 0;  /* Append Surf version to default WebKit user agent */
-
+static int surfuseragent    = 1;  /* Append Surf version to default WebKit user agent */
 static char *fulluseragent  = ""; /* Or override the whole user agent string */
-static char *scriptfile     = "~/.config/surf/script.js";
-static char *styledir       = "~/.config/surf/styles/";
-static char *certdir        = "~/.config/surf/certificates/";
-static char *cachedir       = "~/.cache/surf/cache/";
-static char *cookiefile     = "~/.config/surf/cookies.txt";
-
-#define HOMEPAGE "https://www.startpage.com/do/mypage.pl?prfe=cb58fdf87a845f5f9f68c4831997f78b5de930db0e7cf1eba1d0ad09b127eb74be9373b4e57276e93c0845262d071e5b34fdc9fd637a183f4f944c063ef8d0c34f07644ed11d18f923548e70ce03316b38"
+static char *scriptfile     = "~/.surf/script.js";
+static char *styledir       = "~/.surf/styles/";
+static char *certdir        = "~/.surf/certificates/";
+static char *cachedir       = "~/.surf/cache/";
+static char *cookiefile     = "~/.surf/cookies.txt";
 
 /* Webkit default features */
 /* Highest priority value will be used.
@@ -22,10 +19,11 @@ static Parameter defconfig[ParameterLast] = {
 	[AccessWebcam]        =       { { .i = 0 },     },
 	[Certificate]         =       { { .i = 0 },     },
 	[CaretBrowsing]       =       { { .i = 0 },     },
-	[CookiePolicies]      =       { { .v = "a" }, },
+	[CookiePolicies]      =       { { .v = "@Aa" }, },
+	[DarkMode]            =       { { .i = 1 },     },
 	[DefaultCharset]      =       { { .v = "UTF-8" }, },
 	[DiskCache]           =       { { .i = 1 },     },
-	[DNSPrefetch]         =       { { .i = 1 },     },
+	[DNSPrefetch]         =       { { .i = 0 },     },
 	[Ephemeral]           =       { { .i = 0 },     },
 	[FileURLsCrossAccess] =       { { .i = 0 },     },
 	[FontSize]            =       { { .i = 12 },    },
@@ -33,14 +31,14 @@ static Parameter defconfig[ParameterLast] = {
 	[Geolocation]         =       { { .i = 0 },     },
 	[HideBackground]      =       { { .i = 0 },     },
 	[Inspector]           =       { { .i = 0 },     },
-	[Java]                =       { { .i = 0 },     },
+	[Java]                =       { { .i = 1 },     },
 	[JavaScript]          =       { { .i = 1 },     },
 	[KioskMode]           =       { { .i = 0 },     },
 	[LoadImages]          =       { { .i = 1 },     },
 	[MediaManualPlay]     =       { { .i = 1 },     },
 	[PreferredLanguages]  =       { { .v = (char *[]){ NULL } }, },
 	[RunInFullscreen]     =       { { .i = 0 },     },
-	[ScrollBars]          =       { { .i = 1 },     },
+	[ScrollBars]          =       { { .i = 0 },     },
 	[ShowIndicators]      =       { { .i = 1 },     },
 	[SiteQuirks]          =       { { .i = 1 },     },
 	[SmoothScrolling]     =       { { .i = 0 },     },
@@ -70,23 +68,22 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 /* SETPROP(readprop, setprop, prompt)*/
 #define SETPROP(r, s, p) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
-             "prop=\"$(printf '%b' \"$(xprop -id $1 $2 " \
-             "| sed \"s/^$2(STRING) = //;s/^\\\"\\(.*\\)\\\"$/\\1/\" && cat ~/.config/surf/bookmarks)\" " \
-             "| dmenu -l 10 -p \"$4\" -w $1)\" && " \
-             "xprop -id $1 -f $3 8s -set $3 \"$prop\"", \
-             "surf-setprop", winid, r, s, p, NULL \
+             "prop=\"$(printf '%b' \"$(xprop -id $1 "r" " \
+             "| sed -e 's/^"r"(UTF8_STRING) = \"\\(.*\\)\"/\\1/' " \
+             "      -e 's/\\\\\\(.\\)/\\1/g')\" " \
+             "| dmenu -p '"p"' -w $1)\" " \
+             "&& xprop -id $1 -f "s" 8u -set "s" \"$prop\"", \
+             "surf-setprop", winid, NULL \
         } \
 }
 
 /* DOWNLOAD(URI, referer) */
-#define DOWNLOAD(d, r) { \
-	.v = (char *[]){ "/bin/sh", "-c", \
-		"cd ~/Telechargements;"\
-		"st -e /bin/sh -c \"aria2c -U '$1'" \
-		" --referer '$2' --load-cookies $3 --save-cookies $3 '$0';" \
-		" sleep 3;\"", \
-		d, useragent, r, cookiefile, NULL \
-	} \
+#define DOWNLOAD(u, r) { \
+        .v = (const char *[]){ "st", "-e", "/bin/sh", "-c",\
+             "curl -g -L -J -O -A \"$1\" -b \"$2\" -c \"$2\"" \
+             " -e \"$3\" \"$4\"; read", \
+             "surf-download", useragent, cookiefile, r, u, NULL \
+        } \
 }
 
 /* PLUMB(URI) */
@@ -103,17 +100,6 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 #define VIDEOPLAY(u) {\
         .v = (const char *[]){ "/bin/sh", "-c", \
              "mpv --really-quiet \"$0\"", u, NULL \
-        } \
-}
-
-/* BM_ADD(readprop) */
-#define BM_ADD(r) {\
-        .v = (const char *[]){ "/bin/sh", "-c", \
-             "(echo $(xprop -id $0 $1) | cut -d '\"' -f2 " \
-             "| sed 's/.*https*:\\/\\/\\(www\\.\\)\\?//' && cat ~/.config/surf/bookmarks) " \
-             "| awk '!seen[$0]++' > ~/.config/surf/bookmarks.tmp && " \
-             "mv ~/.config/surf/bookmarks.tmp ~/.config/surf/bookmarks", \
-             winid, r, NULL \
         } \
 }
 
@@ -136,17 +122,6 @@ static SiteSpecific certs[] = {
 	{ "://suckless\\.org/", "suckless.org.crt" },
 };
 
-/*EXTERNAL PIPE*/
-static char *linkselect_curwin [] = { "/bin/sh", "-c",
-	"surf_linkselect $0 'Link' | xargs -r xprop -id $0 -f _SURF_GO 8s -set _SURF_GO",
-	winid, NULL
-};
-static char *linkselect_newwin [] = { "/bin/sh", "-c",
-	"surf_linkselect $0 'Link (new window)' | xargs -r surf",
-	winid, NULL
-};
-static char *editscreen[] = { "/bin/sh", "-c", "edit_screen", NULL };
-
 #define MODKEY GDK_CONTROL_MASK
 
 /* hotkeys */
@@ -159,21 +134,16 @@ static Key keys[] = {
 	{ MODKEY,                GDK_KEY_g,      spawn,      SETPROP("_SURF_URI", "_SURF_GO", PROMPT_GO) },
 	{ MODKEY,                GDK_KEY_f,      spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 	{ MODKEY,                GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
-	{ MODKEY,                GDK_KEY_m,      spawn,      BM_ADD("_SURF_URI") },
 
 	{ 0,                     GDK_KEY_Escape, stop,       { 0 } },
 	{ MODKEY,                GDK_KEY_c,      stop,       { 0 } },
-
-	{ MODKEY,                GDK_KEY_d,      externalpipe, { .v = linkselect_curwin } },
-	{ GDK_SHIFT_MASK|MODKEY, GDK_KEY_d,      externalpipe, { .v = linkselect_newwin } },
-	{ MODKEY,                GDK_KEY_o,      externalpipe, { .v = editscreen        } },
 
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_r,      reload,     { .i = 1 } },
 	{ MODKEY,                GDK_KEY_r,      reload,     { .i = 0 } },
 
 	{ MODKEY,                GDK_KEY_l,      navigate,   { .i = +1 } },
 	{ MODKEY,                GDK_KEY_h,      navigate,   { .i = -1 } },
-  { MODKEY,                GDK_KEY_z,      loaduri,    { .v = HOMEPAGE} },
+
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ MODKEY,                GDK_KEY_j,      scrollv,    { .i = +10 } },
 	{ MODKEY,                GDK_KEY_k,      scrollv,    { .i = -10 } },
@@ -210,6 +180,7 @@ static Key keys[] = {
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      toggle,     { .i = ScrollBars } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_t,      toggle,     { .i = StrictTLS } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_m,      toggle,     { .i = Style } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_d,      toggle,     { .i = DarkMode } },
 };
 
 /* button definitions */

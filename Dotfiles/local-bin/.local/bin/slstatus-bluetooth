@@ -1,12 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ "$(bluetoothctl show | grep "Powered" | awk '{print $2}')" != "yes" ]; then
-    icon=""
-else
-    if [ "$(bluetoothctl info)" != "Missing device address argument" ]; then
-      icon=""
+bluetooth_status=$(bluetoothctl show | awk -F ': ' '/\s*Powered/ {print $2}')
+
+icon="" # Default icon for "not powered" or "unknown status"
+
+if [ "$bluetooth_status" = "yes" ]; then
+    # Check if a Bluetooth device is connected
+    bluetooth_device_info=$(bluetoothctl info 2>/dev/null | head -n 1)
+
+    if [ "$bluetooth_device_info" != "Missing device address argument" ]; then
+      icon="" # Icon for connected device
     else
-      icon=""
+      icon="" # Icon for powered but no device connected
     fi
 fi
-printf "%s\\n" "$icon"
+
+printf "%s\n" "$icon"

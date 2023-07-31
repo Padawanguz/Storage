@@ -4,7 +4,7 @@ xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --output eDP1 --mode 1920x1080
 
 # Set Bluetooth scan on
-bluetoothctl scan on &
+# bluetoothctl scan on &
 
 # Polkit Authentication Agent
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &

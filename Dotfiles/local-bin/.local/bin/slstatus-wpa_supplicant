@@ -2,18 +2,32 @@
 
 ifname=$(iw dev | awk -F '[ ]' '/Interface/ {print $2}')
 
-wpastate=$(wpa_cli -i $ifname status | awk -F '[=]' '/wpa_state/ {print $2}')
+# Ensure variable ifname is not empty before proceeding
+if [[ -z "$ifname" ]]; then
+    echo "No interface found. Exiting..."
+    exit 1
+fi
 
-case $wpastate in
+wpastate=$(wpa_cli -i "$ifname" status | awk -F '[=]' '/wpa_state/ {print $2}')
+wifiicon=""
 
+# Ensure variable wpastate is not empty before proceeding
+if [[ -z "$wpastate" ]]; then
+    echo "No WPA state found. Exiting..."
+    exit 1
+fi
+
+case "$wpastate" in
   COMPLETED)
     wifiicon="$(awk '/^\s*w/ { print " ", int($3 * 100 / 70) "%" }' /proc/net/wireless)"
     ;;
-
   DISCONNECTED)
     wifiicon="睊"
     ;;
-
+  *)
+    echo "Unknown WPA state: $wpastate. Exiting..."
+    exit 1
+    ;;
 esac
 
 echo "$wifiicon"

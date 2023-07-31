@@ -16,7 +16,10 @@ rbenv rehash >/dev/null
 # Set Enviroment Variables
 set -Ux EDITOR nvim
 set -Ux TERMINAL st
-set -Ux BROWSER firefox
+set -Ux BROWSER surf
+
+# Avoid loading Ranger global configuration in addition to the local
+set -x RANGER_LOAD_DEFAULT_RC false
 
 # Removes unnecesary $HOME clutter
 set -x XDG_CONFIG_HOME $HOME/.config

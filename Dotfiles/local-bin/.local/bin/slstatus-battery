@@ -1,20 +1,65 @@
 #!/bin/sh
 
-# Loop through all attached batteries and format the info
+# # Loop through all attached batteries and format the info
+# for battery in /sys/class/power_supply/BAT?*; do
+# 	# If non-first battery, print a space separator.
+# 	[ -n "${capacity+x}" ] && printf " "
+# 	# Sets up the status and capacity
+# 	case "$(cat "$battery/status")" in
+# 		"Full") status=" " ;;
+# 		"Discharging") status="  " ;;
+# 		"Charging") status=" " ;;
+# 		"Not charging") status=" " ;;
+# 		"Unknown") status=" " ;;
+# 	esac
+# 	capacity=$(cat "$battery/capacity")
+# 	# Will make a warn variable if discharging and low
+# 	[ "$status" = " " ] && [ "$capacity" -le 25 ] && warn=" "
+# 	# Prints the info
+# 	printf "%s%s%d%%" "$status" "$warn" "$capacity"; unset warn
+# done && exit 0
+
+
 for battery in /sys/class/power_supply/BAT?*; do
-	# If non-first battery, print a space separator.
-	[ -n "${capacity+x}" ] && printf " "
-	# Sets up the status and capacity
-	case "$(cat "$battery/status")" in
-		"Full") status=" " ;;
-		"Discharging") status="  " ;;
-		"Charging") status=" " ;;
-		"Not charging") status=" " ;;
-		"Unknown") status=" " ;;
+	# If battery directory doesn't exist, skip this iteration
+	if [ ! -d "$battery" ]; then
+		echo "Battery directory $battery does not exist. Skipping..."
+		continue
+	fi
+
+	# If it's not the first battery, print a space separator.
+	[ -n "${batteryCapacity+x}" ] && printf " "
+
+	# Setting up the batteryStatus and batteryCapacity
+	batteryStatusFile="$battery/status"
+	batteryCapacityFile="$battery/capacity"
+
+	if [ ! -f "$batteryStatusFile" ] || [ ! -f "$batteryCapacityFile" ]; then
+		echo "Either $batteryStatusFile or $batteryCapacityFile does not exist. Skipping..."
+		continue
+	fi
+
+	batteryStatus="$(cat "$batteryStatusFile")"
+	batteryCapacity=$(cat "$batteryCapacityFile")
+
+	case "$batteryStatus" in
+		"Full") statusSymbol=" " ;;
+		"Discharging") statusSymbol="  " ;;
+		"Charging") statusSymbol=" " ;;
+		"Not charging") statusSymbol=" " ;;
+		"Unknown") statusSymbol=" " ;;
+		*)
+			echo "Unknown status $batteryStatus for battery $battery. Skipping..."
+			continue
+		;;
 	esac
-	capacity=$(cat "$battery/capacity")
-	# Will make a warn variable if discharging and low
-	[ "$status" = " " ] && [ "$capacity" -le 25 ] && warn=" "
-	# Prints the info
-	printf "%s%s%d%%" "$status" "$warn" "$capacity"; unset warn
-done && exit 0
+
+	# Will set a warning variable if discharging and low
+	[ "$statusSymbol" = " " ] && [ "$batteryCapacity" -le 25 ] && warnSymbol=" "
+
+	# Prints the battery status information
+	printf "%s%s%d%%" "$statusSymbol" "$warnSymbol" "$batteryCapacity"; unset warnSymbol
+done
+
+# If the script reaches this point, it means it executed without any fatal error
+exit 0
