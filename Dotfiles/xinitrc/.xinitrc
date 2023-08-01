@@ -34,12 +34,8 @@ clipmenud &
 # Mouse unclutter
 unclutter &
 
-# Udisk automount
-# udiskie -NT &
-# udiskie-mount /dev/sda1
-
-# Protonmail bridge daemon
-# protonmail-bridge --noninteractive &
+# Inotify watches
+# inotify-watch-index.sh &
 
 #Start dwm with startx
 exec dwm

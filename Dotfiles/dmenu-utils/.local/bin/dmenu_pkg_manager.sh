@@ -19,7 +19,7 @@
 
 # Define constants
 AURACLE_CACHE_DIR="$HOME/.auracle"
-INDEX_DIR="$HOME/.cache/dmenu_utilities"
+INDEX_DIR="$HOME/.cache/dmenu-utils"
 TERMINAL_COMMANDS=("st" "kitty" "rxvt" "sakura" "lilyterm" "roxterm" "termite" "Alacritty" "xterm")
 
 # Check if required commands are available

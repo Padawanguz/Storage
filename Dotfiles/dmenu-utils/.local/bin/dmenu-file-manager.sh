@@ -1,18 +1,63 @@
 #!/bin/bash
+set -x
+set -e
+
+# Script name: dmenu file and directory browser
+#
+# This script provides an interactive file and directory browser using dmenu. It maintains an index of files and directories, excluding certain directories defined in the EXCLUDE_DIRS variable.
+# It allows users to navigate through their file system, open files, and perform several operations such as renaming, deleting, copying, moving, and compressing files.
+#
+# Dependencies:
+# - find: Used to generate an index of files and directories.
+# - grep: Used to filter out hidden files and directories from the index.
+# - ls: Used to list files and directories in the current directory.
+# - cat: Used to read the index files.
+# - touch: Used to create new files.
+# - mkdir: Used to create new directories.
+# - zip: Used to compress files.
+# - xdg-open: Used to open files and directories with the default applications.
+# - rm: Used to delete files.
+# - cp: Used to copy files.
+# - mv: Used to move and rename files.
+# - tar: Used to compress files.
+# - dmenu: Used to create an interactive menu.
+#
+# This script can be used in conjunction with the `inotify-watch-index.sh` script. `inotify-watch-index.sh` uses the Linux kernel's inotify API to watch for file system changes in real-time. When a change is detected (such as a file or directory being created, modified, or deleted), `inotify-watch-index.sh` triggers an update to the index used by this dmenu file and directory browser. This allows the index to stay up-to-date without having to manually rebuild it, providing a seamless browsing experience.
+#
+# To use this script, simply run it from a terminal. Use the dmenu interface to navigate through your file system and perform operations on files and directories.
+#
+# The '@' option allows you to jump to any directory indexed, and the 'Toggle View' and 'Toggle Hidden' options allow you to switch between different views.
+#
 
 dir=$HOME
 show_hidden=false
 find_view=false
-file_index="$HOME/.cache/dmenu-utilities/dmenu_file_browser_index"
-dir_index="$HOME/.cache/dmenu-utilities/dmenu_dir_browser_index"
-hidden_file_index="$HOME/.cache/dmenu-utilities/dmenu_hidden_file_browser_index"
-hidden_dir_index="$HOME/.cache/dmenu-utilities/dmenu_hidden_dir_browser_index"
+file_index="$HOME/.cache/dmenu-utils/dmenu_file_browser_index"
+dir_index="$HOME/.cache/dmenu-utils/dmenu_dir_browser_index"
+hidden_file_index="$HOME/.cache/dmenu-utils/dmenu_hidden_file_browser_index"
+hidden_dir_index="$HOME/.cache/dmenu-utils/dmenu_hidden_dir_browser_index"
 WATCHDAEMON=true # Flag to indicate if the daemon is used to update the index
 INDEX_UPDATED=false # Flag to indicate if the index has been updated, it must be always false at the beginning of the script
 TERMINAL_COMMANDS=("st" "kitty" "rxvt" "sakura" "lilyterm" "roxterm" "termite" "Alacritty" "xterm") #Helps compatibility with different terminal emulators
 
+create_directories_and_files() {
+    # Create the cache directory if it doesn't exist
+    if [ ! -d "$HOME/.cache/dmenu-utils/" ]; then
+        mkdir -p "$HOME/.cache/dmenu-utils/"
+    fi
+
+    # Create the index files if they don't exist
+    for index_file in "$HOME/.cache/dmenu-utils/dmenu_file_browser_index" "$HOME/.cache/dmenu-utils/dmenu_dir_browser_index" "$HOME/.cache/dmenu-utils/dmenu_hidden_file_browser_index" "$HOME/.cache/dmenu-utils/dmenu_hidden_dir_browser_index"; do
+        if [ ! -f "$index_file" ]; then
+            touch "$index_file"
+        fi
+    done
+}
+
+create_directories_and_files
+
 # Check if required commands are available
-for cmd in pacman auracle dmenu makepkg; do
+for cmd in zip tar; do
   if ! command -v $cmd &> /dev/null; then
     echo "error: $cmd could not be found. Please install $cmd."
     exit 1
@@ -141,21 +186,244 @@ while true; do
     fi
 
     if [ "$selection" == "- - -" ]; then
-        folder_operation=$(echo -e "Open Terminal Here\nCreate New File\nCreate New Folder\nArchive\nOpen in File Manager" | dmenu -i -p "$dir")
-        if [ "$folder_operation" == "Open Terminal Here" ]; then
+        folder_operation=$(echo -e "Open Terminal Here\nCreate New File\nCreate New Folder\nArchive\nOpen in File Manager\nDelete Current Folder\nBulk Copy\nBulk Move\nBulk Delete" | dmenu -i -p "$dir")
+        if [ "$folder_operation" == "Delete Current Folder" ]; then
+            if [ "$dir" == "$HOME" ]; then
+                echo "Cannot delete the home directory."
+                continue
+            fi
+            confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to delete folder $dir?")
+            if [ "$confirm" == "yes" ]; then
+                rm -r "$dir"
+                dir=$HOME
+                INDEX_UPDATED=true
+            fi
+        elif [ "$folder_operation" == "Open Terminal Here" ]; then
             $terminal -e bash -c "cd $dir; $SHELL" &
             exit 0
         elif [ "$folder_operation" == "Create New File" ]; then
-            file_name=$(echo -e "" | dmenu -i -p "File name")
-            if [ -n "$file_name" ]; then
-                touch "$dir/$file_name"
+            file_count=$(seq 1 100 | tr '\n' '\0' | xargs -0 -n1 | dmenu -i -p "How many files?")
+            if [ -n "$file_count" ]; then
+                for ((i=1;i<=$file_count;i++)); do
+                    file_name=$(echo -e "" | dmenu -i -p "File name $i")
+                    if [ -z "$file_name" ]; then
+                        file_name="untitled($i)"
+                    fi
+                    touch "$dir/$file_name"
+                    INDEX_UPDATED=true
+                done
+            fi
+        elif [ "$folder_operation" == "Bulk Delete" ]; then
+            # Generate the list of files in the current directory
+            files=( $(ls -1 -v "$dir"/*) )
+            file_count=${#files[@]}
+            options=("*" $(seq 1 $file_count))
+
+            # Prompt the user to select the number of files to delete
+            delete_count=$(printf '%s\n' "${options[@]}" | dmenu -i -p "How many files to delete?")
+
+            if [ "$delete_count" == "*" ]; then
+                delete_count=$file_count
+                files_to_delete=("${files[@]}") # Add all files to files_to_delete
+            else
+                if [ -n "$delete_count" ]; then
+                    # Store the files to be deleted
+                    files_to_delete=()
+
+                    for ((i=1;i<=$delete_count;i++)); do
+                        # Prompt the user to select a file
+                        file=$(printf '%s\n' "${files[@]}" | dmenu -i -p "Select file $i to delete")
+
+                        # Store the original files array
+                        original_files=("${files[@]}")
+
+                        # Empty the files array
+                        files=()
+
+                        # Rebuild the files array excluding the selected file
+                        for file_item in "${original_files[@]}"; do
+                            if [ "$file_item" != "$file" ]; then
+                                files+=("$file_item")
+                            fi
+                        done
+
+                        # Add the selected file to the list of files to delete
+                        files_to_delete+=("$file")
+                    done
+                fi
+            fi
+
+            # Get the filenames from the full paths
+            filenames_to_delete=()
+            for fullpath in "${files_to_delete[@]}"; do
+                filenames_to_delete+=("$(basename "$fullpath")")
+            done
+
+            # Limit the number of filenames displayed
+            display_limit=5
+            if [ ${#filenames_to_delete[@]} -gt $display_limit ]; then
+                files_to_delete_string=$(printf ' %s' "${filenames_to_delete[@]:0:$display_limit}")
+                files_to_delete_string="${files_to_delete_string:1} ... and $((${#filenames_to_delete[@]} - $display_limit)) more"
+            else
+                files_to_delete_string=$(printf ' %s' "${filenames_to_delete[@]}")
+                files_to_delete_string=${files_to_delete_string:1}
+            fi
+
+            # Confirm the deletion
+            confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to delete these files?$files_to_delete_string")
+            if [ "$confirm" == "yes" ]; then
+                rm -r "${files_to_delete[@]}"
                 INDEX_UPDATED=true
             fi
-        elif [ "$folder_operation" == "Create New Folder" ]; then
-            folder_name=$(echo -e "" | dmenu -i -p "Folder name")
-            if [ -n "$folder_name" ]; then
-                mkdir "$dir/$folder_name"
+
+
+        elif [ "$folder_operation" == "Bulk Move" ]; then
+            # Generate the list of files in the current directory
+            files=( $(ls -1 -v "$dir"/*) )
+            file_count=${#files[@]}
+            options=("*" $(seq 1 $file_count))
+
+            # Prompt the user to select the number of files to move
+            move_count=$(printf '%s\n' "${options[@]}" | dmenu -i -p "How many files to move?")
+
+            if [ "$move_count" == "*" ]; then
+                move_count=$file_count
+                files_to_move=("${files[@]}") # Add all files to files_to_move
+            else
+                if [ -n "$move_count" ]; then
+                    # Store the files to be moved
+                    files_to_move=()
+
+                    for ((i=1;i<=$move_count;i++)); do
+                        # Prompt the user to select a file
+                        file=$(printf '%s\n' "${files[@]}" | dmenu -i -p "Select file $i to move")
+
+                        # Store the original files array
+                        original_files=("${files[@]}")
+
+                        # Empty the files array
+                        files=()
+
+                        # Rebuild the files array excluding the selected file
+                        for file_item in "${original_files[@]}"; do
+                            if [ "$file_item" != "$file" ]; then
+                                files+=("$file_item")
+                            fi
+                        done
+
+                        # Add the selected file to the list of files to move
+                        files_to_move+=("$file")
+                    done
+                fi
+            fi
+
+            # Get the destination directory
+            dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Move to: ")
+
+            if [ -n "$dest" ]; then
+                # Get the filenames from the full paths
+                filenames_to_move=()
+                for fullpath in "${files_to_move[@]}"; do
+                    filenames_to_move+=("$(basename "$fullpath")")
+                done
+
+                # Limit the number of filenames displayed
+                display_limit=5
+                if [ ${#filenames_to_move[@]} -gt $display_limit ]; then
+                    files_to_move_string=$(printf ' %s' "${filenames_to_move[@]:0:$display_limit}")
+                    files_to_move_string="${files_to_move_string:1} ... and $((${#filenames_to_move[@]} - $display_limit)) more"
+                else
+                    files_to_move_string=$(printf ' %s' "${filenames_to_move[@]}")
+                    files_to_move_string=${files_to_move_string:1}
+                fi
+
+                # Confirm the move
+                confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to move these files?$files_to_move_string to $dest")
+                if [ "$confirm" == "yes" ]; then
+                    mv "${files_to_move[@]}" "$dest"
+                    INDEX_UPDATED=true
+                fi
+            fi
+
+        elif [ "$folder_operation" == "Bulk Copy" ]; then
+            # Generate the list of files in the current directory
+            files=( $(ls -1 -v "$dir"/*) )
+            file_count=${#files[@]}
+            options=("*" $(seq 1 $file_count))
+
+        # Prompt the user to select the number of files to copy
+        copy_count=$(printf '%s\n' "${options[@]}" | dmenu -i -p "How many files to copy?")
+
+        if [ "$copy_count" == "*" ]; then
+            copy_count=$file_count
+            files_to_copy=("${files[@]}") # Add all files to files_to_copy
+        else
+            if [ -n "$copy_count" ]; then
+                # Store the files to be copied
+                files_to_copy=()
+
+                for ((i=1;i<=$copy_count;i++)); do
+                    # Prompt the user to select a file
+                    file=$(printf '%s\n' "${files[@]}" | dmenu -i -p "Select file $i to copy")
+
+                    # Store the original files array
+                    original_files=("${files[@]}")
+
+                    # Empty the files array
+                    files=()
+
+                    # Rebuild the files array excluding the selected file
+                    for file_item in "${original_files[@]}"; do
+                        if [ "$file_item" != "$file" ]; then
+                            files+=("$file_item")
+                        fi
+                    done
+
+                    # Add the selected file to the list of files to copy
+                    files_to_copy+=("$file")
+                done
+            fi
+        fi
+
+        # Get the destination directory
+        dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Copy to: ")
+
+        if [ -n "$dest" ]; then
+            # Get the filenames from the full paths
+            filenames_to_copy=()
+            for fullpath in "${files_to_copy[@]}"; do
+                filenames_to_copy+=("$(basename "$fullpath")")
+            done
+
+            # Limit the number of filenames displayed
+            display_limit=5
+            if [ ${#filenames_to_copy[@]} -gt $display_limit ]; then
+                files_to_copy_string=$(printf ' %s' "${filenames_to_copy[@]:0:$display_limit}")
+                files_to_copy_string="${files_to_copy_string:1} ... and $((${#filenames_to_copy[@]} - $display_limit)) more"
+            else
+                files_to_copy_string=$(printf ' %s' "${filenames_to_copy[@]}")
+                files_to_copy_string=${files_to_copy_string:1}
+            fi
+
+            # Confirm the copy
+            confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to copy these files?$files_to_copy_string to $dest")
+            if [ "$confirm" == "yes" ]; then
+                cp -r "${files_to_copy[@]}" "$dest"
                 INDEX_UPDATED=true
+            fi
+        fi
+
+        elif [ "$folder_operation" == "Create New Folder" ]; then
+            folder_count=$(seq 1 100 | tr '\n' '\0' | xargs -0 -n1 | dmenu -i -p "How many folders?")
+            if [ -n "$folder_count" ]; then
+                for ((i=1;i<=$folder_count;i++)); do
+                    folder_name=$(echo -e "" | dmenu -i -p "Folder name $i")
+                    if [ -z "$folder_name" ]; then
+                        folder_name="untitled($i)"
+                    fi
+                    mkdir "$dir/$folder_name"
+                    INDEX_UPDATED=true
+                done
             fi
         elif [ "$folder_operation" == "Archive" ]; then
             archive_name=$(echo -e "" | dmenu -i -p "Archive name (without extension)")
@@ -167,6 +435,7 @@ while true; do
             xdg-open "$dir"
             exit 0
         fi
+
         continue
     fi
 

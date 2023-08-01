@@ -2,10 +2,35 @@
 
 # Define directories to watch and index files
 dir_to_watch=$HOME
-file_index="$HOME/dmenu_file_browser_index"
-dir_index="$HOME/dmenu_dir_browser_index"
-hidden_file_index="$HOME/dmenu_hidden_file_browser_index"
-hidden_dir_index="$HOME/dmenu_hidden_dir_browser_index"
+file_index="$HOME/.cache/dmenu-utils/dmenu_file_browser_index"
+dir_index="$HOME/.cache/dmenu-utils/dmenu_dir_browser_index"
+hidden_file_index="$HOME/.cache/dmenu-utils/dmenu_hidden_file_browser_index"
+hidden_dir_index="$HOME/.cache/dmenu-utils/dmenu_hidden_dir_browser_index"
+
+create_directories_and_files() {
+    # Create the cache directory if it doesn't exist
+    if [ ! -d "$HOME/.cache/dmenu-utils/" ]; then
+        mkdir -p "$HOME/.cache/dmenu-utils/"
+    fi
+
+    # Create the index files if they don't exist
+    for index_file in "$HOME/.cache/dmenu-utils/dmenu_file_browser_index" "$HOME/.cache/dmenu-utils/dmenu_dir_browser_index" "$HOME/.cache/dmenu-utils/dmenu_hidden_file_browser_index" "$HOME/.cache/dmenu-utils/dmenu_hidden_dir_browser_index"; do
+        if [ ! -f "$index_file" ]; then
+            touch "$index_file"
+        fi
+    done
+}
+
+create_directories_and_files
+
+
+# Check if required commands are available
+for cmd in inotifywait; do
+  if ! command -v $cmd &> /dev/null; then
+    echo "error: $cmd could not be found. Please install $cmd."
+    exit 1
+  fi
+done
 
 # Define directories to exclude with $HOME
 EXCLUDE_DIRS=(

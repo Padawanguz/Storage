@@ -37,7 +37,7 @@ for layout in "${layouts[@]}"; do
 done
 
 # Create directory if not exists
-dir="$HOME/.cache/dmenu_utilities"
+dir="$HOME/.cache/dmenu-utils"
 if [[ ! -d $dir ]]; then
     mkdir -p $dir
 fi
