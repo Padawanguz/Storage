@@ -575,7 +575,13 @@ while true; do
     fi
 
     # Include the toggle option in the list passed to dmenu
-    selection=$(echo -e "@\n..\n~\n$toggle_option\n&\n?\n$list" | dmenu -i -l 20 -p "$dir")
+    # If the list is not empty, include it; otherwise, do not include it
+    if [ -z "$list" ]; then
+        options="@\n..\n~\n$toggle_option\n&\n?"
+    else
+        options="@\n..\n~\n$toggle_option\n&\n?\n$list"
+    fi
+    selection=$(echo -e "$options" | dmenu -i -l 20 -p "$dir")
 
     # If the user didn't make a selection, check the current directory
     if [ -z "$selection" ]; then
