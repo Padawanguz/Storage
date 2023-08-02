@@ -35,7 +35,7 @@ clipmenud &
 unclutter &
 
 # Inotify watches
-# inotify-watch-index.sh &
+inotify-watch-index.sh &
 
 #Start dwm with startx
 exec dwm
