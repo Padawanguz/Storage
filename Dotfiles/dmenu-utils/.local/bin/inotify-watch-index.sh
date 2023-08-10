@@ -35,7 +35,10 @@ done
 # Define directories to exclude with $HOME
 EXCLUDE_DIRS=(
   "$HOME/.cache"
-  "$HOME/.local/share/Trash"
+  "$HOME/.local/lib"
+  "$HOME/.local/share"
+  "$HOME/.local/opt"
+  "$HOME/.local/state"
   "$HOME/.mozilla"
   "$HOME/.google-chrome"
   "$HOME/.thunderbird"
@@ -51,6 +54,7 @@ EXCLUDE_DIRS=(
   "$HOME/.vscode"
   "$HOME/.tmp"
   "$HOME/.temp"
+  "$HOME/.zoom"
 )
 
 # Inotifywait options
@@ -97,7 +101,13 @@ build_hidden_dir_index() {
 }
 
 watch_changes() {
-    inotifywait $inotifywait_options --format '%w%f %e' "$dir_to_watch" | while read -r line; do
+    local exclude_pattern=""
+    for excl_dir in "${EXCLUDE_DIRS[@]}"; do
+        exclude_pattern+="|$excl_dir"
+    done
+    exclude_pattern=${exclude_pattern#|} # Remove the leading |
+
+    inotifywait $inotifywait_options --exclude "$exclude_pattern" --format '%w%f %e' "$dir_to_watch" | while read -r line; do
         file=$(echo $line | cut -d ' ' -f 1)
         event=$(echo $line | cut -d ' ' -f 2-)
         echo "File $file has event $event"
@@ -116,10 +126,32 @@ watch_changes() {
                 fi
             fi
         elif [[ $event == *"DELETE"* ]]; then
+            echo "File $file was deleted"
             sed -i "\|$file|d" $file_index
             sed -i "\|$file|d" $dir_index
             sed -i "\|$file|d" $hidden_file_index
             sed -i "\|$file|d" $hidden_dir_index
+        elif [[ $event == *"MOVED_FROM"* ]]; then
+            echo "File $file was moved from"
+            sed -i "\|$file|d" $file_index
+            sed -i "\|$file|d" $dir_index
+            sed -i "\|$file|d" $hidden_file_index
+            sed -i "\|$file|d" $hidden_dir_index
+        elif [[ $event == *"MOVED_TO"* ]]; then
+            echo "File $file was moved to"
+            if [ -f "$file" ]; then
+                if [[ $(basename $file) == .?* ]]; then
+                    echo $file >> $hidden_file_index
+                else
+                    echo $file >> $file_index
+                fi
+            elif [ -d "$file" ]; then
+                if [[ $(basename $file) == .?* ]]; then
+                    echo $file >> $hidden_dir_index
+                else
+                    echo $file >> $dir_index
+                fi
+            fi
         fi
     done
 }

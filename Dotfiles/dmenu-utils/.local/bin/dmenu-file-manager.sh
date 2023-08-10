@@ -98,7 +98,10 @@ terminal=$(get_terminal)
 # Define directories to exclude with $HOME
 EXCLUDE_DIRS=(
   "$HOME/.cache"
-  "$HOME/.local/share/Trash"
+  "$HOME/.local/lib"
+  "$HOME/.local/share"
+  "$HOME/.local/opt"
+  "$HOME/.local/state"
   "$HOME/.mozilla"
   "$HOME/.google-chrome"
   "$HOME/.thunderbird"
@@ -114,6 +117,7 @@ EXCLUDE_DIRS=(
   "$HOME/.vscode"
   "$HOME/.tmp"
   "$HOME/.temp"
+  "$HOME/.zoom"
 )
 
 # Construct the find command for files only
@@ -139,6 +143,56 @@ if [ ! -f "$file_index" ] || [ ! -f "$dir_index" ] || [ ! -f "$hidden_file_index
     INDEX_UPDATED=true
 fi
 
+sort_by_length() {
+    awk '{ print length, $0 }' | sort -n -s | cut -d" " -f2-
+}
+
+get_installed_apps() {
+    # Determine the package manager
+    if command -v dpkg >/dev/null; then
+        # Debian-based systems
+        dpkg --get-selections | awk '{print $1}'
+    elif command -v rpm >/dev/null; then
+        # Red Hat-based systems
+        rpm -qa
+    elif command -v pacman >/dev/null; then
+        # Arch Linux
+        pacman -Qqe
+    elif command -v dnf >/dev/null; then
+        # Fedora
+        dnf list installed
+    elif command -v zypper >/dev/null; then
+        # openSUSE
+        zypper se --installed-only
+    else
+        echo "Unsupported package manager"
+        return 1
+    fi
+}
+
+open_with() {
+    local file_path=$1
+
+    # Get a list of installed applications
+    apps=$(get_installed_apps)
+    if [ $? -ne 0 ]; then
+        echo "Failed to get a list of installed applications"
+        return 1
+    fi
+
+    # Ask the user to select an application
+    app=$(echo "$apps" | dmenu -i -p "Select an application: ")
+
+    # If no application was selected, print a message and return
+    if [ -z "$app" ]; then
+        echo "No application selected"
+        return 1
+    fi
+
+    # Try to open the file with the selected application
+    $app "$file_path"
+}
+
 delete_current_folder() {
     if [ "$dir" == "$HOME" ]; then
         echo "Cannot delete the home directory."
@@ -156,7 +210,7 @@ delete_current_folder() {
 }
 
 move_current_dir() {
-    dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Move to: ")
+    dest=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Move to: ")
     if [ -n "$dest" ]; then
         confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to move $dir to $dest?")
         if [ "$confirm" == "yes" ]; then
@@ -169,7 +223,7 @@ move_current_dir() {
 }
 
 copy_current_dir() {
-    dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Copy to: ")
+    dest=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Copy to: ")
     if [ -n "$dest" ]; then
         confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to copy directory $dir to $dest?")
         if [ "$confirm" == "yes" ]; then
@@ -322,7 +376,7 @@ bulk_move() {
     fi
 
     # Get the destination directory
-    dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Move to: ")
+    dest=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Move to: ")
 
     if [ -n "$dest" ]; then
         # Get the filenames from the full paths
@@ -361,7 +415,7 @@ bulk_copy() {
     fi
 
     # Get the destination directory
-    dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Copy to: ")
+    dest=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Copy to: ")
 
     if [ -n "$dest" ]; then
         # Get the filenames from the full paths
@@ -412,7 +466,7 @@ delete_file() {
 }
 
 copy_file() {
-    dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Copy to: ")
+    dest=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Copy to: ")
     if [ -n "$dest" ]; then
         confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to copy file $path to $dest?")
         if [ "$confirm" == "yes" ]; then
@@ -422,7 +476,7 @@ copy_file() {
 }
 
 move_file() {
-    dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Move to: ")
+    dest=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Move to: ")
     if [ -n "$dest" ]; then
         confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to move file $path to $dest?")
         if [ "$confirm" == "yes" ]; then
@@ -480,6 +534,75 @@ is_compressed_archive() {
     esac
 }
 
+# Function to check if a file is an ISO file
+is_iso() {
+    local file_path=$1
+    local mime_type=$(file --mime-type -b "$file_path")
+    if [ "$mime_type" == "application/x-iso9660-image" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to mount an ISO file
+mount_iso() {
+    local iso_path=$1
+
+    # Get the filename from the full path
+    local filename=$(basename "$iso_path")
+
+    # Remove the file extension to get the name of the ISO
+    local iso_name="${filename%.*}"
+
+
+    # Ask for confirmation
+
+    # Get the destination directory
+    local dest=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Select mount location: ")
+
+    # Create a mount point with the name of the ISO in the selected directory
+    local mount_point="$dest/$iso_name"
+
+    confirm=$(echo -e "yes\nno" | dmenu -i -p "Are you sure you want to mount $iso_path at $mount_point?")
+    if [ "$confirm" == "yes" ]; then
+
+        mkdir -p "$mount_point"
+
+        # Mount the ISO file
+        fuseiso "$iso_path" "$mount_point"
+
+        echo "ISO mounted at $mount_point"
+    fi
+}
+
+# Function to unmount an ISO file
+unmount_dir() {
+    echo "Unmounted $dir"
+    confirm=$(echo -e "yes\nno" | dmenu -i -p "Do you want to delete the folder containing the mount point?")
+    if [ "$confirm" == "yes" ]; then
+        fusermount -u "$dir"
+        rmdir "$dir" && echo "Deleted $dir"
+    fi
+}
+
+# Function to check if a directory is a mount point
+is_mountpoint() {
+    local dir_path=$1
+    if mountpoint -q "$dir_path"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to copy a path to the clipboard
+copy_to_clipboard() {
+    local path_to_copy=$1
+    echo -n "$path_to_copy" | xclip -selection clipboard
+    echo "Copied $path_to_copy to clipboard"
+}
+
 # Function to extract a compressed archive
 extract_archive() {
     local archive=$1
@@ -510,13 +633,19 @@ file_operations() {
     local path=$1
 
     if is_compressed_archive "$path"; then
-        operation=$(echo -e "Open\nRename\nDelete\nCopy\nMove\nExtract" | dmenu -i -p "$path")
+        operation=$(echo -e "Extract\nRename\nDelete\nCopy\nMove" | dmenu -i -p "$path")
+    elif is_iso "$path"; then
+        operation=$(echo -e "Mount\nRename\nDelete\nCopy\nMove" | dmenu -i -p "$path")
     else
-        operation=$(echo -e "Open\nRename\nDelete\nCopy\nMove\nCompress" | dmenu -i -p "$path")
+        operation=$(echo -e "Open\nRename\nDelete\nCopy\nMove\nCompress\nOpen With..." | dmenu -i -p "$path")
     fi
 
     if [ "$operation" == "Open" ]; then
         open_file "$path"
+    elif [ "$operation" == "Open With..." ]; then
+        open_with "$path"
+    elif [ "$operation" == "Mount" ]; then
+        mount_iso "$path"
     elif [ "$operation" == "Rename" ]; then
         rename_file "$path"
     elif [ "$operation" == "Delete" ]; then
@@ -528,7 +657,7 @@ file_operations() {
     elif [ "$operation" == "Compress" ]; then
         compress_file "$path"
     elif [ "$operation" == "Extract" ]; then
-        dest=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Extract to: ")
+        dest=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Extract to: ")
         if [ -n "$dest" ]; then
             confirm=$(echo -e "yes\nno" | dmenu -i -p "Confirm you want to extract archive $path to $dest?")
             if [ "$confirm" == "yes" ]; then
@@ -550,10 +679,10 @@ while true; do
     if $find_view ; then
         # Show hidden files if show_hidden is true
         if $show_hidden ; then
-            list=$(cat $hidden_file_index | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))")
+            list=$(cat $hidden_file_index | sort_by_length)
         else
             # Otherwise, don't show hidden files
-            list=$(cat $file_index | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))")
+            list=$(cat $file_index | sort_by_length)
         fi
     else
         # If not in find mode, show directory contents
@@ -569,17 +698,25 @@ while true; do
     # Get the user's selection
     # Generate the display text for the toggle option based on the current view
     if $find_view; then
-        toggle_option="#"
+        toggle_view_option="#"
     else
-        toggle_option="/"
+        toggle_view_option="/"
+    fi
+
+
+    # Generate the display text for the toggle hidden files option based on the current view
+    if $show_hidden ; then
+        toggle_hidden_option="*"
+    else
+        toggle_hidden_option="&"
     fi
 
     # Include the toggle option in the list passed to dmenu
     # If the list is not empty, include it; otherwise, do not include it
     if [ -z "$list" ]; then
-        options="@\n..\n~\n$toggle_option\n&\n?"
+        options="@\n..\n$toggle_view_option\n$toggle_hidden_option\n?"
     else
-        options="@\n..\n~\n$toggle_option\n&\n?\n$list"
+        options="@\n..\n$toggle_view_option\n$toggle_hidden_option\n?\n$list"
     fi
     selection=$(echo -e "$options" | dmenu -i -l 20 -p "$dir")
 
@@ -593,21 +730,14 @@ while true; do
         fi
     fi
 
-    # Navigate to the parent directory
-    if [ "$selection" == ".." ]; then
-        dir=$(dirname "$dir")
-        continue
-    fi
-
-    # Navigate to the home directory
-    if [ "$selection" == "~" ]; then
-        dir=$HOME
-        continue
-    fi
-
     # Jump to a directory
     if [ "$selection" == "@" ]; then
-        dir_jump=$(cat "$dir_index" | python3 -c "import sys; print(''.join(sorted(sys.stdin, key=len)))" | dmenu -i -l 20 -p "Jump to: ")
+        # If show_hidden is true, include hidden directories
+        if $show_hidden ; then
+            dir_jump=$(cat "$hidden_dir_index" | sort_by_length | dmenu -i -l 20 -p "Jump to: ")
+        else
+            dir_jump=$(cat "$dir_index" | sort_by_length | dmenu -i -l 20 -p "Jump to: ")
+        fi
         # If a directory was selected, jump to that directory
         if [ -n "$dir_jump" ]; then
             dir="$dir_jump"
@@ -616,7 +746,15 @@ while true; do
         continue
     fi
 
-    if [ "$selection" == "$toggle_option" ]; then
+    # Navigate to the parent directory
+    if [ "$selection" == ".." ]; then
+        if [ "$dir" != "$HOME" ]; then
+            dir=$(dirname "$dir")
+        fi
+        continue
+    fi
+
+    if [ "$selection" == "$toggle_view_option" ]; then
         if $find_view ; then
             find_view=false
         else
@@ -626,7 +764,7 @@ while true; do
     fi
 
     # Toggle the visibility of hidden files
-    if [ "$selection" == "&" ]; then
+    if [ "$selection" == "$toggle_hidden_option" ]; then
         # If hidden files are currently visible, hide them
         if $show_hidden ; then
             show_hidden=false
@@ -639,33 +777,45 @@ while true; do
 
     # Handle operations on the current directory
     if [ "$selection" == "?" ]; then
-        folder_operation=$(echo -e "Copy\nMove\nDelete\nRename\nCreate New File\nCreate New Folder\nOpen Terminal Here\nOpen in File Manager\nArchive\nBulk Move\nBulk Copy\nBulk Delete" | dmenu -i -p "$dir")
+        # Check if the current directory is a mount point
+        if mountpoint -q "$dir"; then
+            # Add "Unmount" to the dmenu options
+            folder_operation=$(echo -e "Unmount\nCopy\nMove\nDelete\nRename\nCreate New File\nCreate New Folder\nCopy Path to Clipboard\nOpen Terminal Here\nOpen in File Manager\nArchive\nBulk Move\nBulk Copy\nBulk Delete" | dmenu -i -p "$dir")
+            if [ "$folder_operation" == "Unmount" ]; then
+                unmount_dir
+            fi
+        else
+            folder_operation=$(echo -e "Copy\nMove\nDelete\nRename\nCreate New File\nCreate New Folder\nCopy Path to Clipboard\nOpen Terminal Here\nOpen in File Manager\nArchive\nBulk Move\nBulk Copy\nBulk Delete" | dmenu -i -p "$dir")
+        fi
+
         # Call the appropriate function based on the selected operation
         # Each function handles a different operation
         if [ "$folder_operation" == "Delete" ]; then
-          delete_current_folder
+            delete_current_folder
         elif [ "$folder_operation" == "Bulk Delete" ]; then
-          bulk_delete
+            bulk_delete
         elif [ "$folder_operation" == "Bulk Move" ]; then
-          bulk_move
+            bulk_move
         elif [ "$folder_operation" == "Bulk Copy" ]; then
-          bulk_copy
+            bulk_copy
         elif [ "$folder_operation" == "Open Terminal Here" ]; then
-          open_terminal_here
+            open_terminal_here
+        elif [ "$folder_operation" == "Copy Path to Clipboard" ]; then
+            copy_to_clipboard $dir
         elif [ "$folder_operation" == "Create New File" ]; then
-          create_new_file
+            create_new_file
         elif [ "$folder_operation" == "Create New Folder" ]; then
-          create_new_folder
+            create_new_folder
         elif [ "$folder_operation" == "Archive" ]; then
-          archive
+            archive
         elif [ "$folder_operation" == "Open in File Manager" ]; then
-          open_in_file_manager
+            open_in_file_manager
         elif [ "$folder_operation" == "Copy" ]; then
-          copy_current_dir
+            copy_current_dir
         elif [ "$folder_operation" == "Move" ]; then
-          move_current_dir
+            move_current_dir
         elif [ "$folder_operation" == "Rename" ]; then
-          rename_current_dir
+            rename_current_dir
         fi
         continue
     fi

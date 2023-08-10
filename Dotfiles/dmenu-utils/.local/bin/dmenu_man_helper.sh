@@ -1,52 +1,73 @@
 #!/bin/bash
-#
-# This script provides a user-friendly interface to view Unix/Linux man pages.
-# It retrieves a list of all unique commands from the man pages available on the system,
-# presents them in a dmenu for user selection, and then displays the man page for the selected command.
-# The script also handles cases where no commands are found or no selection is made.
-#
-# After a man page is viewed, the script loops back to the main menu, allowing the user to
-# select and view another command's man page. The script only exits when the 'dmenu' selection
-# is cancelled (such as when ESC is pressed).
-#
-# Dependencies:
-# - man: to retrieve and display man pages.
-# - awk: to process the output of the 'man' command.
-# - sort and uniq: to sort and remove duplicates from the command list.
-# - dmenu: to present the command list in a user-friendly menu.
+set -x
+set -e
+display_cheatsheet() {
+  case $1 in
+   "Vim Cheatsheet")
+      cheatsheet=$(cat "$HOME/Storage/Various/vim_cheatsheet.txt")
+      ;;
+    "Git Cheatsheet")
+      cheatsheet=$(cat "$HOME/Storage/Various/git_cheatsheet.txt")
+      ;;
+    "Arch Cheatsheet")
+      cheatsheet=$(cat "$HOME/Storage/Various/arch_cheatsheet.txt")
+      ;;
+  esac
 
-# Function to display man pages.
-display_man() {
+  # Show the cheatsheet in dmenu
+  echo "$cheatsheet" | dmenu -l 20 -i -p "$1: "
+}
 
-  # Gather list of all unique commands from man pages.
-  commands=$(man -k . | awk '{print $1}' | sort | uniq)
+cheatsheet_menu() {
 
-  # If no commands found, print error message and exit.
-  if [[ -z "$commands" ]]; then
-    echo "No commands found. Exiting..."
-    exit 1
+  # Select a cheat sheet using dmenu
+  selected_cheatsheet=$(echo -e "Vim Cheatsheet\nGit Cheatsheet\nArch Cheatsheet" | dmenu -i -p 'Select a Cheat Sheet: ')
+
+  # Check if dmenu was cancelled by pressing Esc
+  if [ "$?" -eq 1 ]; then
+    return
   fi
 
-  # Present commands in dmenu for selection.
-  selected_command=$(echo "$commands" | dmenu -i -p 'Command: ')
+  # Display the selected cheat sheet
+  display_cheatsheet "$selected_cheatsheet"
 
-  # Check if dmenu was cancelled.
+  # Return to the cheat sheet menu
+  cheatsheet_menu
+}
+
+display_man() {
+  # Options for the main menu
+  main_menu_options="View Man Pages\nView Cheat Sheets"
+
+  # Select an option from the main menu
+  selected_option=$(echo -e "View Man Pages\nView Cheat Sheets" | dmenu -i -p 'Select an Option: ')
+
+  # Check if dmenu was cancelled by pressing Esc
   if [ "$?" -eq 1 ]; then
-    # If dmenu was cancelled, exit the script.
     echo "Exiting..."
     exit 0
-  elif [[ -z "$selected_command" ]]; then
-    # If no selection made, print error message and return to the function.
-    echo "No selection made. Returning to main menu..."
-    display_man
   fi
 
-  # Display man page for selected command.
-  man $selected_command
+  case $selected_option in
+    "View Man Pages")
+      # Gather list of all unique commands from man pages
+      commands=$(man -k . | awk '{print $1}' | sort | uniq)
+      selected_command=$(echo "$commands" | dmenu -i -p 'Command: ')
+      # Check if dmenu was cancelled by pressing Esc
+      if [ "$?" -eq 1 ]; then
+        display_man
+        return
+      fi
+      st -e bash -c "man $selected_command"
+      ;;
+    "View Cheat Sheets")
+      cheatsheet_menu
+      ;;
+  esac
 
-  # After displaying man page, return to main menu.
+  # Return to the main menu
   display_man
 }
 
-# Start the script.
+# Start the script
 display_man
