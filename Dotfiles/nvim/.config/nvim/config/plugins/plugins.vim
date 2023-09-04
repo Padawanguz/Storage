@@ -40,7 +40,6 @@
   Plug 'majutsushi/tagbar'
   Plug 'jceb/vim-orgmode'
   Plug 'lambdalisue/suda.vim'
-  Plug 'github/copilot.vim'
 
   call plug#end()
 

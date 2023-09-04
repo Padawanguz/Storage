@@ -1,73 +1,53 @@
 #!/bin/bash
-set -x
-set -e
-display_cheatsheet() {
-  case $1 in
-   "Vim Cheatsheet")
-      cheatsheet=$(cat "$HOME/Storage/Various/vim_cheatsheet.txt")
-      ;;
-    "Git Cheatsheet")
-      cheatsheet=$(cat "$HOME/Storage/Various/git_cheatsheet.txt")
-      ;;
-    "Arch Cheatsheet")
-      cheatsheet=$(cat "$HOME/Storage/Various/arch_cheatsheet.txt")
-      ;;
-  esac
 
-  # Show the cheatsheet in dmenu
-  echo "$cheatsheet" | dmenu -l 20 -i -p "$1: "
+# Path to the man pages file with descriptions
+MAN_PAGES_FILE="$HOME/man_pages_with_descriptions.txt"
+
+# Function to generate the man pages file with descriptions
+generate_man_pages_file() {
+  apropos . | awk -F ' - ' '{print $1 " -" $2}' | sort > "$MAN_PAGES_FILE"
 }
 
-cheatsheet_menu() {
+# Check if the man pages file exists, generate it if not
+if [ ! -f "$MAN_PAGES_FILE" ]; then
+  generate_man_pages_file
+fi
 
-  # Select a cheat sheet using dmenu
-  selected_cheatsheet=$(echo -e "Vim Cheatsheet\nGit Cheatsheet\nArch Cheatsheet" | dmenu -i -p 'Select a Cheat Sheet: ')
+# Read the man pages with descriptions from the file
+man_pages_with_descriptions=$(cat "$MAN_PAGES_FILE")
 
-  # Check if dmenu was cancelled by pressing Esc
-  if [ "$?" -eq 1 ]; then
-    return
+# Function to prompt the user to select a man page
+select_man_page() {
+  echo "$man_pages_with_descriptions" | dmenu -l 20 -p "Select a man page:"
+}
+
+# Function to open the selected man page
+open_man_page() {
+  selected_page=$(echo "$1" | cut -d ' ' -f 1)
+  st -e man "$selected_page"
+}
+
+# Main loop to handle user interactions
+while true; do
+  selected_item=$(select_man_page)
+
+  # Break the loop if the user presses escape or selects nothing
+  if [ -z "$selected_item" ]; then
+    break
   fi
 
-  # Display the selected cheat sheet
-  display_cheatsheet "$selected_cheatsheet"
+  # Prompt the user to view the man page or search again
+  action=$(echo -e "View\nSearch Again" | dmenu -p "What would you like to do?")
 
-  # Return to the cheat sheet menu
-  cheatsheet_menu
-}
-
-display_man() {
-  # Options for the main menu
-  main_menu_options="View Man Pages\nView Cheat Sheets"
-
-  # Select an option from the main menu
-  selected_option=$(echo -e "View Man Pages\nView Cheat Sheets" | dmenu -i -p 'Select an Option: ')
-
-  # Check if dmenu was cancelled by pressing Esc
-  if [ "$?" -eq 1 ]; then
-    echo "Exiting..."
-    exit 0
-  fi
-
-  case $selected_option in
-    "View Man Pages")
-      # Gather list of all unique commands from man pages
-      commands=$(man -k . | awk '{print $1}' | sort | uniq)
-      selected_command=$(echo "$commands" | dmenu -i -p 'Command: ')
-      # Check if dmenu was cancelled by pressing Esc
-      if [ "$?" -eq 1 ]; then
-        display_man
-        return
-      fi
-      st -e bash -c "man $selected_command"
+  case "$action" in
+    "View")
+      open_man_page "$selected_item"
       ;;
-    "View Cheat Sheets")
-      cheatsheet_menu
+    "Search Again")
+      continue
+      ;;
+    *)
+      break
       ;;
   esac
-
-  # Return to the main menu
-  display_man
-}
-
-# Start the script
-display_man
+done

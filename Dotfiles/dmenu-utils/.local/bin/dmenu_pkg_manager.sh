@@ -214,7 +214,7 @@ clear_package_cache() {
     $(declare -f display_info)
     $(declare -f confirm_action)
     $(declare -f clean_auracle_cache)
-    if confirm_action 'This will remove all but the three most recent versions of each package in pacman's cache and packages older than 30 days in the AUR cache.'; then
+    if confirm_action 'This will remove all but the three most recent versions of each package in pacman'\''s cache and packages older than 30 days in the AUR cache.'; then
       sudo paccache -r
       clean_auracle_cache
     fi
