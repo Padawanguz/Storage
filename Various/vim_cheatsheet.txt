@@ -1,0 +1,174 @@
+# Vim Cheat Sheet
+
+## Global
+- Help for keyword: :h[elp] keyword
+- Save file as: :sav[eas] file
+- Close current pane: :clo[se]
+- Open terminal window: :ter[minal]
+- Open man page for word under cursor: K
+
+## Cursor Movement
+- Move cursor left: h
+- Move cursor down: j
+- Move cursor up: k
+- Move cursor right: l
+- Move to top of screen: H
+- Move to middle of screen: M
+- Move to bottom of screen: L
+- Jump forwards to start of word: w
+- Jump forwards to end of word: e
+- Jump backwards to start of word: b
+- Jump backwards to end of word: ge
+- Move to matching character: %
+- Jump to start of line: 0
+- Jump to first non-blank character of line: ^
+- Jump to end of line: $
+- Go to first line of document: gg
+- Go to last line of document: G
+- Go to line 5: 5gg or 5G
+- Move to local declaration: gd
+- Move to global declaration: gD
+- Jump to next occurrence of character x: fx
+- Repeat previous movement: ;
+
+## Insert Mode
+- Insert before cursor: i
+- Insert at beginning of line: I
+- Append after cursor: a
+- Append at end of line: A
+- Append new line below current line: o
+- Append new line above current line: O
+- Delete character before cursor: Ctrl + h
+- Delete word before cursor: Ctrl + w
+- Begin new line: Ctrl + j
+- Indent line right: Ctrl + t
+- De-indent line left: Ctrl + d
+- Exit insert mode: Esc or Ctrl + c
+
+## Editing
+- Replace a single character: r
+- Replace more than one character: R
+- Join line below with space: J
+- Join line below without space: gJ
+- Reflow paragraph: gwip
+- Switch case: g~
+- Change to lowercase: gu
+- Change to uppercase: gU
+- Change entire line: cc
+- Change to end of line: c$ or C
+- Change entire word: ciw
+- Delete character and substitute text: s
+- Delete line and substitute text: S
+- Transpose two letters: xp
+- Undo: u
+- Redo: Ctrl + r
+- Repeat last command: .
+
+## Visual Mode
+- Start visual mode: v
+- Start linewise visual mode: V
+- Move to other end of marked area: o
+- Start visual block mode: Ctrl + v
+- Mark a word: aw
+- Mark a block with (): ab
+- Mark inner block with (): ib
+- Exit visual mode: Esc or Ctrl + c
+
+## Visual Commands
+- Shift text right: >
+- Shift text left: <
+- Yank marked text: y
+- Delete marked text: d
+- Switch case: ~
+- Change marked text to lowercase: u
+- Change marked text to uppercase: U
+
+## Registers
+- Show registers content: :reg[isters]
+- Yank into register x: "xy
+- Paste contents of register x: "xp
+- Yank into system clipboard register: \"+y
+- Paste from system clipboard register: \"+p
+
+## Marks and Positions
+- List of marks: :marks
+- Set current position for mark A: ma
+- Jump to position of mark A: `a
+- Yank text to position of mark A: y`a
+- Go to position where Vim was previously exited: `0
+- Go to position of last change in this file: `.
+
+## Macros
+- Record macro a: qa
+- Stop recording macro: q
+- Run macro a: @a
+- Rerun last run macro: @@
+
+## Cut and Paste
+- Yank a line: yy
+- Yank 2 lines: 2yy
+- Yank characters of word from cursor to start of next word: yw
+- Yank word under cursor: yiw
+- Yank word under cursor and space after/before it: yaw
+- Yank to end of line: y$ or Y
+- Paste after cursor: p
+- Paste before cursor: P
+- Delete a line: dd
+- Delete 2 lines: 2dd
+- Delete characters of word from cursor to start of next word: dw
+- Delete word under cursor: diw
+- Delete word under cursor and space after/before it: daw
+- Delete lines starting from 3 to 5: :3,5d
+- Delete to end of line: d$ or D
+- Delete character: x
+
+## Indent Text
+- Indent line right: >>
+- De-indent line left: <<
+- Indent a block with () or {}: >%
+- De-indent a block with () or {}: <%
+- Re-indent entire buffer: gg=G
+
+## Exiting
+- Write file: :w
+- Write and quit: :wq or :x or ZZ
+- Quit: :q
+- Quit and throw away unsaved changes: :q! or ZQ
+- Write and quit on all tabs: :wqa
+
+## Search and Replace
+- Search for pattern: /pattern
+- Search backward for pattern: ?pattern
+- Repeat search in same direction: n
+- Repeat search in opposite direction: N
+- Replace all old with new throughout file: :%s/old/new/g
+- Replace all old with new throughout file with confirmations: :%s/old/new/gc
+- Remove highlighting of search matches: :noh[lsearch]
+
+## Working with Multiple Files
+- Edit a file in a new buffer: :e[dit] file
+- Go to next buffer: :bn[ext]
+- Go to previous buffer: :bp[revious]
+- Delete a buffer: :bd[elete]
+- Open file in new buffer and split window: :sp[lit] file
+- Open file in new buffer and vertically split window: :vs[plit] file
+- Split window: Ctrl + ws
+- Split window vertically: Ctrl + wv
+- Switch windows: Ctrl + ww
+- Quit a window: Ctrl + wq
+- Exchange current window with next one: Ctrl + wx
+- Make all windows equal height & width: Ctrl + w=
+
+## Diff
+- Manually define a fold up to motion: zf
+- Delete fold under cursor: zd
+- Toggle fold under cursor: za
+- Open fold under cursor: zo
+- Close fold under cursor: zc
+- Reduce all folds by one level: zr
+- Fold more all folds by one level: zm
+- Toggle folding functionality: zi
+- Jump to start of next change: ]c
+- Jump to start of previous change: [c
+- Obtain difference from other buffer: do or :diffg[et]
+- Put difference to other buffer: dp

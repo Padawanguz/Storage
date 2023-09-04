@@ -1,0 +1,24 @@
+# Installing Packages
+pacman -S package_name1 package_name2 ...  # Install specific packages
+pacman -S extra/package_name              # Install specific version from a repository
+pacman -S gnome                           # Install package group
+pacman -U /path/to/package_name.pkg.tar.zst # Install a 'local' package
+pacman -U http://www.example.com/repo.pkg.tar.zst # Install a 'remote' package
+
+# Removing Packages
+pacman -R package_name                    # Remove a single package
+pacman -Rs package_name                   # Remove a package and unneeded dependencies
+pacman -Rsc package_name                  # Remove a package and all dependent packages
+pacman -Rdd package_name                  # Remove without removing dependent packages
+
+# Upgrading Packages
+pacman -Syu                               # Update all packages
+
+# Querying Package Databases
+pacman -Ss string1 string2 ...            # Search for packages in the database
+pacman -Qs string1 string2 ...            # Search for installed packages
+pacman -Si package_name                   # Display info about a remote package
+pacman -Qi package_name                   # Display info about a local package
+
+# Additional Commands
+pacman -Sw package_name                   # Download without installing

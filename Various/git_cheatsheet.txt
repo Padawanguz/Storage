@@ -1,0 +1,66 @@
+
+# Git Cheat Sheet
+
+## Configuration
+- Check Git Configuration: git config -l
+- Set Username: git config --global user.name "YourName"
+- Set User Email: git config --global user.email "youremail@example.com"
+- Cache Login Credentials: git config --global credential.helper cache
+
+## Initialization & Staging
+- Initialize a Git Repo: git init
+- Add a File to Staging Area: git add filename_here
+- Add All Files to Staging Area: git add .
+- Add Certain Files to Staging Area: git add fil*
+
+## Status & Commit
+- Check Repository's Status: git status
+- Commit Changes in Editor: git commit
+- Commit with a Message: git commit -m "your message here"
+- Commit Changes (Skip Staging Area): git commit -a -m "your message here"
+
+## History & Log
+- See Commit History: git log
+- See Commit History with Changes: git log -p
+- See Specific Commit: git show commit-id
+- See Log Stats: git log --stat
+- See Changes Using "diff": git diff, git diff file.py, git diff --staged
+
+## File Operations
+- Remove Tracked Files: git rm filename
+- Rename Files: git mv oldfile newfile
+- Ignore Files: Create .gitignore file
+- Revert Unstaged Changes: git checkout filename
+- Revert Staged Changes: git reset HEAD filename, git reset HEAD -p
+
+## Commit Modifications
+- Amend Recent Commit: git commit --amend
+- Rollback Last Commit: git revert HEAD
+- Rollback Old Commit: git revert commit_id_here
+
+## Branching & Merging
+- Create New Branch: git branch branch_name
+- Switch to Branch: git checkout branch_name
+- List Branches: git branch
+- Create & Switch to New Branch: git checkout -b branch_name
+- Delete Branch: git branch -d branch_name
+- Merge Branches: git merge branch_name
+
+## Remote Operations
+- Add Remote Repository: git add remote https://repo_here
+- See Remote URLs: git remote -v
+- Get Info About Remote Repo: git remote show origin
+- Push Changes to Remote: git push
+- Pull Changes from Remote: git pull
+- Check Remote Branches: git branch -r
+- Fetch Remote Changes: git fetch
+- Merge Remote Repo: git merge origin/main
+- Push New Branch to Remote: git push -u origin branch_name
+- Remove Remote Branch: git push --delete origin branch_name_here
+
+## Rebasing & Advanced Operations
+- Use Git Rebase: git rebase branch_name_here
+- Run Rebase Interactively: git rebase -i master
+- Force a Push Request: git push -f
+
+# End of Git Cheat Sheet
